@@ -1,8 +1,8 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 from datetime import datetime as dt
 
 class Usuario(ABC):
-
+    @abstractmethod
     def __init__(self, cpf: str, data_nacimento: dt, email: str, genero: str, nome: str, senha: str, sobrenome: str):
         if isinstance(cpf, str):
             self.__cpf = cpf
