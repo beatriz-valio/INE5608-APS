@@ -1,5 +1,7 @@
 import PySimpleGUI as sg
 import os
+import flanelinha_veloz.view.abstract_boundary as AbstractBoundary
+
 # sg.theme('')
 
 class LoginBoundary:
@@ -11,7 +13,7 @@ class LoginBoundary:
     def open_screen(self):
 
         layout = [
-            [sg.Image(LoginBoundary.IMAGE_PATH)],
+            [sg.Image(LoginBoundary.IMAGE_PATH, subsample=2)],
             [sg.Text('Email')],
             [sg.Input(key='email')],
             [sg.Text('Senha')],
