@@ -9,8 +9,6 @@ class EmployeesBoundary(AbstractBoundary):
         layout = [
             [sg.Button("Cadastrar um novo usuário da empresa", key=1)],
             [sg.Button("Alterar dados de um usuário da empresa", key=2)],
-            [sg.Button("Excluir um usuário da empresa", key=3)],
-            [sg.Button("Listar todos os usuários da empresa", key=4)],
             [sg.Cancel("Voltar", key=0)]
         ]
         window = sg.Window("Flanelinha Veloz - Funcionário/Gestor",
@@ -21,29 +19,29 @@ class EmployeesBoundary(AbstractBoundary):
         window.close()
         return button
 
-    def cadastrar_usuario_empresa_tela(self):
+    def registration_employees_screen(self):
         layout = [
-            [sg.Text("Nome: "),
+            [sg.Text("Nome: * "),
              sg.In(key="nome")],
-            [sg.Text("Sobrenome: "),
+            [sg.Text("Sobrenome: * "),
              sg.InputText(key="sobrenome")],
-            [sg.Text("CPF: "),
+            [sg.Text("CPF: * "),
              sg.In(key="cpf")],
-            [sg.Text("Email: "),
+            [sg.Text("Email: * "),
              sg.In(key="email")],
-            [sg.Text("Confirmar Email: "),
+            [sg.Text("Confirmar Email: * "),
              sg.In(key="confirmar_email")],
-            [sg.Text("Senha: "),
+            [sg.Text("Senha: * "),
              sg.In(key="senha", password_char = "*")],
-            [sg.Text("Confirmar Senha: "),
+            [sg.Text("Confirmar Senha: * "),
              sg.In(key="confirmar_senha", password_char = "*")],
-            [sg.Text("Gênero: "),
+            [sg.Text("Gênero: * "),
              sg.Combo(values=['Feminino', 'Masculino', 'Outro'],  key="genero")],
-            [sg.Text("Data de nascimento:"),
+            [sg.Text("Data de nascimento: *"),
              sg.CalendarButton(button_text= "Calendário", format = "%d/%m/%Y", key="data_nascimento")],
-            [sg.Text("Cargo: "),
+            [sg.Text("Cargo: * "),
              sg.Combo(values=['Funcionário', 'Gestor'],  key="cargo")],
-            [sg.Text("Primeiro Turno: "),
+            [sg.Text("Primeiro Turno: * "),
              sg.Spin([i for i in range(0,24)], initial_value=1, key="primeito_turno_entrada_hora"),
              sg.Text("h"), 
              sg.Spin([i for i in range(0,60,15)], initial_value=1, key="primeito_turno_entrada_minuto"),
@@ -52,7 +50,7 @@ class EmployeesBoundary(AbstractBoundary):
              sg.Text("h"), 
              sg.Spin([i for i in range(0,60,15)], initial_value=1, key="primeito_turno_saido_minuto"),
              sg.Text("min")],
-            [sg.Text("Segundo Turno: "),
+            [sg.Text("Segundo Turno: * "),
              sg.Spin([i for i in range(0,24)], initial_value=1, key="segundo_turno_entrada_hora"), 
              sg.Text("h"), 
              sg.Spin([i for i in range(0,60,15)], initial_value=1, key="segundo_turno_entrada_minuto"),
@@ -61,9 +59,9 @@ class EmployeesBoundary(AbstractBoundary):
              sg.Text("h"), 
              sg.Spin([i for i in range(0,60,15)], initial_value=1, key="segundo_turno_saido_minuto"),
              sg.Text("min")], 
-            [sg.Text("Dias trabalhados: "),
+            [sg.Text("Dias trabalhados: * "),
              sg.Listbox(values=['Domingo', 'Segunda-feira', 'Terça-feira','Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'], select_mode='extended', key="dias_trabalhados", size=(30, 7))],
-            [sg.Button("Voltar", key=0), sg.Button("Avançar", key=1)]
+            [sg.Button("Voltar", key=EmployeesBoundary.CANCELAR), sg.Button("Avançar", key=EmployeesBoundary.SUBMETER)]
         ]
         window = sg.Window("Flanelinha Veloz - Cadastro Usuário Empresa").Layout(layout)
         button, values = window.Read()
@@ -96,8 +94,9 @@ class EmployeesBoundary(AbstractBoundary):
                 [sg.Text("Para editar um aluno,")],
                 [sg.Text("Digite a matrícula do aluno ->"),
                  sg.In(key="matricula")],
-                [sg.Cancel("Voltar", key=EmployeesBoundary.CANCELAR),
-                 sg.Submit("Avançar", key=EmployeesBoundary.SUBMETER)]
+                [sg.Button("Voltar", key=EmployeesBoundary.CANCELAR), 
+                 sg.Button("Avançar", key=EmployeesBoundary.SUBMETER),
+                 sg.Button("Excluir", key=2)]
             ]
             window = sg.Window("Flanelinha Veloz - Editar Usuário Empresa").Layout(layout)
             button, values = window.Read()
@@ -106,76 +105,3 @@ class EmployeesBoundary(AbstractBoundary):
                 "acao": button,
                 "matricula": values["matricula"]
             }
-
-    def excluir_usuario_empresa_tela(self, alunos):
-        lista_usuario_empresa = [
-            [sg.Text("\n".join(alunos))]
-        ]
-        layout = [
-            [sg.Col(lista_usuario_empresa, scrollable=True)],
-            [sg.Text("Para excluir um aluno,")],
-            [sg.Text("Digite a matrícula do aluno ->"),
-             sg.In(key="matricula")],
-            [sg.Cancel("Voltar", key=EmployeesBoundary.CANCELAR),
-             sg.Submit("Avançar", key=EmployeesBoundary.SUBMETER)]
-        ]
-        window = sg.Window("Flanelinha Veloz - Excluir um aluno").Layout(layout)
-        button, values = window.Read()
-        window.close()
-        return {
-            "acao": button,
-            "matricula": values["matricula"]
-        }
-
-    def editar_campos_usuario_empresa(self, nome: str, idade: int):
-        layout = [
-            [sg.Text("Digite um novo nome para o aluno:"),
-             sg.Input(nome, key="nome")],
-            [sg.Text("Digite uma nova idade para o aluno:"),
-             sg.Input(idade, key="idade")],
-            [sg.Cancel("Voltar", key=EmployeesBoundary.CANCELAR),
-             sg.Submit("Avançar", key=EmployeesBoundary.SUBMETER)]
-        ]
-        window = sg.Window("Flanelinha Veloz - Novos dados").Layout(layout)
-        button, values = window.Read()
-        window.close()
-        return {
-            "acao": button,
-            "nome": values["nome"],
-            "idade": values["idade"]
-        }
-
-    def listar_usuario_empresa(self, cursos):
-        lista_cursos = [
-            [sg.Text("\n".join(cursos))]
-        ]
-        layout = [
-            [sg.Col(lista_cursos, scrollable=True)],
-            [sg.Text("Digite o código do curso pretendido:"),
-             sg.In(key="codigo_curso")],
-            [sg.Cancel("Voltar", key=EmployeesBoundary.CANCELAR),
-             sg.Submit("Avançar", key=EmployeesBoundary.SUBMETER)]
-        ]
-        window = sg.Window("Flanelinha Veloz - Listagem de Alunos") \
-            .Layout(layout)
-        button, values = window.Read()
-        window.close()
-        return {
-            "acao": button,
-            "codigo": values["codigo_curso"]
-        }
-
-    def relatorio_usuario_empresa(self, alunos):
-        lista_usuario_empresa = [
-            [sg.Text("\n".join(alunos))]
-        ]
-        layout = [
-            [sg.Col(lista_usuario_empresa, scrollable=True)],
-            [sg.Cancel("Ok", key=EmployeesBoundary.CANCELAR)]
-        ]
-        window = sg.Window("Flanelinha Veloz - Alunos matriculados").Layout(layout)
-        button, values = window.Read()
-        window.close()
-        return {
-            "acao": button
-        }

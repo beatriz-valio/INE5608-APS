@@ -3,11 +3,11 @@ from datetime import datetime as dt
 
 class Usuario(ABC):
     @abstractmethod
-    def __init__(self, cpf: str, data_nacimento: dt, email: str, genero: str, nome: str, senha: str, sobrenome: str):
+    def __init__(self, cpf: str, data_nascimento: dt, email: str, genero: str, nome: str, senha: str, sobrenome: str):
         if isinstance(cpf, str):
             self.__cpf = cpf
-        if isinstance(data_nacimento, dt):
-            self.__data_nacimento = data_nacimento
+        if isinstance(data_nascimento, dt):
+            self.__data_nascimento = data_nascimento
         if isinstance(email, str):
             self.__email = email
         if isinstance(genero, str):
@@ -29,13 +29,13 @@ class Usuario(ABC):
             self.__cpf = cpf
 
     @property
-    def data_nacimento(self) -> dt:
-        return self.__data_nacimento
+    def data_nascimento(self) -> dt:
+        return self.__data_nascimento
 
-    @data_nacimento.setter
-    def data_nacimento(self, data_nacimento: dt):
-        if isinstance(data_nacimento, dt):
-            self.__data_nacimento = data_nacimento
+    @data_nascimento.setter
+    def data_nascimento(self, data_nascimento: dt):
+        if isinstance(data_nascimento, dt):
+            self.__data_nascimento = data_nascimento
 
     @property
     def email(self) -> str:
