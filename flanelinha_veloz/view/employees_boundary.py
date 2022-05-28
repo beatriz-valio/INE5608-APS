@@ -1,6 +1,7 @@
 import PySimpleGUI as sg
+from flanelinha_veloz.view.abstract_boundary import AbstractBoundary
 
-class EmployeesBoundary:
+class EmployeesBoundary(AbstractBoundary):
     CANCELAR = 0
     SUBMETER = 1
 
@@ -37,10 +38,11 @@ class EmployeesBoundary:
             [sg.Text("Confirmar Senha: "),
              sg.In(key="confirmar_senha", password_char = "*")],
             [sg.Text("Gênero: "),
-             sg.In(key="genero")],
-            [sg.CalendarButton(button_text= "Data de nascimento", format = "%d/%m/%Y", key="data_nascimento")],
+             sg.Combo(values=['Feminino', 'Masculino', 'Outro'],  key="genero")],
+            [sg.Text("Data de nascimento:"),
+             sg.CalendarButton(button_text= "Calendário", format = "%d/%m/%Y", key="data_nascimento")],
             [sg.Text("Cargo: "),
-             sg.Listbox(values=['Funcionário', 'Gestor'],  key="cargo")],
+             sg.Combo(values=['Funcionário', 'Gestor'],  key="cargo")],
             [sg.Text("Primeiro Turno: "),
              sg.Spin([i for i in range(0,24)], initial_value=1, key="primeito_turno_entrada_hora"),
              sg.Text("h"), 

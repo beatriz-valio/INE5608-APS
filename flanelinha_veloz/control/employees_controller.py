@@ -7,11 +7,9 @@ class EmployeesController:
         # self.__system_controller = system_controller
         self.__boundary = EmployeesBoundary()
 
-    def add_employee(self) -> Funcionario:
+    def add_employees(self) -> Funcionario:
         pass
 
-    def add_manager(self) -> Gestor:
-        pass
 
     def retornar(self):
         pass
@@ -20,7 +18,7 @@ class EmployeesController:
         try:
             options = {
                 0: self.retornar,
-                1: self.add_employee,
+                1: self.add_employees,
                 2: self.add_manager
             }
             while True:
