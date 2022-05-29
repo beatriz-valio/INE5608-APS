@@ -11,19 +11,18 @@ class LoginBoundary:
     def open_screen(self):
 
         layout = [
-            [sg.Image(LoginBoundary.IMAGE_PATH, subsample=2, pad=(35,35))],
-            [sg.Text('Email')],
-            [sg.Input(key='email')],
-            [sg.Text('Senha')],
-            [sg.Input(key='senha')],
-            [sg.Button('Entrar', key=LoginBoundary.ENTRAR)],
-            [sg.Text('Não possui cadastro?', pad=(5,25))],
-            [sg.Button('Cadastro de Cliente', key=LoginBoundary.REGISTER_CLIENT)],
-            [sg.Button('Cadastro de Funcionário', key=LoginBoundary.REGISTER_EMPLOYER)],
+            [sg.Image(LoginBoundary.IMAGE_PATH, subsample=2, pad=(5,5))],
+            [sg.Text('Email', font='Arial 11')],
+            [sg.Input(key='email', size=(40,1))],
+            [sg.Text('Senha', font='Arial 11')],
+            [sg.Input(key='senha', size=(40,1))],
+            [sg.Button('Entrar', size=(10,1), key=LoginBoundary.ENTRAR)],
+            [sg.Text('Não possui cadastro?', pad=(1,20))],
+            [sg.Button('Cadastro de Cliente', key=LoginBoundary.REGISTER_CLIENT), sg.Button('Cadastro de Funcionário', key=LoginBoundary.REGISTER_EMPLOYER)],
         ]
 
-        window = sg.Window('Flanelinha Veloz', layout=layout)
+        window = sg.Window('Flanelinha Veloz - Realize seu login', layout=layout, size=(900, 500), element_justification="c")
         
-        button, values = window.read()
+        button, value = window.Read()
         window.close()
         return button
