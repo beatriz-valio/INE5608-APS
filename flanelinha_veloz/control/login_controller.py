@@ -1,9 +1,14 @@
 from flanelinha_veloz.view.login_boundary import LoginBoundary
 from flanelinha_veloz.view.menu_boundary import MenuBoundary
 
+
+def shutdown():
+    exit(0)
+
+
 class LoginController:
 
-    def __init__(self):
+    def __init__(self, system_controller):
         self.__login_screen = LoginBoundary()
         # self.__client_controller = ClientController()
         # self.__employer_controller = EmployeesController()
@@ -17,22 +22,15 @@ class LoginController:
         self.__menu_controller.open_menu_client();
 
     def register_client(self):
-        # TODO: Aqui voce deverá chamar o controlador de cliente e chamar a função que abre a tela de cliente.
-        # self.__client_controller.open_screen();
-        pass
+        self.__system_controller.client_controller.open_create_screen()
 
     def register_employer(self):
-        # TODO: Aqui voce deverá chamar o controlador de funcionário e chamar a função que abre a tela de funcionário.
-        # self.__employer_controller.open_screen();
-        pass
-    
-    def shutdown(self):
-        exit(0)
+        self.__system_controller.employees_controller.open_add_employees_screen()
 
     def open_screen(self):
         try:
             action_options = {
-                None: self.shutdown,
+                None: shutdown,
                 1: self.login,
                 2: self.register_client,
                 3: self.register_employer,
@@ -42,4 +40,4 @@ class LoginController:
                 selected_function = action_options[option_number]
                 selected_function()
         except Exception as e:
-            print(e)
+            self.__login_screen.show_message(str(e))

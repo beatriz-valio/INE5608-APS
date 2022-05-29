@@ -4,7 +4,7 @@ from abc import ABC
 
 class DAO(ABC):
     def __init__(self, datasource=''):
-        self.__datasource = datasource
+        self.__datasource = 'flanelinha_veloz/data' + datasource
         self.__cache = {}
         try:
             self.__load()

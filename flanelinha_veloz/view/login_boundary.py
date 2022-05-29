@@ -1,6 +1,6 @@
 import PySimpleGUI as sg
 import os
-import flanelinha_veloz.view.abstract_boundary as AbstractBoundary
+from flanelinha_veloz.view.abstract_boundary import AbstractBoundary
 
 class LoginBoundary:
     ENTRAR = 1
@@ -9,7 +9,6 @@ class LoginBoundary:
     IMAGE_PATH = os.path.abspath('flanelinha_veloz/assets/logo.png')
 
     def open_screen(self):
-
         layout = [
             [sg.Image(LoginBoundary.IMAGE_PATH, subsample=2, pad=(5,5))],
             [sg.Text('Email', font='Arial 11')],

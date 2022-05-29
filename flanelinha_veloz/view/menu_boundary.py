@@ -1,3 +1,4 @@
+from ctypes import alignment
 import PySimpleGUI as sg
 import os
 import flanelinha_veloz.view.abstract_boundary as AbstractBoundary
