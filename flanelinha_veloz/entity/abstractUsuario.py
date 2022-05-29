@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from datetime import datetime as dt
 
+
 class Usuario(ABC):
     @abstractmethod
     def __init__(self, cpf: str, data_nacimento: dt, email: str, genero: str, nome: str, senha: str, sobrenome: str):
@@ -45,7 +46,7 @@ class Usuario(ABC):
     def email(self, email: str):
         if isinstance(email, str):
             self.__email = email
-    
+
     @property
     def genero(self) -> str:
         return self.__genero
@@ -54,7 +55,7 @@ class Usuario(ABC):
     def genero(self, genero: str):
         if isinstance(genero, str):
             self.__genero = genero
-    
+
     @property
     def nome(self) -> str:
         return self.__nome
@@ -63,7 +64,7 @@ class Usuario(ABC):
     def nome(self, nome: str):
         if isinstance(nome, str):
             self.__nome = nome
-    
+
     @property
     def senha(self) -> str:
         return self.__senha
@@ -72,7 +73,7 @@ class Usuario(ABC):
     def senha(self, senha: str):
         if isinstance(senha, str):
             self.__senha = senha
-    
+
     @property
     def sobrenome(self) -> str:
         return self.__sobrenome

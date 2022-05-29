@@ -20,7 +20,7 @@ class LoginController:
         pass
 
     def register_client(self):
-        self.__system_controller.client_controller.open_screen()
+        self.__system_controller.client_controller.open_create_screen()
 
     def register_employer(self):
         # TODO: Aqui voce deverá chamar o controlador de funcionário e chamar a função que abre a tela de funcionário.
