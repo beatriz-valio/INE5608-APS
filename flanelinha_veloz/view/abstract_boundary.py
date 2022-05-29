@@ -3,7 +3,7 @@ import PySimpleGUI as sg
 
 
 class AbstractBoundary(ABC):
-    sg.theme('DarkTanBlue')
+    sg.theme('DarkGray5')
 
     def show_message(self, message: str):
         sg.popup_ok(message)
