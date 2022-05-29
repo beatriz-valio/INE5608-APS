@@ -1,5 +1,5 @@
 from flanelinha_veloz.entity.abstractUsuarioEmpresa import UsuarioEmpresa
-from datetime import datetime as dt, timedelta
+from datetime import datetime as dt
 
 class Funcionario(UsuarioEmpresa):
     def __init__(self, cpf: str, data_nascimento: dt, email: str, genero: str, nome: str, senha: str, sobrenome: str, cargo: str, turno: list, dias_trabalhados: list) -> None:

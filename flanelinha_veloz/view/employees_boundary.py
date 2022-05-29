@@ -2,8 +2,8 @@ import PySimpleGUI as sg
 from flanelinha_veloz.view.abstract_boundary import AbstractBoundary
 
 class EmployeesBoundary(AbstractBoundary):
-    CANCELAR = 0
-    SUBMETER = 1
+    CANCEL = 0
+    SUBMIT = 1
 
     def screen_options(self):
         layout = [
@@ -38,30 +38,31 @@ class EmployeesBoundary(AbstractBoundary):
             [sg.Text("Gênero: * "),
              sg.Combo(values=['Feminino', 'Masculino', 'Outro'],  key="genero")],
             [sg.Text("Data de nascimento: *"),
-             sg.CalendarButton(button_text= "Calendário", format = "%d/%m/%Y", key="data_nascimento")],
+             sg.CalendarButton(target='data_nascimento', button_text= "Calendário", format = "%d/%m/%Y"),
+             sg.In(key='data_nascimento')],
             [sg.Text("Cargo: * "),
              sg.Combo(values=['Funcionário', 'Gestor'],  key="cargo")],
             [sg.Text("Primeiro Turno: * "),
-             sg.Spin([i for i in range(0,24)], initial_value=1, key="primeito_turno_entrada_hora"),
+             sg.Spin([i for i in range(0,24)], initial_value=0, key="primeito_turno_entrada_hora"),
              sg.Text("h"), 
-             sg.Spin([i for i in range(0,60,15)], initial_value=1, key="primeito_turno_entrada_minuto"),
+             sg.Spin([i for i in range(0,60,15)], initial_value=0, key="primeito_turno_entrada_minuto"),
              sg.Text("min até às"), 
-             sg.Spin([i for i in range(0,24)], initial_value=1, key="primeito_turno_saido_hora"), 
+             sg.Spin([i for i in range(0,24)], initial_value=0, key="primeito_turno_saido_hora"), 
              sg.Text("h"), 
-             sg.Spin([i for i in range(0,60,15)], initial_value=1, key="primeito_turno_saido_minuto"),
+             sg.Spin([i for i in range(0,60,15)], initial_value=0, key="primeito_turno_saido_minuto"),
              sg.Text("min")],
             [sg.Text("Segundo Turno: * "),
-             sg.Spin([i for i in range(0,24)], initial_value=1, key="segundo_turno_entrada_hora"), 
+             sg.Spin([i for i in range(0,24)], initial_value=0, key="segundo_turno_entrada_hora"), 
              sg.Text("h"), 
-             sg.Spin([i for i in range(0,60,15)], initial_value=1, key="segundo_turno_entrada_minuto"),
+             sg.Spin([i for i in range(0,60,15)], initial_value=0, key="segundo_turno_entrada_minuto"),
              sg.Text("min até às"), 
-             sg.Spin([i for i in range(0,24)], initial_value=1, key="segundo_turno_saido_hora"),
+             sg.Spin([i for i in range(0,24)], initial_value=0, key="segundo_turno_saido_hora"),
              sg.Text("h"), 
-             sg.Spin([i for i in range(0,60,15)], initial_value=1, key="segundo_turno_saido_minuto"),
+             sg.Spin([i for i in range(0,60,15)], initial_value=0, key="segundo_turno_saido_minuto"),
              sg.Text("min")], 
             [sg.Text("Dias trabalhados: * "),
              sg.Listbox(values=['Domingo', 'Segunda-feira', 'Terça-feira','Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'], select_mode='extended', key="dias_trabalhados", size=(30, 7))],
-            [sg.Button("Voltar", key=EmployeesBoundary.CANCELAR), sg.Button("Avançar", key=EmployeesBoundary.SUBMETER)]
+            [sg.Cancel("Voltar", key=EmployeesBoundary.CANCEL), sg.Submit("Avançar", key=EmployeesBoundary.SUBMIT)]
         ]
         window = sg.Window("Flanelinha Veloz - Cadastro Usuário Empresa").Layout(layout)
         button, values = window.Read()
@@ -94,8 +95,8 @@ class EmployeesBoundary(AbstractBoundary):
                 [sg.Text("Para editar um aluno,")],
                 [sg.Text("Digite a matrícula do aluno ->"),
                  sg.In(key="matricula")],
-                [sg.Button("Voltar", key=EmployeesBoundary.CANCELAR), 
-                 sg.Button("Avançar", key=EmployeesBoundary.SUBMETER),
+                [sg.Button("Voltar", key=EmployeesBoundary.CANCEL), 
+                 sg.Button("Avançar", key=EmployeesBoundary.SUBMIT),
                  sg.Button("Excluir", key=2)]
             ]
             window = sg.Window("Flanelinha Veloz - Editar Usuário Empresa").Layout(layout)
