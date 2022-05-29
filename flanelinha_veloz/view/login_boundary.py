@@ -1,17 +1,15 @@
 import PySimpleGUI as sg
 import os
-import flanelinha_veloz.view.abstract_boundary as AbstractBoundary
+from flanelinha_veloz.view.abstract_boundary import AbstractBoundary
 
-# sg.theme('')
 
-class LoginBoundary:
+class LoginBoundary(AbstractBoundary):
     ENTRAR = 0
     REGISTER_CLIENT = 1
     REGISTER_EMPLOYER = 2
     IMAGE_PATH = os.path.abspath('flanelinha_veloz/assets/logo.png')
 
     def open_screen(self):
-
         layout = [
             [sg.Image(LoginBoundary.IMAGE_PATH, subsample=2)],
             [sg.Text('Email')],
@@ -26,7 +24,7 @@ class LoginBoundary:
         ]
 
         window = sg.Window('Flanelinha Veloz', layout=layout)
-        
+
         button, values = window.read()
         window.close()
         return button

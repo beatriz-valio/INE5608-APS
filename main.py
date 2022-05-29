@@ -1,4 +1,4 @@
-from flanelinha_veloz.control.login_controller import LoginController
+from flanelinha_veloz.control.system_controller import SystemController
 
 if __name__ == "__main__":
-    LoginController().open_screen()
+    SystemController().open_login_screen()
