@@ -6,15 +6,15 @@ class EmployeesDAO(DAO):
         super().__init__('/employees_list.pkl')
 
     def add(self, employee: Funcionario):
-        if (isinstance(employee.cpf, str)) and \
+        if (isinstance(employee.cpf, int)) and \
                 (employee is not None) and \
                 isinstance(employee, Funcionario):
             super().add(employee.cpf, employee)
 
-    def get(self, key: str):
-        if isinstance(key, str):
+    def get(self, key: int):
+        if isinstance(key, int):
             return super().get(key)
 
-    def remove(self, key: str):
-        if isinstance(key, str):
+    def remove(self, key: int):
+        if isinstance(key, int):
             return super().remove(key)
