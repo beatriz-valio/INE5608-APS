@@ -42,6 +42,8 @@ class EmployeesController:
                         raise ValueError
                 except ValueError:
                     self.__boundary.show_message("* Confira  os valores *")
+            elif acao == None:
+                self.exit()
             else:
                 break
 
@@ -66,9 +68,13 @@ class EmployeesController:
         except KeyError:
             self.__boundary.show_message("Nenhum funcionário encontrado!")
 
+    def exit(self):
+        exit(0)
+
     def open_screen(self):
         try:
             options = {
+                None: self.exit,
                 0: self.retornar,
                 1: self.open_add_employees_screen,
             }
