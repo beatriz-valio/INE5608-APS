@@ -56,11 +56,13 @@ class ClientController:
                 else:
                     break
             except ValueError:
-                self.__client_screen.show_message('Digite os valores corretos!')
+                self.__client_screen.show_message('Digite os valores corretos!', 'red')
+            except Exception as e:
+                self.__client_screen.show_message(str(e))
 
     def client_registration(self, client):
         if isinstance(client, Cliente) and client is not None and client not in self.__client_dao.get_all():
             self.__client_dao.add(client)
-            self.__client_screen.show_message('Cadastrado com sucesso!')
+            self.__client_screen.show_message('Cadastrado com sucesso!', 'green')
         else:
-            self.__client_screen.show_message('Dados incorretos!')
+            self.__client_screen.show_message('Dados incorretos!', 'red')
