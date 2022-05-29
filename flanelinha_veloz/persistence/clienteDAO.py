@@ -7,7 +7,7 @@ class ClienteDAO(DAO):
         super().__init__('/clients_list.pkl')
 
     def add(self, client: Cliente):
-        if (isinstance(client.cpf, int)) and \
+        if isinstance(client.cpf, int) and \
                 (client is not None) and \
                 isinstance(client, Cliente):
             super().add(client.cpf, client)

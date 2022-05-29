@@ -4,7 +4,7 @@ from flanelinha_veloz.entity.abstractUsuario import Usuario
 
 
 class Cliente(Usuario):
-    def __init__(self, cpf: str, data_nacimento: dt, email: str, genero: str, nome: str, senha: str, sobrenome: str,
+    def __init__(self, cpf: int, data_nacimento: dt, email: str, genero: str, nome: str, senha: str, sobrenome: str,
                  agendamentos: [] = None):
         super().__init__(cpf, data_nacimento, email, genero, nome, senha, sobrenome)
         if agendamentos is not None:

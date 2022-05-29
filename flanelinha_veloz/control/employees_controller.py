@@ -73,12 +73,12 @@ class EmployeesController:
         if isinstance(employee, Funcionario) and employee is not None and \
                 employee not in self.__employee_dao.get_all():
             self.__employee_dao.add(employee)
-    
+
     def employee_delete(self, employee: Funcionario):
         if isinstance(employee, Funcionario) and employee is not None and \
                 employee in self.__employee_dao.get_all():
             self.__employee_dao.remove(employee.cpf)
-    
+
     def search_for_employee_by_cpf(self, cpf: str):
         try:
             cpf = int(cpf)
