@@ -9,6 +9,7 @@ class MenuController:
 
 
     def ver_perfil(self):
+        # self.__employer_controller.open_menu_client();
         pass
     
     def shutdown(self):
@@ -18,7 +19,10 @@ class MenuController:
         try:
             action_options = {
                 None: self.shutdown,
-                0: self.ver_perfil,
+                0: self.sair,
+                1: self.ver_perfil,
+                2: self.mudar_perfil,
+                3: self.agendar_lavagem
             }
             while True:
                 option_number = self.__menu_screen.open_menu_client()

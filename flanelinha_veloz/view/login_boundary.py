@@ -3,9 +3,9 @@ import os
 import flanelinha_veloz.view.abstract_boundary as AbstractBoundary
 
 class LoginBoundary:
-    ENTRAR = 0
-    REGISTER_CLIENT = 1
-    REGISTER_EMPLOYER = 2
+    ENTRAR = 1
+    REGISTER_CLIENT = 2
+    REGISTER_EMPLOYER = 3
     IMAGE_PATH = os.path.abspath('flanelinha_veloz/assets/logo.png')
 
     def open_screen(self):
@@ -22,7 +22,7 @@ class LoginBoundary:
         ]
 
         window = sg.Window('Flanelinha Veloz - Realize seu login', layout=layout, size=(900, 500), element_justification="c")
-        
+
         button, value = window.Read()
         window.close()
         return button

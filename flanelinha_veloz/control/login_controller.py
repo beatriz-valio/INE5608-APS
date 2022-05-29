@@ -1,4 +1,5 @@
 from flanelinha_veloz.view.login_boundary import LoginBoundary
+from flanelinha_veloz.view.menu_boundary import MenuBoundary
 
 class LoginController:
 
@@ -6,13 +7,14 @@ class LoginController:
         self.__login_screen = LoginBoundary()
         # self.__client_controller = ClientController()
         # self.__employer_controller = EmployeesController()
+        self.__menu_controller = MenuBoundary()
 
 
     def login(self):
         # Essa função será executado quando o botão de login for clicado. Deverá ser pego os dados passados pelo usuário no campos e trazer o arquivo onde estão salvos os acessos de todos os funcionários para comparar o email com email e ver se a senha bate.
         # Caso a senha bater, poderá seguir para a próxima tela (Nesse momento você checará se ele é cliente ou funcionário e dependendo ele vai para a tela X ou Y).
         # Caso a senha não bata, mostrarem uma mensagem de erro para o usuário.
-        pass
+        self.__menu_controller.open_menu_client();
 
     def register_client(self):
         # TODO: Aqui voce deverá chamar o controlador de cliente e chamar a função que abre a tela de cliente.
@@ -31,9 +33,9 @@ class LoginController:
         try:
             action_options = {
                 None: self.shutdown,
-                0: self.login,
-                1: self.register_client,
-                2: self.register_employer,
+                1: self.login,
+                2: self.register_client,
+                3: self.register_employer,
             }
             while True:
                 option_number = self.__login_screen.open_screen()
