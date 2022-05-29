@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from flanelinha_veloz.entity.abstractUsuario import Usuario
-from datetime import datetime as dt, timedelta
+from datetime import datetime as dt
 
 class UsuarioEmpresa(Usuario):
     @abstractmethod

@@ -1,12 +1,15 @@
 from flanelinha_veloz.entity.abstractUsuarioEmpresa import UsuarioEmpresa
+from flanelinha_veloz.view.abstract_boundary import AbstractBoundary
 from flanelinha_veloz.view.employees_boundary import EmployeesBoundary
 # from flanelinha_veloz.control.system_controller import SystemController
 from flanelinha_veloz.persistence.employeesDAO import EmployeesDAO
 from flanelinha_veloz.exceptions.employees_already_exists_in_the_system import employeesAlreadyExistsInTheSystem
+from datetime import datetime as dt
 
 class EmployeesController:
     def __init__(self) -> None:
-        # self.__system_controller = system_controller
+        # self.__system_controller = SystemController()
+        self.__abstract_boundary = AbstractBoundary
         self.__boundary = EmployeesBoundary()
         self.__employee_dao = EmployeesDAO()
 
@@ -17,16 +20,16 @@ class EmployeesController:
             acao = valores['acao']
             if acao == EmployeesBoundary.SUBMETER:
                 try:
-                    cpf = type(valores['cpf'])
-                    data_nascimento = type(valores['data_nascimento'])
-                    email = type(valores['email'])
-                    genero = type(valores['genero'])
-                    nome = type(valores['nome'])
-                    senha = type(valores['senha'])
-                    sobrenome = type(valores['sobrenome'])
-                    cargo = type(valores['cargo'])
-                    turno = type(valores['turno'])
-                    dias_trabalhados = type(valores['dias_trabalhados'])
+                    cpf = valores['cpf']
+                    data_nascimento = dt(valores['data_nascimento'])
+                    email = valores['email']
+                    genero = valores['genero']
+                    nome = valores['nome']
+                    senha = valores['senha']
+                    sobrenome = valores['sobrenome']
+                    cargo = valores['cargo']
+                    turno = valores['turno']
+                    dias_trabalhados = valores['dias_trabalhados']
                     print(cpf, data_nascimento, email, genero, nome, senha, sobrenome, cargo, turno, dias_trabalhados)
                     if nome is not None and nome != '':
                         if self.search_for_employee_by_cpf(cpf):
@@ -55,13 +58,13 @@ class EmployeesController:
     def employee_delete(self, employee: UsuarioEmpresa):
         if isinstance(employee, UsuarioEmpresa) and employee is not None and \
                 employee in self.__employee_dao.get_all():
-            self.__employee_dao.remove(employee.codigo)
+            self.__employee_dao.remove(employee.cpf)
     
     def search_for_employee_by_cpf(self, cpf: int):
         try:
             return self.__funcionario_dao.get(cpf)
         except KeyError:
-            self.__boundary.show_message('Nenhum funcionário encontrado!')
+            self.__boundary.show_message("Nenhum funcionário encontrado!")
 
     def open_screen(self):
         try:
@@ -70,9 +73,8 @@ class EmployeesController:
                 1: self.open_add_employees_screen,
             }
             while True:
-                # option_chosed = self.__boundary.tela_opcoes()
-                option_chosed = self.__boundary.cadastrar_usuario_empresa_tela()
+                option_chosed = self.__boundary.screen_options()
                 function_chosed = options[option_chosed]
                 function_chosed()
         except Exception as e:
-            self.__tela_aluno.show_message(str(e))
+            self.__boundary.show_message(str(e))

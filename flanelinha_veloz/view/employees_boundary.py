@@ -5,7 +5,7 @@ class EmployeesBoundary(AbstractBoundary):
     CANCELAR = 0
     SUBMETER = 1
 
-    def tela_opcoes(self):
+    def screen_options(self):
         layout = [
             [sg.Button("Cadastrar um novo usuário da empresa", key=1)],
             [sg.Button("Alterar dados de um usuário da empresa", key=2)],
