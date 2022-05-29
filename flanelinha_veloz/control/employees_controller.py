@@ -21,7 +21,6 @@ class EmployeesController:
             try:
                 valores = self.__boundary.registration_employees_screen()
                 acao = valores['acao']
-                print(valores)
                 if acao == EmployeesBoundary.SUBMIT:
                     cpf = valores['cpf']
                     if cpf is None or cpf == '':
@@ -42,12 +41,9 @@ class EmployeesController:
                                 raise PasswordDoesntMatchException
                     nome = valores['nome']
                     if nome is not None and nome != '':
-                    # cpf = valores['cpf']
                         data_nascimento = valores['data_nascimento']
                         cpf = int(cpf)
-                        # email = valores['email']
                         genero = valores['genero']
-                        # senha = valores['senha']
                         sobrenome = valores['sobrenome']
                         cargo = valores['cargo']
                         turno = valores['turno']
