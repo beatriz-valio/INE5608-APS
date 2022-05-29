@@ -4,8 +4,8 @@ from datetime import datetime as dt
 
 class Usuario(ABC):
     @abstractmethod
-    def __init__(self, cpf: str, data_nascimento: dt, email: str, genero: str, nome: str, senha: str, sobrenome: str):
-        if isinstance(cpf, str):
+    def __init__(self, cpf: int, data_nascimento: dt, email: str, genero: str, nome: str, senha: str, sobrenome: str):
+        if isinstance(cpf, int):
             self.__cpf = cpf
         if isinstance(data_nascimento, dt):
             self.__data_nascimento = data_nascimento
@@ -21,12 +21,12 @@ class Usuario(ABC):
             self.__sobrenome = sobrenome
 
     @property
-    def cpf(self) -> str:
+    def cpf(self) -> int:
         return self.__cpf
 
     @cpf.setter
-    def cpf(self, cpf: str):
-        if isinstance(cpf, str):
+    def cpf(self, cpf: int):
+        if isinstance(cpf, int):
             self.__cpf = cpf
 
     @property
