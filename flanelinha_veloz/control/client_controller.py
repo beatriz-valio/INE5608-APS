@@ -1,6 +1,5 @@
 from datetime import datetime as dt
 
-from flanelinha_veloz.control.system_controller import validate_cpf, validate_email, shutdown
 from flanelinha_veloz.entity.cliente import Cliente
 from flanelinha_veloz.exceptions.cpfNotValid import CPFNotValid
 from flanelinha_veloz.exceptions.emailDoesntMatchException import EmailDoesntMatchException
@@ -55,7 +54,7 @@ class ClientController:
                                 self.__client_dao.remove(logged_user['cpf'])
                                 self.client_registration(client)
                     elif action is None:
-                        shutdown()
+                        self.__system_controller.shutdown()
                     else:
                         break
             except ValueError:
@@ -77,7 +76,7 @@ class ClientController:
                     if self.check_if_already_exist(cpf):
                         raise UserAlreadyExistException
                     else:
-                        if not validate_cpf(str(cpf)):
+                        if not self.__system_controller.validate_cpf(str(cpf)):
                             raise CPFNotValid
                         else:
                             email = client_return['email']
@@ -85,7 +84,7 @@ class ClientController:
                             if email != c_email:
                                 raise EmailDoesntMatchException
                             else:
-                                if not validate_email(email):
+                                if not self.__system_controller.validate_email(email):
                                     raise EmailNotValid
                                 else:
                                     password = client_return['password']
@@ -100,7 +99,7 @@ class ClientController:
                                         client = Cliente(cpf, birth_date, email, gender, name, password, last_name)
                                         self.client_registration(client)
                 elif action is None:
-                    shutdown()
+                    self.__system_controller.shutdown()
                 else:
                     break
             except ValueError:
@@ -118,7 +117,7 @@ class ClientController:
     def open_screen(self):
         try:
             options = {
-                None: shutdown,
+                None: self.__system_controller.shutdown,
                 0: self.return_page,
                 1: self.open_create_screen,
                 2: self.open_update_screen,

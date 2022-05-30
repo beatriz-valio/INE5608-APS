@@ -69,7 +69,7 @@ class ClientBoundary(AbstractBoundary):
             [sg.Button("Alterar cliente logado", key=2)],
             [sg.Cancel('Voltar', key=ClientBoundary.CANCEL)]
         ]
-        window = sg.Window('Sistema UFSC - Gerência de Alunos',
+        window = sg.Window('Flanelinha Veloz',
                            size=(290, 290),
                            element_justification='c') \
             .Layout(layout)
