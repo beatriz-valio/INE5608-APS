@@ -1,4 +1,5 @@
 import PySimpleGUI as sg
+from flanelinha_veloz.entity.funcionario import Funcionario
 from flanelinha_veloz.view.abstract_boundary import AbstractBoundary
 
 class EmployeesBoundary(AbstractBoundary):
@@ -92,11 +93,10 @@ class EmployeesBoundary(AbstractBoundary):
             "dias_trabalhados": values["dias_trabalhados"]
         }
 
-# Fazer um para funcionário e outro para gestor
-    def editar_usuario_empresa_tela(self, alunos):
+    def editar_usuario_empresa_tela(self, funcionario: Funcionario):
         while True:
             lista_usuario_empresa = [
-                [sg.Text("\n".join(alunos))]
+                [sg.Text("\n".join(funcionario))]
             ]
             layout = [
                 [sg.Col(lista_usuario_empresa, scrollable=True)],
