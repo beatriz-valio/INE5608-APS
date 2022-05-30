@@ -23,7 +23,7 @@ class ClientController:
         try:
             return self.__client_dao.get(cpf)
         except KeyError:
-            self.__client_screen.show_message('Nenhum aluno encontrado!')
+            self.__client_screen.show_message('Nenhum cliente encontrado!')
 
     def open_update_screen(self):
         while True:
@@ -53,6 +53,10 @@ class ClientController:
                                 client = Cliente(cpf, birth_date, email, gender, name, password, last_name)
                                 self.__client_dao.remove(logged_user['cpf'])
                                 self.client_registration(client)
+                    elif action == ClientBoundary.DELETE:
+                        cpf = logged_user.cpf
+                        self.delete_client(cpf)
+                        break
                     elif action is None:
                         self.__system_controller.shutdown()
                     else:
@@ -61,6 +65,14 @@ class ClientController:
                 self.__client_screen.show_message('Digite os valores corretos!', 'red')
             except Exception as e:
                 self.__client_screen.show_message(str(e))
+
+    def delete_client(self, cpf: int):
+        try:
+            if self.check_if_already_exist(cpf):
+                self.__client_dao.remove(cpf)
+                self.__client_screen.show_message('Usuário deletado com sucesso!')
+        except KeyError:
+            self.__client_screen.show_message('Não foi possível deletar o usuário!')
 
     def check_if_already_exist(self, cpf: int):
         return self.__client_dao.get(cpf)
