@@ -1,3 +1,4 @@
+import hashlib
 from flanelinha_veloz.view.employees_boundary import EmployeesBoundary
 from flanelinha_veloz.entity.funcionario import Funcionario
 # from flanelinha_veloz.entity.gestor import Gestor
@@ -26,10 +27,11 @@ class EmployeesController:
         # TODO: Atualizar o CPF
         while True:
             try:
-                cpf = '09074322980'
+                cpf = '41754514987'
                 employees_cpf = self.search_for_employee_by_cpf(cpf)
                 if employees_cpf:
                     valores = self.__boundary.update_employees_screen(employees_cpf)
+                    senha_antiga = employees_cpf.senha
                     acao = valores['acao']
                     all_value_good = True
                     if acao == EmployeesBoundary.SUBMIT:
@@ -47,6 +49,10 @@ class EmployeesController:
                             confirmar_senha = valores['confirmar_senha']
                             if senha != confirmar_senha:
                                 raise PasswordDoesntMatchException
+                            if senha != senha_antiga:
+                                senha = senha.encode('utf-8', 'ignore')
+                                senha = hashlib.md5(senha)
+                                senha = senha.hexdigest()
                         if all_value_good: 
                             nome = valores['nome']
                             data_nascimento = dt.strptime(valores['data_nascimento'], "%d/%m/%Y")
@@ -58,7 +64,7 @@ class EmployeesController:
                             dias_trabalhados = valores['dias_trabalhados']
                             self.employee_delete(employees_cpf)
                             self.employee_registration(Funcionario(cpf, data_nascimento, email, genero, nome, senha, sobrenome, cargo, turno, dias_trabalhados))
-                            self.__boundary.show_message('Cadastramento concluído!')
+                            self.__boundary.show_message('Atualização salva com sucesso!', 'green')
                             break
                         else:
                             raise ValueError
@@ -66,13 +72,13 @@ class EmployeesController:
                         self.__system_controller.shutdown()    
                     elif acao == EmployeesBoundary.DELETE:
                         self.employee_delete(employees_cpf)
-                        self.__boundary.show_message('Funcionário deletado com sucesso!')
+                        self.__boundary.show_message('Funcionário deletado com sucesso!', 'green')
                     else:
                         break
                 else:
                     break
             except ValueError:
-                self.__boundary.show_message("Nenhum funcionário cadastrado.")
+                self.__boundary.show_message('Nenhum funcionário cadastrado.', 'red')
             except Exception as e:
                 self.__boundary.show_message(str(e))
 
@@ -116,8 +122,11 @@ class EmployeesController:
                         cargo = valores['cargo']
                         turno = valores['turno']
                         dias_trabalhados = valores['dias_trabalhados']
+                        senha = senha.encode('utf-8', 'ignore')
+                        senha = hashlib.md5(senha)
+                        senha = senha.hexdigest()
                         self.employee_registration(Funcionario(cpf, data_nascimento, email, genero, nome, senha, sobrenome, cargo, turno, dias_trabalhados))
-                        self.__boundary.show_message('Cadastramento concluído!')
+                        self.__boundary.show_message('Cadastramento concluído!', 'green')
                         break
                     else:
                         raise ValueError
@@ -126,7 +135,7 @@ class EmployeesController:
                 else:
                     break
             except ValueError:
-                self.__boundary.show_message("Existem campos em branco, confira!")
+                self.__boundary.show_message('Existem campos em branco, confira!', 'red')
             except Exception as e:
                 self.__boundary.show_message(str(e))
 
@@ -145,7 +154,7 @@ class EmployeesController:
             cpf = int(cpf)
             return self.__employee_dao.get(cpf)
         except KeyError:
-            self.__boundary.show_message("Nenhum funcionário encontrado!")
+            self.__boundary.show_message('Nenhum funcionário encontrado!', 'red')
 
     def return_page(self):
         self.__system_controller.open_login_screen()
