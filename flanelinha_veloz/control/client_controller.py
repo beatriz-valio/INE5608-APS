@@ -21,9 +21,6 @@ class ClientController:
     def client_dao(self):
         return self.__client_dao
 
-    def return_page(self):
-        self.__system_controller.open_login_screen()
-
     def search_client(self, cpf: int):
         try:
             return self.__client_dao.get(cpf)
@@ -65,7 +62,7 @@ class ClientController:
                     elif action == ClientBoundary.DELETE:
                         cpf = logged_user.cpf
                         self.delete_client(cpf)
-                        break
+                        self.____system_controller.open_login_screen()
                     elif action is None:
                         self.__system_controller.shutdown()
                     else:

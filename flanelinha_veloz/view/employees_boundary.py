@@ -1,7 +1,9 @@
 import PySimpleGUI as sg
-from flanelinha_veloz.entity.funcionario import Funcionario
-from flanelinha_veloz.view.abstract_boundary import AbstractBoundary
 from datetime import datetime as dt
+
+from flanelinha_veloz.entity.funcionario import Funcionario
+from flanelinha_veloz.entity.gestor import Gestor
+from flanelinha_veloz.view.abstract_boundary import AbstractBoundary
 
 
 class EmployeesBoundary(AbstractBoundary):
@@ -85,7 +87,7 @@ class EmployeesBoundary(AbstractBoundary):
             "dias_trabalhados": values["dias_trabalhados"]
         }
 
-    def update_employees_screen(self, employee: Funcionario):
+    def update_employees_screen(self, employee: Funcionario or Gestor):
         layout = [
             [sg.Text("Nome: * ", size=EmployeesBoundary.TEXT_SIZE),
              sg.In(default_text= employee.nome, key="nome", size=EmployeesBoundary.INPUT_SIZE)],
