@@ -8,6 +8,7 @@ class ClientBoundary(AbstractBoundary):
     CANCEL = 0
     CREATE = 1
     UPDATE = 2
+    DELETE = 3
     GENDER_OPTIONS = ['Masculino', 'Feminino', 'Outro']
 
     def open_screen(self):
@@ -51,10 +52,11 @@ class ClientBoundary(AbstractBoundary):
             [sg.Text('Data de nascimento: *')],
             [sg.CalendarButton(target='birth_date', button_text="Calendário", format="%d/%m/%Y", ),
              sg.In(key="birth_date", default_text=client.data_nascimento)],
-            [sg.Cancel('Voltar', key=ClientBoundary.CANCEL), sg.Submit('Atualizar', key=ClientBoundary.CREATE)]
+            [sg.Cancel('Voltar', key=ClientBoundary.CANCEL), sg.Submit('Atualizar', key=ClientBoundary.CREATE)],
+            [sg.Text('Deseja excluir seu cadastro?'), sg.Submit('Excluir', key=ClientBoundary.DELETE)]
         ]
         window = sg.Window('Flanelinha Veloz - Perfil',
-                           size=(320, 320)) \
+                           size=(360, 360)) \
             .Layout(layout)
         button, values = window.Read()
         window.close()
