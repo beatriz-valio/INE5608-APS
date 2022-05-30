@@ -2,7 +2,7 @@ import PySimpleGUI as sg
 import os
 from flanelinha_veloz.view.abstract_boundary import AbstractBoundary
 
-class LoginBoundary:
+class LoginBoundary(AbstractBoundary):
     ENTRAR = 1
     REGISTER_CLIENT = 2
     REGISTER_EMPLOYER = 3
@@ -22,6 +22,9 @@ class LoginBoundary:
 
         window = sg.Window('Flanelinha Veloz - Realize seu login', layout=layout, size=(900, 500), element_justification="c")
 
-        button, value = window.Read()
+        button, values = window.Read()
         window.close()
-        return button
+        return {
+            'action': button,
+            'client': values
+        }
