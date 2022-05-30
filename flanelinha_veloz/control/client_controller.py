@@ -17,7 +17,7 @@ class ClientController:
         self.__system_controller = system_controller
 
     @property
-    def clientDAO(self):
+    def client_dao(self):
         return self.__client_dao
 
     def return_page(self):
@@ -32,8 +32,7 @@ class ClientController:
     def open_update_screen(self):
         while True:
             try:
-                # TODO: Atualizar o CPF com base no que a Bea retornar para nós do usuário logado.
-                logged_user = self.search_client(12023077958)
+                logged_user = self.__system_controller.logged_user
                 if logged_user:
                     client_values = self.__client_screen.open_update_screen(logged_user)
                     action = client_values['action']
@@ -129,18 +128,3 @@ class ClientController:
             self.__client_screen.show_message('Cadastrado com sucesso!', 'green')
         else:
             self.__client_screen.show_message('Dados incorretos!', 'red')
-
-    def open_screen(self):
-        try:
-            options = {
-                None: self.__system_controller.shutdown,
-                0: self.return_page,
-                1: self.open_create_screen,
-                2: self.open_update_screen,
-            }
-            while True:
-                selected_option = self.__client_screen.default_screen()
-                selected_function = options[selected_option]
-                selected_function()
-        except Exception as e:
-            self.__client_screen.show_message(str(e))

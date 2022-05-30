@@ -15,37 +15,32 @@ class LoginController:
 
     def check_email_in_clients(self, email, password):
         client_controller = self.__system_controller.client_controller
-        for client in client_controller.clientDAO.get_all():
+        for client in client_controller.client_dao.get_all():
             if client.email == email and client.senha == password:
-                self.__system_controller.menu_controller.open_menu_client()
                 self.save_user(client)
+                self.__system_controller.menu_controller.open_menu_client()
 
     def check_email_in_employees(self, email, password):
         employees_controller = self.__system_controller.employees_controller
         for employee in employees_controller.employeeDAO.get_all():
             if employee.email == email and employee.senha == password:
-                if employee.cargo == 'Gestor':
-                    print('Entrou um gestor')
-                    self.__system_controller.menu_controller.open_menu_manager()
-                    return employee.cargo
-                elif employee.cargo == 'Funcionário':
-                    print('Entrou um funcionário')
-                    self.__system_controller.menu_controller.open_menu_employer()
-                    return employee.cargo
                 self.save_user(employee)
+                if employee.cargo == 'Gestor':
+                    self.__system_controller.menu_controller.open_menu_manager()
+                elif employee.cargo == 'Funcionário':
+                    self.__system_controller.menu_controller.open_menu_employer()
 
     def login(self, client):
         self.check_email_in_clients(client['email'], client['senha'])
-        self.check_email_in_employees(client['email'], client['senha'])
         self.check_email_in_employees(client['email'], client['senha'])
         if self.__logged_user is None:
             self.__login_screen.show_message('Dados incorretos!')
 
     def register_client(self):
-        self.__system_controller.client_controller.open_screen()
+        self.__system_controller.client_controller.open_create_screen()
 
     def register_employer(self):
-        self.__system_controller.employees_controller.open_screen()
+        self.__system_controller.employees_controller.open_add_employees_screen()
 
     def open_screen(self):
         try:
