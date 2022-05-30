@@ -14,25 +14,29 @@ class LoginController:
 
     def check_email_in_clients(self, email, password):
         client_controller = self.__system_controller.client_controller
-        print(client_controller.clientDAO.get_all())
+        # print(client_controller.clientDAO.get_all())
         for client in client_controller.clientDAO.get_all():
             if client.email == email and client.senha == password:
                 print('Entrou um cliente')
                 # Abrir o menu de cliente
+                self.__menu_controller.open_menu_client()
                 self.save_user(client)
                 break
 
     def check_email_in_employees(self, email, password):
         employees_controller = self.__system_controller.employees_controller
-        for employee in employees_controller.employeesDAO.get_all():
+        print(employees_controller.employeesDAO.get_all())
+        for employee in employees_controller.employeeDAO.get_all():
             if employee.email == email and employee.senha == password:
                 if employee.cargo == 'Gestor':
                     print('Entrou um gestor')
                     # Abrir menu de gestor
+                    self.__menu_controller.open_menu_manager()
                     break
                 if employee.cargo == 'Funcionário':
                     print('Entrou um funcionário')
                     # Abrir menu de funcionário
+                    self.__menu_controller.open_menu_employer()
                     break
                 self.save_user(employee)
 
@@ -41,9 +45,10 @@ class LoginController:
 
     def login(self, client):
         try:
+            # Login Cliente
             self.check_email_in_clients(client['email'], client['senha'])
+            # Login Funcionario/Gestor
             self.check_email_in_employees(client['email'], client['senha'])
-            self.__menu_controller.open_menu_client()
         except Exception as e:
             self.__login_screen.show_message('Dados incorretos!')
 
