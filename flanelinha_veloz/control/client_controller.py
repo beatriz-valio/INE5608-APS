@@ -1,4 +1,5 @@
 from datetime import datetime as dt
+import hashlib
 
 from flanelinha_veloz.entity.cliente import Cliente
 from flanelinha_veloz.exceptions.cpfNotValidException import CPFNotValidException
@@ -36,6 +37,7 @@ class ClientController:
                 logged_user = self.search_client(12023077958)
                 if logged_user:
                     client_values = self.__client_screen.open_update_screen(logged_user)
+                    old_password = logged_user.senha
                     action = client_values['action']
                     if action == ClientBoundary.UPDATE:
                         client_return = client_values['client']
@@ -49,6 +51,10 @@ class ClientController:
                             c_password = client_return['c-password']
                             if password != c_password:
                                 raise PasswordDoesntMatchException
+                            if password != old_password:
+                                password = password.encode('utf-8', 'ignore')
+                                password = hashlib.md5(password)
+                                password = password.hexdigest()
                             else:
                                 birth_date = client_return['birth_date']
                                 gender = client_return['gender']
@@ -108,6 +114,9 @@ class ClientController:
                                     if password != c_password:
                                         raise PasswordDoesntMatchException
                                     else:
+                                        password = password.encode('utf-8', 'ignore')
+                                        password = hashlib.md5(password)
+                                        password = password.hexdigest()
                                         birth_date = dt.strptime(client_return['birth_date'], "%d/%m/%Y")
                                         gender = client_return['gender']
                                         name = client_return['name']
