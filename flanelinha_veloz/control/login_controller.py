@@ -22,8 +22,8 @@ class LoginController:
             password_md5 = hashlib.md5(password_md5)
             password_md5 = password_md5.hexdigest()
             if client.email == email and client.senha == password_md5:
-                self.__system_controller.menu_controller.open_menu_client()
                 self.save_user(client)
+                self.__system_controller.menu_controller.open_menu_client()
 
     def check_email_in_employees(self, email, password):
         employees_controller = self.__system_controller.employees_controller
@@ -40,7 +40,6 @@ class LoginController:
 
     def login(self, client):
         self.check_email_in_clients(client['email'], client['senha'])
-        self.check_email_in_employees(client['email'], client['senha'])
         self.check_email_in_employees(client['email'], client['senha'])
         if self.__logged_user is None:
             self.__login_screen.show_message('Dados incorretos!')

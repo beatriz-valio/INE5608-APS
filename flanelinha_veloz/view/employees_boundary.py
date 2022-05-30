@@ -1,7 +1,10 @@
 import PySimpleGUI as sg
-from flanelinha_veloz.entity.funcionario import Funcionario
-from flanelinha_veloz.view.abstract_boundary import AbstractBoundary
 from datetime import datetime as dt
+
+from flanelinha_veloz.entity.funcionario import Funcionario
+from flanelinha_veloz.entity.gestor import Gestor
+from flanelinha_veloz.view.abstract_boundary import AbstractBoundary
+
 
 class EmployeesBoundary(AbstractBoundary):
     CANCEL = 0
@@ -12,28 +15,6 @@ class EmployeesBoundary(AbstractBoundary):
     WEEKDAYS_OPTIONS = ['Domingo', 'Segunda-feira', 'Terça-feira','Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado']
     TEXT_SIZE = 20
     INPUT_SIZE = 70
-
-    def screen_options(self):
-        layout = [
-            [sg.Button("Cadastrar um novo usuário da empresa",
-                key=1,
-                size=40)],
-            [sg.Button("Alterar dados de um usuário da empresa",
-                key=2,
-                size=40)],
-            [sg.Cancel("Voltar",
-                key=0,
-                size=40)]
-        ]
-        window = sg.Window("Flanelinha Veloz - Funcionário/Gestor",
-                           size=(900, 550),
-                           element_justification="c",
-                           resizable=True,
-                           margins=(200, 200)) \
-            .Layout(layout)
-        button, value = window.Read()
-        window.close()
-        return button
 
     def registration_employees_screen(self):
         layout = [
@@ -106,7 +87,7 @@ class EmployeesBoundary(AbstractBoundary):
             "dias_trabalhados": values["dias_trabalhados"]
         }
 
-    def update_employees_screen(self, employee: Funcionario):
+    def update_employees_screen(self, employee: Funcionario or Gestor):
         layout = [
             [sg.Text("Nome: * ", size=EmployeesBoundary.TEXT_SIZE),
              sg.In(default_text= employee.nome, key="nome", size=EmployeesBoundary.INPUT_SIZE)],

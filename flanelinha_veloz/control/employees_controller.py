@@ -1,16 +1,17 @@
 import hashlib
+from datetime import datetime as dt
+
 from flanelinha_veloz.view.employees_boundary import EmployeesBoundary
 from flanelinha_veloz.entity.funcionario import Funcionario
-# from flanelinha_veloz.entity.gestor import Gestor
+from flanelinha_veloz.entity.gestor import Gestor
+
+from flanelinha_veloz.persistence.employeesDAO import EmployeesDAO
 from flanelinha_veloz.exceptions.cpfNotValidException import CPFNotValidException
 from flanelinha_veloz.exceptions.emailDoesntMatchException import EmailDoesntMatchException
 from flanelinha_veloz.exceptions.emailNotValidException import EmailNotValidException
 from flanelinha_veloz.exceptions.employeesNotWritedException import EmployeesNotWritedException
 from flanelinha_veloz.exceptions.passwordDoesntMatchException import PasswordDoesntMatchException
-from flanelinha_veloz.persistence.employeesDAO import EmployeesDAO
-
 from flanelinha_veloz.exceptions.employeesAlreadyExistsInTheSystemException import EmployeesAlreadyExistsInTheSystemException
-from datetime import datetime as dt
 
 
 class EmployeesController:
@@ -24,10 +25,9 @@ class EmployeesController:
         return self.__employee_dao
 
     def open_edit_employees_screen(self):
-        # TODO: Atualizar o CPF
         while True:
             try:
-                cpf = '41754514987'
+                cpf = self.__system_controller.logged_user.cpf
                 employees_cpf = self.search_for_employee_by_cpf(cpf)
                 if employees_cpf:
                     valores = self.__boundary.update_employees_screen(employees_cpf)
@@ -63,9 +63,16 @@ class EmployeesController:
                             turno = valores['turno']
                             dias_trabalhados = valores['dias_trabalhados']
                             self.employee_delete(employees_cpf)
-                            self.employee_registration(Funcionario(cpf, data_nascimento, email, genero, nome, senha, sobrenome, cargo, turno, dias_trabalhados))
-                            self.__boundary.show_message('Atualização salva com sucesso!', 'green')
-                            break
+                            if cargo == 'Gestor':
+                                obj = Gestor(cpf, data_nascimento, email, genero, nome, senha, sobrenome, cargo, turno, dias_trabalhados)
+                                self.employee_registration(obj)
+                                self.__boundary.show_message('Atualização salva com sucesso!', 'green')
+                                self.__system_controller.menu_controller.open_menu_manager()                        
+                            else: 
+                                obj = Funcionario(cpf, data_nascimento, email, genero, nome, senha, sobrenome, cargo, turno, dias_trabalhados)
+                                self.employee_registration(obj)
+                                self.__boundary.show_message('Atualização salva com sucesso!', 'green')
+                                self.__system_controller.menu_controller.open_menu_employer()                        
                         else:
                             raise ValueError
                     elif acao is None:
@@ -73,6 +80,7 @@ class EmployeesController:
                     elif acao == EmployeesBoundary.DELETE:
                         self.employee_delete(employees_cpf)
                         self.__boundary.show_message('Funcionário deletado com sucesso!', 'green')
+                        self.__system_controller.open_login_screen()
                     else:
                         break
                 else:
@@ -125,7 +133,11 @@ class EmployeesController:
                         senha = senha.encode('utf-8', 'ignore')
                         senha = hashlib.md5(senha)
                         senha = senha.hexdigest()
-                        self.employee_registration(Funcionario(cpf, data_nascimento, email, genero, nome, senha, sobrenome, cargo, turno, dias_trabalhados))
+                        if cargo == 'Gestor':
+                            obj = Gestor(cpf, data_nascimento, email, genero, nome, senha, sobrenome, cargo, turno, dias_trabalhados)
+                        else: 
+                            obj = Funcionario(cpf, data_nascimento, email, genero, nome, senha, sobrenome, cargo, turno, dias_trabalhados)
+                        self.employee_registration(obj)
                         self.__boundary.show_message('Cadastramento concluído!', 'green')
                         break
                     else:
@@ -139,13 +151,13 @@ class EmployeesController:
             except Exception as e:
                 self.__boundary.show_message(str(e))
 
-    def employee_registration(self, employee: Funcionario):
-        if isinstance(employee, Funcionario) and employee is not None and \
+    def employee_registration(self, employee):
+        if employee is not None and \
                 employee not in self.__employee_dao.get_all():
             self.__employee_dao.add(employee)
 
-    def employee_delete(self, employee: Funcionario):
-        if isinstance(employee, Funcionario) and employee is not None and \
+    def employee_delete(self, employee):
+        if employee is not None and \
                 employee in self.__employee_dao.get_all():
             self.__employee_dao.remove(employee.cpf)
 
@@ -155,21 +167,3 @@ class EmployeesController:
             return self.__employee_dao.get(cpf)
         except KeyError:
             self.__boundary.show_message('Nenhum funcionário encontrado!', 'red')
-
-    def return_page(self):
-        self.__system_controller.open_login_screen()
-
-    def open_screen(self):
-        try:
-            options = {
-                None: self.__system_controller.shutdown,
-                0: self.return_page,
-                1: self.open_add_employees_screen,
-                2: self.open_edit_employees_screen,
-            }
-            while True:
-                selected_option = self.__boundary.screen_options()
-                selected_function = options[selected_option]
-                selected_function()
-        except Exception as e:
-            self.__boundary.show_message(str(e))
