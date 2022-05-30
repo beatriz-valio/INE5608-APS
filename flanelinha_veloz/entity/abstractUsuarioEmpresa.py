@@ -10,6 +10,8 @@ class UsuarioEmpresa(Usuario):
             self.__cargo = cargo
         if isinstance(turno, list):
             self.__turno = turno
+        if isinstance(dias_trabalhados, list):
+            self.__dias_trabalhados = dias_trabalhados
 
     @property
     def cargo(self) -> str:
