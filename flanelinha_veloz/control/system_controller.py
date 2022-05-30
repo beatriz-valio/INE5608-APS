@@ -1,6 +1,7 @@
 from flanelinha_veloz.control.client_controller import ClientController
 from flanelinha_veloz.control.employees_controller import EmployeesController
 from flanelinha_veloz.control.login_controller import LoginController
+from flanelinha_veloz.control.menu_controller import MenuController
 from flanelinha_veloz.entity.abstractUsuario import Usuario
 
 
@@ -10,7 +11,8 @@ class SystemController:
         self.__login_controller = LoginController(self)
         self.__client_controller = ClientController(self)
         self.__employees_controller = EmployeesController(self)
-        self.__logged_user: Usuario
+        self.__menu_controller = MenuController(self)
+        self.__logged_user: Usuario or None = None
 
     @property
     def logged_user(self) -> Usuario:
@@ -18,6 +20,10 @@ class SystemController:
 
     def set_logged_user(self, user: Usuario):
         self.__logged_user = user
+
+    @property
+    def menu_controller(self):
+        return self.__menu_controller
 
     @property
     def client_controller(self):

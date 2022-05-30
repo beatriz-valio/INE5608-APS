@@ -1,67 +1,59 @@
 from flanelinha_veloz.view.menu_boundary import MenuBoundary
 
+
 class MenuController:
 
-    def __init__(self):
+    def __init__(self, system_controller):
         self.__menu_screen = MenuBoundary()
-        # self.__client_controller = ClientController()
-        # self.__employer_controller = EmployeesController()
+        self.__system_controller = system_controller
 
+    def see_client_profile(self):
+        self.__system_controller.client_controller.open_update_screen()
 
-    def ver_perfil(self):
-        # self.__employer_controller.open_menu_client();
-        return self.__menu_screen.open_menu_client()
-
-    def mudar_perfil(self):
-            # self.__employer_controller.open_menu_client();
-        return self.__menu_screen.open_menu_client()
-
-    def agendar_lavagem(self):
-            # self.__employer_controller.open_menu_client();
-        return self.__menu_screen.open_menu_client()
+    def see_employees_profile(self):
+        self.__system_controller.employees_controller.open_edit_employees_screen()
 
     def open_menu_client(self):
         try:
             action_options = {
                 None: self.__system_controller.shutdown,
-                # 1: self.ver_perfil,
-                # 2: self.mudar_perfil,
-                # 3: self.agendar_lavagem,
+                0: self.__system_controller.shutdown,
+                1: self.see_client_profile
             }
             while True:
                 option_number = self.__menu_screen.open_menu_client()
                 selected_function = action_options[option_number]
                 selected_function()
         except Exception as e:
+            # TODO: Verificar porque o show message não está sendo possível utilizar
             print(e)
 
     def open_menu_manager(self):
         try:
             action_options = {
                 None: self.__system_controller.shutdown,
-                # 0: self.sair,
-                # 1: self.ver_perfil,
-                # 2: self.mudar_perfil,
-                # 4: self.cadastrar_tipo_serv,
+                0: self.__system_controller.shutdown,
+                1: self.see_employees_profile,
             }
             while True:
                 option_number = self.__menu_screen.open_menu_manager()
                 selected_function = action_options[option_number]
                 selected_function()
         except Exception as e:
+            # TODO: Verificar porque o show message não está sendo possível utilizar
             print(e)
 
     def open_menu_employer(self):
         try:
             action_options = {
                 None: self.__system_controller.shutdown,
-                # 0: self.sair,
-                # 1: self.ver_perfil,
-                # 2: self.mudar_perfil,
+                0: self.__system_controller.shutdown,
+                1: self.see_employees_profile,
             }
             while True:
                 option_number = self.__menu_screen.open_menu_employer()
                 selected_function = action_options[option_number]
                 selected_function()
         except Exception as e:
+            # TODO: Verificar porque o show message não está sendo possível utilizar
             print(e)
