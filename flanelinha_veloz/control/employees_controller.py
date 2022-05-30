@@ -20,23 +20,55 @@ class EmployeesController:
 
     def open_edit_employees_screen(self):
         # TODO: Atualizar o CPF
-        cpf = '09074322980'
         while True:
             try:
+                cpf = '09074322980'
                 employees_cpf = self.search_for_employee_by_cpf(cpf)
                 if employees_cpf:
-                    valores = self.__boundary.registration_employees_screen()
+                    valores = self.__boundary.update_employees_screen(employees_cpf)
                     acao = valores['acao']
+                    all_value_good = True
                     if acao == EmployeesBoundary.SUBMIT:
-                        pass
+                        for value in valores:
+                            if valores[value] is None or valores[value] == '': 
+                                all_value_good = False
+                        email = valores['email']
+                        confirmar_email = valores['confirmar_email']
+                        if email != confirmar_email:
+                            raise EmailDoesntMatchException
+                        elif not self.__system_controller.validate_email(email):
+                            raise EmailNotValidException
+                        else:
+                            senha = valores['senha']
+                            confirmar_senha = valores['confirmar_senha']
+                            if senha != confirmar_senha:
+                                raise PasswordDoesntMatchException
+                        if all_value_good: 
+                            nome = valores['nome']
+                            data_nascimento = dt.strptime(valores['data_nascimento'], "%d/%m/%Y")
+                            cpf = int(cpf)
+                            genero = valores['genero']
+                            sobrenome = valores['sobrenome']
+                            cargo = valores['cargo']
+                            turno = valores['turno']
+                            dias_trabalhados = valores['dias_trabalhados']
+                            self.employee_delete(employees_cpf)
+                            self.employee_registration(Funcionario(cpf, data_nascimento, email, genero, nome, senha, sobrenome, cargo, turno, dias_trabalhados))
+                            self.__boundary.show_message('Cadastramento concluído!')
+                            break
+                        else:
+                            raise ValueError
                     elif acao is None:
                         self.__system_controller.shutdown()    
+                    elif acao == EmployeesBoundary.DELETE:
+                        self.employee_delete(employees_cpf)
+                        self.__boundary.show_message('Funcionário deletado com sucesso!')
                     else:
                         break
                 else:
                     break
             except ValueError:
-                self.__boundary.show_message("Fundionário não cadastrado.")
+                self.__boundary.show_message("Nenhum funcionário cadastrado.")
             except Exception as e:
                 self.__boundary.show_message(str(e))
 
@@ -110,3 +142,21 @@ class EmployeesController:
             return self.__employee_dao.get(cpf)
         except KeyError:
             self.__boundary.show_message("Nenhum funcionário encontrado!")
+
+    def return_page(self):
+        self.__system_controller.open_login_screen()
+
+    def open_screen(self):
+        try:
+            options = {
+                None: self.__system_controller.shutdown,
+                0: self.return_page,
+                1: self.open_add_employees_screen,
+                2: self.open_edit_employees_screen,
+            }
+            while True:
+                selected_option = self.__boundary.screen_options()
+                selected_function = options[selected_option]
+                selected_function()
+        except Exception as e:
+            self.__boundary.show_message(str(e))

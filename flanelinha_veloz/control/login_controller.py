@@ -52,7 +52,7 @@ class LoginController:
         self.__system_controller.client_controller.open_screen()
 
     def register_employer(self):
-        self.__system_controller.employees_controller.open_add_employees_screen()
+        self.__system_controller.employees_controller.open_screen()
 
     def open_screen(self):
         try:
