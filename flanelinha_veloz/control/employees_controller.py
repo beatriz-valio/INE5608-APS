@@ -18,10 +18,7 @@ class EmployeesController:
         self.__employee_dao = EmployeesDAO()
 
     def open_edit_employees_screen(self):
-        # pprint(vars(self.__employee_dao.get(cpf)))
-        cpf = int('09074322980')
-        a = self.__employee_dao.get(cpf)
-        print(a.data_nascimento)
+        pass
 
     def open_add_employees_screen(self):
         while True:
