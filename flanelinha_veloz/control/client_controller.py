@@ -16,6 +16,10 @@ class ClientController:
         self.__client_dao = ClienteDAO()
         self.__system_controller = system_controller
 
+    @property
+    def clientDAO(self):
+        return self.__client_dao
+
     def return_page(self):
         self.__system_controller.open_login_screen()
 

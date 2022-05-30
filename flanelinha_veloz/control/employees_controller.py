@@ -18,6 +18,10 @@ class EmployeesController:
         self.__boundary = EmployeesBoundary()
         self.__employee_dao = EmployeesDAO()
 
+    @property
+    def employeeDAO(self):
+        return self.__employee_dao
+
     def open_edit_employees_screen(self):
         # TODO: Atualizar o CPF
         while True:
