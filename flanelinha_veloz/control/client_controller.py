@@ -1,15 +1,14 @@
 from datetime import datetime as dt
 
+from flanelinha_veloz.control.system_controller import validate_cpf, validate_email, shutdown
 from flanelinha_veloz.entity.cliente import Cliente
+from flanelinha_veloz.exceptions.cpfNotValid import CPFNotValid
 from flanelinha_veloz.exceptions.emailDoesntMatchException import EmailDoesntMatchException
+from flanelinha_veloz.exceptions.emailNotValid import EmailNotValid
 from flanelinha_veloz.exceptions.passwordDoesntMatchException import PasswordDoesntMatchException
 from flanelinha_veloz.exceptions.userAlreadyExistException import UserAlreadyExistException
 from flanelinha_veloz.persistence.clienteDAO import ClienteDAO
 from flanelinha_veloz.view.client_boundary import ClientBoundary
-
-
-def shutdown():
-    exit(0)
 
 
 class ClientController:
@@ -78,22 +77,28 @@ class ClientController:
                     if self.check_if_already_exist(cpf):
                         raise UserAlreadyExistException
                     else:
-                        email = client_return['email']
-                        c_email = client_return['c-email']
-                        if email != c_email:
-                            raise EmailDoesntMatchException
+                        if not validate_cpf(str(cpf)):
+                            raise CPFNotValid
                         else:
-                            password = client_return['password']
-                            c_password = client_return['c-password']
-                            if password != c_password:
-                                raise PasswordDoesntMatchException
+                            email = client_return['email']
+                            c_email = client_return['c-email']
+                            if email != c_email:
+                                raise EmailDoesntMatchException
                             else:
-                                birth_date = dt.strptime(client_return['birth_date'], "%d/%m/%Y")
-                                gender = client_return['gender']
-                                name = client_return['name']
-                                last_name = client_return['last_name']
-                                client = Cliente(cpf, birth_date, email, gender, name, password, last_name)
-                                self.client_registration(client)
+                                if not validate_email(email):
+                                    raise EmailNotValid
+                                else:
+                                    password = client_return['password']
+                                    c_password = client_return['c-password']
+                                    if password != c_password:
+                                        raise PasswordDoesntMatchException
+                                    else:
+                                        birth_date = dt.strptime(client_return['birth_date'], "%d/%m/%Y")
+                                        gender = client_return['gender']
+                                        name = client_return['name']
+                                        last_name = client_return['last_name']
+                                        client = Cliente(cpf, birth_date, email, gender, name, password, last_name)
+                                        self.client_registration(client)
                 elif action is None:
                     shutdown()
                 else:

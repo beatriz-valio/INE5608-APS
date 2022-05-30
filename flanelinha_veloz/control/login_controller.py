@@ -1,8 +1,5 @@
+from flanelinha_veloz.control.system_controller import shutdown
 from flanelinha_veloz.view.login_boundary import LoginBoundary
-
-
-def shutdown():
-    exit(0)
 
 
 class LoginController:
