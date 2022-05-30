@@ -24,10 +24,9 @@ class EmployeesController:
         return self.__employee_dao
 
     def open_edit_employees_screen(self):
-        # TODO: Atualizar o CPF
         while True:
             try:
-                cpf = '41754514987'
+                cpf = self.__system_controller.logged_user.cpf
                 employees_cpf = self.search_for_employee_by_cpf(cpf)
                 if employees_cpf:
                     valores = self.__boundary.update_employees_screen(employees_cpf)
@@ -155,21 +154,3 @@ class EmployeesController:
             return self.__employee_dao.get(cpf)
         except KeyError:
             self.__boundary.show_message('Nenhum funcionário encontrado!', 'red')
-
-    def return_page(self):
-        self.__system_controller.open_login_screen()
-
-    def open_screen(self):
-        try:
-            options = {
-                None: self.__system_controller.shutdown,
-                0: self.return_page,
-                1: self.open_add_employees_screen,
-                2: self.open_edit_employees_screen,
-            }
-            while True:
-                selected_option = self.__boundary.screen_options()
-                selected_function = options[selected_option]
-                selected_function()
-        except Exception as e:
-            self.__boundary.show_message(str(e))
