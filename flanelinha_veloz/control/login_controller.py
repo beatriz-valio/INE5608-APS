@@ -21,28 +21,33 @@ class LoginController:
                 # Login Cliente
                 self.save_user(client)
                 return True
-            else:
-                return False
+        else:
+            return False
 
     def check_email_in_employees(self, email, password):
         employees_controller = self.__system_controller.employees_controller
+        # while True:
         for employee in employees_controller.employeeDAO.get_all():
             if employee.email == email and employee.senha == password:
-                print(employee.cargo)
                 if employee.cargo == 'Gestor':
                     print('Entrou um gestor')
                     # Login Gestor
                     return employee.cargo
-                if employee.cargo == 'Funcionário':
+                elif employee.cargo == 'Funcionário':
                     print('Entrou um funcionário')
                     # Login Funcionario
                     return employee.cargo
                 self.save_user(employee)
-            else:
-                return False
+            # else:
+            #     return False
+            #a@a.com funcionario
+            #b@b.com gestor
+            #c@c.com cliente
 
     def login(self, client):
         try:
+            # print(self.check_email_in_clients(client['email'], client['senha']))
+            # print(self.check_email_in_employees(client['email'], client['senha']))
             # Login Cliente
             if self.check_email_in_clients(client['email'], client['senha']) == True:
                 self.__menu_controller.open_menu_client()
