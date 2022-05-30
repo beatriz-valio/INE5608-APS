@@ -1,3 +1,4 @@
+import hashlib
 from flanelinha_veloz.entity.abstractUsuario import Usuario
 from flanelinha_veloz.view.login_boundary import LoginBoundary
 
@@ -16,20 +17,24 @@ class LoginController:
     def check_email_in_clients(self, email, password):
         client_controller = self.__system_controller.client_controller
         for client in client_controller.clientDAO.get_all():
-            if client.email == email and client.senha == password:
+            password_md5 = password.encode('utf-8', 'ignore')
+            password_md5 = hashlib.md5(password_md5)
+            password_md5 = password_md5.hexdigest()
+            if client.email == email and client.senha == password_md5:
                 self.__system_controller.menu_controller.open_menu_client()
                 self.save_user(client)
 
     def check_email_in_employees(self, email, password):
         employees_controller = self.__system_controller.employees_controller
         for employee in employees_controller.employeeDAO.get_all():
-            if employee.email == email and employee.senha == password:
+            password_md5 = password.encode('utf-8', 'ignore')
+            password_md5 = hashlib.md5(password_md5)
+            password_md5 = password_md5.hexdigest()
+            if employee.email == email and employee.senha == password_md5:
                 if employee.cargo == 'Gestor':
-                    print('Entrou um gestor')
                     self.__system_controller.menu_controller.open_menu_manager()
                     return employee.cargo
                 elif employee.cargo == 'Funcionário':
-                    print('Entrou um funcionário')
                     self.__system_controller.menu_controller.open_menu_employer()
                     return employee.cargo
                 self.save_user(employee)
