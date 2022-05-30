@@ -4,7 +4,7 @@ import os
 import flanelinha_veloz.view.abstract_boundary as AbstractBoundary
 
 class MenuBoundary:
-    SHUTDOWN = 0
+    # SHUTDOWN = 0
     # VER_PERFIL = 1
     # MUDAR_PERFIL = 2
     # AGENDAR_LAVAGEM = 3

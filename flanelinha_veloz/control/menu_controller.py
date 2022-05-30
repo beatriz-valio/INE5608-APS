@@ -20,13 +20,10 @@ class MenuController:
             # self.__employer_controller.open_menu_client();
         return self.__menu_screen.open_menu_client()
 
-    def shutdown(self):
-        exit(0)
-
     def open_menu_client(self):
         try:
             action_options = {
-                # None: self.shutdown,
+                None: self.__system_controller.shutdown,
                 # 1: self.ver_perfil,
                 # 2: self.mudar_perfil,
                 # 3: self.agendar_lavagem,
@@ -41,7 +38,7 @@ class MenuController:
     def open_menu_manager(self):
         try:
             action_options = {
-                None: self.shutdown,
+                None: self.__system_controller.shutdown,
                 # 0: self.sair,
                 # 1: self.ver_perfil,
                 # 2: self.mudar_perfil,
@@ -57,7 +54,7 @@ class MenuController:
     def open_menu_employer(self):
         try:
             action_options = {
-                None: self.shutdown,
+                None: self.__system_controller.shutdown,
                 # 0: self.sair,
                 # 1: self.ver_perfil,
                 # 2: self.mudar_perfil,
