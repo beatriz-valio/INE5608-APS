@@ -1,9 +1,9 @@
 from datetime import datetime as dt
 
 from flanelinha_veloz.entity.cliente import Cliente
-from flanelinha_veloz.exceptions.cpfNotValid import CPFNotValid
+from flanelinha_veloz.exceptions.cpfNotValidException import CPFNotValidException
 from flanelinha_veloz.exceptions.emailDoesntMatchException import EmailDoesntMatchException
-from flanelinha_veloz.exceptions.emailNotValid import EmailNotValid
+from flanelinha_veloz.exceptions.emailNotValidException import EmailNotValidException
 from flanelinha_veloz.exceptions.passwordDoesntMatchException import PasswordDoesntMatchException
 from flanelinha_veloz.exceptions.userAlreadyExistException import UserAlreadyExistException
 from flanelinha_veloz.persistence.clienteDAO import ClienteDAO
@@ -77,7 +77,7 @@ class ClientController:
                         raise UserAlreadyExistException
                     else:
                         if not self.__system_controller.validate_cpf(str(cpf)):
-                            raise CPFNotValid
+                            raise CPFNotValidException
                         else:
                             email = client_return['email']
                             c_email = client_return['c-email']
@@ -85,7 +85,7 @@ class ClientController:
                                 raise EmailDoesntMatchException
                             else:
                                 if not self.__system_controller.validate_email(email):
-                                    raise EmailNotValid
+                                    raise EmailNotValidException
                                 else:
                                     password = client_return['password']
                                     c_password = client_return['c-password']
