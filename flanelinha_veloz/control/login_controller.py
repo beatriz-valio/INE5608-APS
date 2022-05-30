@@ -10,17 +10,17 @@ class LoginController:
         self.__system_controller = system_controller
         self.__menu_controller = MenuBoundary()
 
-    def check_email_in_clients(self, email):
+    def check_email_in_clients(self, email, password):
         client_controller = self.__system_controller.client_controller
         for client in client_controller.__cliente_dao.get_all():
-            if client['email'] == email:
+            if client['email'] == email and client['senha'] == password:
                 # Abrir o menu de cliente
                 self.save_user(client)
 
-    def check_email_in_employees(self, email):
+    def check_email_in_employees(self, email, password):
         employees_controller = self.__system_controller.employees_controller
         for employee in employees_controller.__employees_dao.get_all():
-            if employee['email'] == email:
+            if employee['email'] == email and employee['senha'] == password:
                 if employee['cargo'] == 'Gestor':
                     # Abrir menu de gestor
                     pass
@@ -29,15 +29,15 @@ class LoginController:
                     pass
                 self.save_user(employee)
 
+
+
     def save_user(self, client: Usuario):
         self.__system_controller.set_logged_user(client)
 
     def login(self, client):
-        # !! ATENÇÃO !!
-        # A variavel client vai retornar o e-mail e a senha da pessoa.
         try:
-            self.check_email_in_clients(client['email'])
-            self.check_email_in_employees(client['email'])
+            self.check_email_in_clients(client['email'], client['senha'])
+            self.check_email_in_employees(client['email'], client['senha'])
         except Exception as e:
             self.__login_screen.show_message('Dados incorretos!')
 
