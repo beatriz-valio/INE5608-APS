@@ -10,6 +10,7 @@ class EmployeesBoundary(AbstractBoundary):
     CANCEL = 0
     SUBMIT = 1
     DELETE = 2
+    UPDATE = 3
     GENDER_OPTIONS = ['Feminino', 'Masculino', 'Outro']
     FUNCTION_OPTIONS = ['Funcionário', 'Gestor']
     WEEKDAYS_OPTIONS = ['Domingo', 'Segunda-feira', 'Terça-feira','Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado']
@@ -40,13 +41,13 @@ class EmployeesBoundary(AbstractBoundary):
             [sg.Text("Cargo: * ", size=EmployeesBoundary.TEXT_SIZE),
              sg.Combo(values=EmployeesBoundary.FUNCTION_OPTIONS,  key="cargo", size=68)],
             [sg.Text("Primeiro Turno: * ", size=32),
-             sg.Spin([i for i in range(0,24)], size=3, key="primeito_turno_entrada_hora"),
+             sg.Spin([i for i in range(0,24)], size=3, key="primeiro_turno_entrada_hora"),
              sg.Text("h"), 
-             sg.Spin([i for i in range(0,60,15)], size=3, key="primeito_turno_entrada_minuto"),
+             sg.Spin([i for i in range(0,60,15)], size=3, key="primeiro_turno_entrada_minuto"),
              sg.Text("min até às"), 
-             sg.Spin([i for i in range(0,24)], size=3, key="primeito_turno_saido_hora"), 
+             sg.Spin([i for i in range(0,24)], size=3, key="primeiro_turno_saido_hora"), 
              sg.Text("h"), 
-             sg.Spin([i for i in range(0,60,15)], size=3, key="primeito_turno_saido_minuto"),
+             sg.Spin([i for i in range(0,60,15)], size=3, key="primeiro_turno_saido_minuto"),
              sg.Text("min", size=15)],
             [sg.Text("Segundo Turno: * ", size=32),
              sg.Spin([i for i in range(0,24)], size=3, key="segundo_turno_entrada_hora"), 
@@ -70,21 +71,9 @@ class EmployeesBoundary(AbstractBoundary):
                         .Layout(layout)
         button, values = window.Read()
         window.close()
-        turnos = [values["primeito_turno_entrada_hora"], values["primeito_turno_entrada_minuto"], values["primeito_turno_saido_hora"], values["primeito_turno_saido_minuto"], values["segundo_turno_entrada_hora"], values["segundo_turno_entrada_minuto"], values["segundo_turno_saido_hora"], values["segundo_turno_saido_minuto"]]
         return {
             "acao": button,
-            "nome": values["nome"],
-            "sobrenome": values["sobrenome"],
-            "cpf": values["cpf"],
-            "email": values["email"],
-            "confirmar_email": values["confirmar_email"],
-            "senha": values["senha"],
-            "confirmar_senha": values["confirmar_senha"],
-            "genero": values["genero"],
-            "data_nascimento": values["data_nascimento"],
-            "cargo": values["cargo"],
-            "turno": turnos,
-            "dias_trabalhados": values["dias_trabalhados"]
+            "valores": values
         }
 
     def update_employees_screen(self, employee: Funcionario or Gestor):
@@ -117,13 +106,13 @@ class EmployeesBoundary(AbstractBoundary):
                     key="cargo",
                     size=68)],
             [sg.Text("Primeiro Turno: * ", size=32),
-             sg.Spin([i for i in range(0,24)], size=3, initial_value= employee.turno[0] , key="primeito_turno_entrada_hora"),
+             sg.Spin([i for i in range(0,24)], size=3, initial_value= employee.turno[0] , key="primeiro_turno_entrada_hora"),
              sg.Text("h"), 
-             sg.Spin([i for i in range(0,60,15)], size=3, initial_value= employee.turno[1], key="primeito_turno_entrada_minuto"),
+             sg.Spin([i for i in range(0,60,15)], size=3, initial_value= employee.turno[1], key="primeiro_turno_entrada_minuto"),
              sg.Text("min até às"), 
-             sg.Spin([i for i in range(0,24)], size=3, initial_value= employee.turno[2], key="primeito_turno_saido_hora"), 
+             sg.Spin([i for i in range(0,24)], size=3, initial_value= employee.turno[2], key="primeiro_turno_saido_hora"), 
              sg.Text("h"), 
-             sg.Spin([i for i in range(0,60,15)], size=3, initial_value= employee.turno[3], key="primeito_turno_saido_minuto"),
+             sg.Spin([i for i in range(0,60,15)], size=3, initial_value= employee.turno[3], key="primeiro_turno_saido_minuto"),
              sg.Text("min", size=15)],
             [sg.Text("Segundo Turno: * ", size=32),
              sg.Spin([i for i in range(0,24)], size=3, initial_value= employee.turno[4], key="segundo_turno_entrada_hora"), 
@@ -153,18 +142,73 @@ class EmployeesBoundary(AbstractBoundary):
                         .Layout(layout)
         button, values = window.Read()
         window.close()
-        turnos = [values["primeito_turno_entrada_hora"], values["primeito_turno_entrada_minuto"], values["primeito_turno_saido_hora"], values["primeito_turno_saido_minuto"], values["segundo_turno_entrada_hora"], values["segundo_turno_entrada_minuto"], values["segundo_turno_saido_hora"], values["segundo_turno_saido_minuto"]]
         return {
             "acao": button,
-            "nome": values["nome"],
-            "sobrenome": values["sobrenome"],
-            "email": values["email"],
-            "confirmar_email": values["confirmar_email"],
-            "senha": values["senha"],
-            "confirmar_senha": values["confirmar_senha"],
-            "genero": values["genero"],
-            "data_nascimento": values["data_nascimento"],
-            "cargo": values["cargo"],
-            "turno": turnos,
-            "dias_trabalhados": values["dias_trabalhados"]
+            "valores": values
+        }
+
+    def profile_employees_screen(self, employee: Funcionario or Gestor):
+        layout = [
+            [sg.Text("Nome:", size=EmployeesBoundary.TEXT_SIZE),
+             sg.Text(employee.nome, key="nome", size=EmployeesBoundary.INPUT_SIZE)],
+            [sg.Text("Sobrenome:", size=EmployeesBoundary.TEXT_SIZE),
+             sg.Text(employee.sobrenome, key="sobrenome", size=EmployeesBoundary.INPUT_SIZE)],
+            [sg.Text("CPF:", size=EmployeesBoundary.TEXT_SIZE),
+             sg.Text(employee.cpf, key="cpf", size=EmployeesBoundary.INPUT_SIZE)],
+            [sg.Text("Email:", size=EmployeesBoundary.TEXT_SIZE),
+             sg.Text(employee.email, key="email", size=EmployeesBoundary.INPUT_SIZE)],
+            [sg.Text("Senha:", size=EmployeesBoundary.TEXT_SIZE),
+             sg.Text("**************", size=EmployeesBoundary.INPUT_SIZE)],
+            [sg.Text("Gênero:", size=EmployeesBoundary.TEXT_SIZE),
+             sg.Combo(EmployeesBoundary.GENDER_OPTIONS,
+                    default_value=employee.genero,
+                    key="genero",
+                    disabled=True,
+                    size=68)],
+            [sg.Text("Data de nascimento:", size=EmployeesBoundary.TEXT_SIZE),
+             sg.Text(dt.strftime(employee.data_nascimento, "%d/%m/%Y"), size=EmployeesBoundary.INPUT_SIZE)],
+            [sg.Text("Cargo:", size=EmployeesBoundary.TEXT_SIZE),
+             sg.Combo(EmployeesBoundary.FUNCTION_OPTIONS,
+                    default_value=employee.cargo,
+                    key="cargo",
+                    disabled=True,
+                    size=68)],
+            [sg.Text("Primeiro Turno:", size=32),
+             sg.Spin([i for i in range(0,24)], size=3, disabled=True, initial_value= employee.turno[0] , key="primeiro_turno_entrada_hora"),
+             sg.Text("h"), 
+             sg.Spin([i for i in range(0,60,15)], size=3, disabled=True, initial_value= employee.turno[1], key="primeiro_turno_entrada_minuto"),
+             sg.Text("min até às"), 
+             sg.Spin([i for i in range(0,24)], size=3, disabled=True, initial_value= employee.turno[2], key="primeiro_turno_saido_hora"), 
+             sg.Text("h"), 
+             sg.Spin([i for i in range(0,60,15)], size=3, disabled=True, initial_value= employee.turno[3], key="primeiro_turno_saido_minuto"),
+             sg.Text("min", size=15)],
+            [sg.Text("Segundo Turno:", size=32),
+             sg.Spin([i for i in range(0,24)], size=3, disabled=True, initial_value= employee.turno[4], key="segundo_turno_entrada_hora"), 
+             sg.Text("h"), 
+             sg.Spin([i for i in range(0,60,15)], size=3, disabled=True, initial_value= employee.turno[5], key="segundo_turno_entrada_minuto"),
+             sg.Text("min até às"), 
+             sg.Spin([i for i in range(0,24)], size=3, disabled=True, initial_value= employee.turno[6], key="segundo_turno_saido_hora"),
+             sg.Text("h"), 
+             sg.Spin([i for i in range(0,60,15)], size=3, disabled=True, initial_value= employee.turno[7], key="segundo_turno_saido_minuto"),
+             sg.Text("min", size=15)], 
+            [sg.Text("Dias trabalhados:", size=EmployeesBoundary.TEXT_SIZE),
+             sg.Listbox(values=employee.dias_trabalhados,
+                    select_mode='extended',
+                    key="dias_trabalhados",
+                    disabled=True,
+                    size=(68, 7))],
+            [sg.Cancel("Voltar", key=EmployeesBoundary.CANCEL), 
+             sg.Submit("Alterar informações", key=EmployeesBoundary.UPDATE)],
+        ]
+        window = sg.Window("Flanelinha Veloz - Perfil", 
+                            size=(900, 550),
+                            element_justification="c",
+                            resizable=True,
+                            margins=(50, 50)) \
+                        .Layout(layout)
+        button, values = window.Read()
+        window.close()
+        return {
+            "acao": button,
+            "valores": values
         }

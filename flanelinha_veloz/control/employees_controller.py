@@ -30,11 +30,13 @@ class EmployeesController:
                 cpf = self.__system_controller.logged_user.cpf
                 employees_cpf = self.search_for_employee_by_cpf(cpf)
                 if employees_cpf:
-                    valores = self.__boundary.update_employees_screen(employees_cpf)
+                    values = self.__boundary.update_employees_screen(employees_cpf)
                     senha_antiga = employees_cpf.senha
-                    acao = valores['acao']
+                    acao = values['acao']
                     all_value_good = True
                     if acao == EmployeesBoundary.SUBMIT:
+                        valores = values['valores']
+                        del(valores['Calendário'])
                         for value in valores:
                             if valores[value] is None or valores[value] == '': 
                                 all_value_good = False
@@ -60,7 +62,14 @@ class EmployeesController:
                             genero = valores['genero']
                             sobrenome = valores['sobrenome']
                             cargo = valores['cargo']
-                            turno = valores['turno']
+                            turno = [valores['primeiro_turno_entrada_hora'], 
+                                    valores['primeiro_turno_entrada_minuto'], 
+                                    valores['primeiro_turno_saido_hora'], 
+                                    valores['primeiro_turno_saido_minuto'], 
+                                    valores['segundo_turno_entrada_hora'], 
+                                    valores['segundo_turno_entrada_minuto'], 
+                                    valores['segundo_turno_saido_hora'], 
+                                    valores['segundo_turno_saido_minuto']]
                             dias_trabalhados = valores['dias_trabalhados']
                             self.employee_delete(employees_cpf)
                             if cargo == 'Gestor':
@@ -75,8 +84,13 @@ class EmployeesController:
                                 self.__system_controller.menu_controller.open_menu_employer()                        
                         else:
                             raise ValueError
+                    elif acao == EmployeesBoundary.CANCEL:
+                        if employees_cpf.cargo == 'Gestor':
+                            self.__system_controller.menu_controller.open_menu_manager()
+                        elif employees_cpf.cargo == 'Funcionário':
+                            self.__system_controller.menu_controller.open_menu_employer() 
                     elif acao is None:
-                        self.__system_controller.shutdown()    
+                        self.__system_controller.shutdown()
                     elif acao == EmployeesBoundary.DELETE:
                         self.employee_delete(employees_cpf)
                         self.__boundary.show_message('Funcionário deletado com sucesso!', 'green')
@@ -90,13 +104,36 @@ class EmployeesController:
             except Exception as e:
                 self.__boundary.show_message(str(e))
 
+    def open_profile_employees_screen(self):
+        while True:
+            try:
+                cpf = self.__system_controller.logged_user.cpf
+                employees_cpf = self.search_for_employee_by_cpf(cpf)
+                if employees_cpf:
+                    values = self.__boundary.profile_employees_screen(employees_cpf)
+                    acao = values['acao']
+                    if acao == EmployeesBoundary.UPDATE:
+                        self.open_edit_employees_screen()
+                    elif acao is None:
+                        self.__system_controller.shutdown()
+                    else:
+                        break
+                else:
+                    break
+            except ValueError:
+                self.__boundary.show_message('Não foi possível fazer essa ação!', 'red')
+            except Exception as e:
+                self.__boundary.show_message(str(e))
+
     def open_add_employees_screen(self):
         while True:
             try:
-                valores = self.__boundary.registration_employees_screen()
-                acao = valores['acao']
+                values = self.__boundary.registration_employees_screen()
+                acao = values['acao']
                 all_value_good = True
                 if acao == EmployeesBoundary.SUBMIT:
+                    valores = values['valores']
+                    del(valores['Calendário'])
                     for value in valores:
                         if valores[value] is None or valores[value] == '': 
                             all_value_good = False
@@ -128,7 +165,14 @@ class EmployeesController:
                         genero = valores['genero']
                         sobrenome = valores['sobrenome']
                         cargo = valores['cargo']
-                        turno = valores['turno']
+                        turno = [valores['primeiro_turno_entrada_hora'], 
+                                valores['primeiro_turno_entrada_minuto'], 
+                                valores['primeiro_turno_saido_hora'], 
+                                valores['primeiro_turno_saido_minuto'], 
+                                valores['segundo_turno_entrada_hora'], 
+                                valores['segundo_turno_entrada_minuto'], 
+                                valores['segundo_turno_saido_hora'], 
+                                valores['segundo_turno_saido_minuto']]
                         dias_trabalhados = valores['dias_trabalhados']
                         senha = senha.encode('utf-8', 'ignore')
                         senha = hashlib.md5(senha)

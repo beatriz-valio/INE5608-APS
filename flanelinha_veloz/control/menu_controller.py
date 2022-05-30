@@ -11,7 +11,7 @@ class MenuController:
         self.__system_controller.client_controller.open_update_screen()
 
     def see_employees_profile(self):
-        self.__system_controller.employees_controller.open_edit_employees_screen()
+        self.__system_controller.employees_controller.open_profile_employees_screen()
 
     def open_menu_client(self):
         try:
