@@ -8,7 +8,7 @@ class MenuController:
         self.__system_controller = system_controller
 
     def see_client_profile(self):
-        self.__system_controller.client_controller.open_update_screen()
+        self.__system_controller.client_controller.open_menu_client()
 
     def see_employees_profile(self):
         self.__system_controller.employees_controller.open_profile_employees_screen()

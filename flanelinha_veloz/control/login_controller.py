@@ -27,7 +27,7 @@ class LoginController:
 
     def check_email_in_employees(self, email, password):
         employees_controller = self.__system_controller.employees_controller
-        for employee in employees_controller.employeeDAO.get_all():
+        for employee in employees_controller.employee_dao.get_all():
             password_md5 = password.encode('utf-8', 'ignore')
             password_md5 = hashlib.md5(password_md5)
             password_md5 = password_md5.hexdigest()

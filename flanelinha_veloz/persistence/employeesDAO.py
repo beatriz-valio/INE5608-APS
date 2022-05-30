@@ -1,5 +1,6 @@
 from flanelinha_veloz.persistence.abstractDAO import DAO
 
+
 class EmployeesDAO(DAO):
     def __init__(self):
         super().__init__('/employees_list.pkl')

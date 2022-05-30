@@ -12,7 +12,8 @@ class MenuBoundary:
             [sg.Cancel('Sair', key=MenuBoundary.SHUTDOWN)]
         ]
 
-        window = sg.Window('Flanelinha Veloz - Menu Cliente', layout=layout, size=(900, 500), element_justification="c")
+        window = sg.Window('Flanelinha Veloz - Menu Cliente', layout=layout,
+                           size=(900, 500), element_justification="c")
 
         button, values = window.Read()
         window.close()
@@ -26,7 +27,8 @@ class MenuBoundary:
 
         ]
 
-        window = sg.Window('Flanelinha Veloz - Menu Gestor', layout=layout, size=(900, 500), element_justification="c")
+        window = sg.Window('Flanelinha Veloz - Menu Gestor', layout=layout,
+                           size=(900, 500), element_justification="c")
 
         button, values = window.Read()
         window.close()
@@ -39,7 +41,8 @@ class MenuBoundary:
             [sg.Cancel('Sair', key=MenuBoundary.SHUTDOWN)]
         ]
 
-        window = sg.Window('Flanelinha Veloz - Menu Funcionário', layout=layout, size=(900, 500),
+        window = sg.Window('Flanelinha Veloz - Menu Funcionário',
+                           layout=layout, size=(900, 500),
                            element_justification="c")
 
         button, values = window.Read()
