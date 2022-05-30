@@ -1,4 +1,3 @@
-from flanelinha_veloz.control.system_controller import shutdown
 from flanelinha_veloz.view.login_boundary import LoginBoundary
 
 
@@ -25,7 +24,7 @@ class LoginController:
     def open_screen(self):
         try:
             action_options = {
-                None: shutdown,
+                None: self.__system_controller.shutdown,
                 0: self.login,
                 1: self.register_client,
                 2: self.register_employer,
