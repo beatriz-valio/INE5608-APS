@@ -2,4 +2,4 @@
 .vscode
 .ldb
 __pycache__
-.pkl
+*.pkl
