@@ -64,17 +64,3 @@ class ClientBoundary(AbstractBoundary):
             'action': button,
             'client': values
         }
-
-    def default_screen(self):
-        layout = [
-            [sg.Button("Cadastrar cliente", key=1)],
-            [sg.Button("Alterar cliente logado", key=2)],
-            [sg.Cancel('Voltar', key=ClientBoundary.CANCEL)]
-        ]
-        window = sg.Window('Flanelinha Veloz',
-                           size=(290, 290),
-                           element_justification='c') \
-            .Layout(layout)
-        button, value = window.Read()
-        window.close()
-        return button
