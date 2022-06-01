@@ -14,9 +14,9 @@ class LoginBoundary(AbstractBoundary):
     def open_screen(self):
         layout = [
             [sg.Image(LoginBoundary.IMAGE_PATH, subsample=2, pad=(5, 5))],
-            [sg.Text('Email', font='Arial 11')],
+            [sg.Text('Email *', font='Arial 11')],
             [sg.Input(key='email', size=(40, 1))],
-            [sg.Text('Senha', font='Arial 11')],
+            [sg.Text('Senha *', font='Arial 11')],
             [sg.Input(key='senha', password_char='*', size=(40, 1))],
             [sg.Button('Entrar', size=(10, 1), key=LoginBoundary.ENTRAR)],
             [sg.Text('Não possui cadastro?', pad=(1, 20))],

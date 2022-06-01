@@ -85,6 +85,7 @@ class ClientController:
         try:
             if self.check_if_already_exist(cpf):
                 self.__client_dao.remove(cpf)
+                self.__system_controller.set_logged_user(None)
                 self.__client_screen.show_message(
                     'Usuário deletado com sucesso!')
         except KeyError:

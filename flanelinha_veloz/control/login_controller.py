@@ -7,12 +7,11 @@ from flanelinha_veloz.view.login_boundary import LoginBoundary
 class LoginController:
 
     def __init__(self, system_controller):
-        self.__logged_user: Usuario or None = None
+        # self.__logged_user: Usuario or None = None
         self.__login_screen = LoginBoundary()
         self.__system_controller = system_controller
 
     def save_user(self, client: Usuario):
-        self.__logged_user = client
         self.__system_controller.set_logged_user(client)
 
     def check_email_in_clients(self, email, password):
@@ -41,7 +40,7 @@ class LoginController:
     def login(self, client):
         self.check_email_in_clients(client['email'], client['senha'])
         self.check_email_in_employees(client['email'], client['senha'])
-        if self.__logged_user is None:
+        if self.__system_controller.logged_user is None:
             self.__login_screen.show_message('Dados incorretos!')
 
     def register_client(self):

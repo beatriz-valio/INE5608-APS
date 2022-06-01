@@ -1,7 +1,9 @@
 import PySimpleGUI as sg
 
+from flanelinha_veloz.view.abstract_boundary import AbstractBoundary
 
-class MenuBoundary:
+
+class MenuBoundary(AbstractBoundary):
     SHUTDOWN = 0
     OPEN_PROFILE = 1
 

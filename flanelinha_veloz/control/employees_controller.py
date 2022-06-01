@@ -231,6 +231,7 @@ class EmployeesController:
         if employee is not None and \
                 employee in self.__employee_dao.get_all():
             self.__employee_dao.remove(employee.cpf)
+            self.__system_controller.set_logged_user(None)
 
     def search_for_employee_by_cpf(self, cpf: str):
         try:

@@ -25,8 +25,7 @@ class MenuController:
                 selected_function = action_options[option_number]
                 selected_function()
         except Exception as e:
-            # TODO: Verificar porque o show message não está sendo possível utilizar
-            print(e)
+            self.__menu_screen.show_message(str(e))
 
     def open_menu_manager(self):
         try:
@@ -40,8 +39,7 @@ class MenuController:
                 selected_function = action_options[option_number]
                 selected_function()
         except Exception as e:
-            # TODO: Verificar porque o show message não está sendo possível utilizar
-            print(e)
+            self.__menu_screen.show_message(str(e))
 
     def open_menu_employer(self):
         try:
