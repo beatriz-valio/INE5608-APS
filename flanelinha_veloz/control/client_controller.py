@@ -44,9 +44,7 @@ class ClientController:
                     action = client_values['action']
                     if action == ClientBoundary.UPDATE:
                         client_return = client_values['client']
-                        for value in client_return:
-                            if client_return[value] is None or client_return[value] == '':
-                                raise MissingDataException
+                        self.check_if_is_complete(client_return)
                         cpf = logged_user.cpf
                         email = client_return['email']
                         c_email = client_return['c-email']
@@ -74,7 +72,6 @@ class ClientController:
                     elif action == ClientBoundary.DELETE:
                         cpf = logged_user.cpf
                         self.delete_client(cpf)
-                        self.__system_controller.set_logged_user(None)
                         self.__system_controller.open_login_screen()
                     elif action is None:
                         self.__system_controller.shutdown()
@@ -89,6 +86,7 @@ class ClientController:
     def delete_client(self, cpf: int):
         try:
             if self.check_if_already_exist(cpf):
+                self.__system_controller.set_logged_user(None)
                 self.__client_dao.remove(cpf)
                 self.__client_screen.show_message(
                     'Usuário deletado com sucesso!')
@@ -99,6 +97,12 @@ class ClientController:
     def check_if_already_exist(self, cpf: int):
         return self.__client_dao.get(cpf)
 
+    def check_if_is_complete(self, data):
+        del (data['Calendário'])
+        for value in data:
+            if data[value] is None or data[value] == '':
+                raise MissingDataException
+
     def open_create_screen(self):
         while True:
             try:
@@ -106,9 +110,7 @@ class ClientController:
                 action = client_values['action']
                 if action == ClientBoundary.CREATE:
                     client_return = client_values['client']
-                    for value in client_return:
-                        if client_return[value] is None or client_return[value] == '':
-                            raise MissingDataException
+                    self.check_if_is_complete(client_return)
                     cpf = int(client_return['cpf'])
                     if self.check_if_already_exist(cpf):
                         raise UserAlreadyExistException
