@@ -72,6 +72,7 @@ class ClientController:
                     elif action == ClientBoundary.DELETE:
                         cpf = logged_user.cpf
                         self.delete_client(cpf)
+                        self.__system_controller.set_logged_user(None)
                         self.__system_controller.open_login_screen()
                     elif action is None:
                         self.__system_controller.shutdown()
@@ -88,7 +89,6 @@ class ClientController:
             if self.check_if_already_exist(cpf):
                 self.__system_controller.set_logged_user(None)
                 self.__client_dao.remove(cpf)
-                self.__system_controller.set_logged_user(None)
                 self.__client_screen.show_message(
                     'Usuário deletado com sucesso!')
         except KeyError:
