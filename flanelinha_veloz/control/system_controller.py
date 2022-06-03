@@ -2,6 +2,7 @@ from flanelinha_veloz.control.client_controller import ClientController
 from flanelinha_veloz.control.employees_controller import EmployeesController
 from flanelinha_veloz.control.login_controller import LoginController
 from flanelinha_veloz.control.menu_controller import MenuController
+from flanelinha_veloz.control.vehicle_types_controller import VehicleTypesController
 from flanelinha_veloz.entity.abstractUsuario import Usuario
 
 
@@ -11,6 +12,7 @@ class SystemController:
         self.__login_controller = LoginController(self)
         self.__client_controller = ClientController(self)
         self.__employees_controller = EmployeesController(self)
+        self.__vehicle_types_controller = VehicleTypesController(self)
         self.__menu_controller = MenuController(self)
         self.__logged_user: Usuario or None = None
 
@@ -32,6 +34,10 @@ class SystemController:
     @property
     def employees_controller(self):
         return self.__employees_controller
+    
+    @property
+    def vehicle_types_controller(self):
+        return self.__vehicle_types_controller
 
     def open_login_screen(self):
         self.__login_controller.open_screen()
