@@ -64,9 +64,9 @@ class ClientBoundary(AbstractBoundary):
             [sg.Text('Data de nascimento: *')],
             [sg.CalendarButton(target='birth_date', button_text="Calendário",
                                format="%d/%m/%Y", ),
-             sg.In(key="birth_date", default_text=client.data_nascimento)],
+             sg.In(key="birth_date", default_text=dt.strftime(client.data_nascimento, "%d/%m/%Y"))],
             [sg.Cancel('Voltar', key=ClientBoundary.CANCEL),
-             sg.Submit('Atualizar', key=ClientBoundary.CREATE)],
+             sg.Submit('Atualizar', key=ClientBoundary.UPDATE)],
             [sg.Text('Deseja excluir seu cadastro?'),
              sg.Submit('Excluir', key=ClientBoundary.DELETE)]
         ]
