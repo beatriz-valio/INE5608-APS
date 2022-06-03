@@ -8,6 +8,7 @@ from flanelinha_veloz.exceptions.emailDoesntMatchException import \
     EmailDoesntMatchException
 from flanelinha_veloz.exceptions.emailNotValidException import \
     EmailNotValidException
+from flanelinha_veloz.exceptions.missingDataException import MissingDataException
 from flanelinha_veloz.exceptions.passwordDoesntMatchException import \
     PasswordDoesntMatchException
 from flanelinha_veloz.exceptions.userAlreadyExistException import \
@@ -43,7 +44,10 @@ class ClientController:
                     action = client_values['action']
                     if action == ClientBoundary.UPDATE:
                         client_return = client_values['client']
-                        cpf = int(client_return['cpf'])
+                        for value in client_return:
+                            if client_return[value] is None or client_return[value] == '':
+                                raise MissingDataException
+                        cpf = logged_user.cpf
                         email = client_return['email']
                         c_email = client_return['c-email']
                         if email != c_email:
@@ -53,24 +57,24 @@ class ClientController:
                             c_password = client_return['c-password']
                             if password != c_password:
                                 raise PasswordDoesntMatchException
-                            if password != old_password:
-                                password = password.encode('utf-8', 'ignore')
-                                password = hashlib.md5(password)
-                                password = password.hexdigest()
                             else:
-                                birth_date = client_return['birth_date']
+                                if password != old_password:
+                                    password = password.encode('utf-8', 'ignore')
+                                    password = hashlib.md5(password)
+                                    password = password.hexdigest()
+                                birth_date = dt.strptime(client_return['birth_date'], "%d/%m/%Y")
                                 gender = client_return['gender']
                                 name = client_return['name']
                                 last_name = client_return['last_name']
                                 client = Cliente(cpf, birth_date, email,
                                                  gender, name, password,
                                                  last_name)
-                                self.__client_dao.remove(logged_user['cpf'])
+                                self.__client_dao.remove(logged_user.cpf)
                                 self.client_registration(client)
                     elif action == ClientBoundary.DELETE:
                         cpf = logged_user.cpf
                         self.delete_client(cpf)
-                        self.____system_controller.open_login_screen()
+                        self.__system_controller.open_login_screen()
                     elif action is None:
                         self.__system_controller.shutdown()
                     else:
@@ -102,6 +106,9 @@ class ClientController:
                 action = client_values['action']
                 if action == ClientBoundary.CREATE:
                     client_return = client_values['client']
+                    for value in client_return:
+                        if client_return[value] is None or client_return[value] == '':
+                            raise MissingDataException
                     cpf = int(client_return['cpf'])
                     if self.check_if_already_exist(cpf):
                         raise UserAlreadyExistException
@@ -151,7 +158,8 @@ class ClientController:
         if isinstance(client,
                       Cliente) and client is not None and client not in self.__client_dao.get_all():
             self.__client_dao.add(client)
-            self.__client_screen.show_message('Cadastrado com sucesso!',
+            self.__system_controller.set_logged_user(client)
+            self.__client_screen.show_message('Ação realizada com sucesso!',
                                               'green')
         else:
             self.__client_screen.show_message('Dados incorretos!', 'red')
