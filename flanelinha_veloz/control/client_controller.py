@@ -72,7 +72,6 @@ class ClientController:
                     elif action == ClientBoundary.DELETE:
                         cpf = logged_user.cpf
                         self.delete_client(cpf)
-                        self.__system_controller.set_logged_user(None)
                         self.__system_controller.open_login_screen()
                     elif action is None:
                         self.__system_controller.shutdown()
