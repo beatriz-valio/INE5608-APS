@@ -3,6 +3,7 @@ from datetime import timedelta, datetime
 from sqlalchemy import false
 from flanelinha_veloz.entity.veiculo import Veiculo
 from flanelinha_veloz.exceptions.durationValueNotValidException import DurationValueNotValidException
+from flanelinha_veloz.exceptions.missingDataException import MissingDataException
 from flanelinha_veloz.exceptions.priceValueNotValidException import PriceValueNotValidException
 from flanelinha_veloz.persistence.vehicleTypesDAO import VehicleTypesDAO
 from flanelinha_veloz.view.vehicle_types_boundary import vehicleTypesBoundary
@@ -54,13 +55,11 @@ class VehicleTypesController:
                     valores = values['valores']
                     for value in valores:
                         if valores[value] is None or valores[value] == '':
-                            all_value_good = False
+                            raise MissingDataException
                     preco = valores['preco']
                     duracao = valores['duracao']
                     preco = float(preco)
-                    if not all_value_good:
-                        raise ValueError
-                    elif not isinstance(preco, float):
+                    if not isinstance(preco, float):
                         raise PriceValueNotValidException
                     elif len(duracao)>5 or len(duracao)<3 or not self.validate_duration(duracao):
                         raise DurationValueNotValidException
