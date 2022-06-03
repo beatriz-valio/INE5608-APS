@@ -8,6 +8,7 @@ from flanelinha_veloz.exceptions.emailDoesntMatchException import \
     EmailDoesntMatchException
 from flanelinha_veloz.exceptions.emailNotValidException import \
     EmailNotValidException
+from flanelinha_veloz.exceptions.missingDataException import MissingDataException
 from flanelinha_veloz.exceptions.passwordDoesntMatchException import \
     PasswordDoesntMatchException
 from flanelinha_veloz.exceptions.userAlreadyExistException import \
@@ -43,6 +44,9 @@ class ClientController:
                     action = client_values['action']
                     if action == ClientBoundary.UPDATE:
                         client_return = client_values['client']
+                        for value in client_return:
+                            if client_return[value] is None or client_return[value] == '':
+                                raise MissingDataException
                         cpf = logged_user.cpf
                         email = client_return['email']
                         c_email = client_return['c-email']
@@ -102,6 +106,9 @@ class ClientController:
                 action = client_values['action']
                 if action == ClientBoundary.CREATE:
                     client_return = client_values['client']
+                    for value in client_return:
+                        if client_return[value] is None or client_return[value] == '':
+                            raise MissingDataException
                     cpf = int(client_return['cpf'])
                     if self.check_if_already_exist(cpf):
                         raise UserAlreadyExistException
