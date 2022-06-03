@@ -13,6 +13,7 @@ from flanelinha_veloz.exceptions.employeesAlreadyExistsInTheSystemException impo
     EmployeesAlreadyExistsInTheSystemException
 from flanelinha_veloz.exceptions.employeesNotWritedException import \
     EmployeesNotWritedException
+from flanelinha_veloz.exceptions.missingDataException import MissingDataException
 from flanelinha_veloz.exceptions.passwordDoesntMatchException import \
     PasswordDoesntMatchException
 from flanelinha_veloz.persistence.employeesDAO import EmployeesDAO
@@ -45,7 +46,7 @@ class EmployeesController:
                         del (valores['Calendário'])
                         for value in valores:
                             if valores[value] is None or valores[value] == '':
-                                all_value_good = False
+                                raise MissingDataException
                         email = valores['email']
                         confirmar_email = valores['confirmar_email']
                         if email != confirmar_email:
@@ -62,43 +63,40 @@ class EmployeesController:
                                 senha = senha.encode('utf-8', 'ignore')
                                 senha = hashlib.md5(senha)
                                 senha = senha.hexdigest()
-                        if all_value_good:
-                            nome = valores['nome']
-                            data_nascimento = dt.strptime(
-                                valores['data_nascimento'], "%d/%m/%Y")
-                            cpf = int(cpf)
-                            genero = valores['genero']
-                            sobrenome = valores['sobrenome']
-                            cargo = valores['cargo']
-                            turno = [valores['primeiro_turno_entrada_hora'],
-                                     valores['primeiro_turno_entrada_minuto'],
-                                     valores['primeiro_turno_saido_hora'],
-                                     valores['primeiro_turno_saido_minuto'],
-                                     valores['segundo_turno_entrada_hora'],
-                                     valores['segundo_turno_entrada_minuto'],
-                                     valores['segundo_turno_saido_hora'],
-                                     valores['segundo_turno_saido_minuto']]
-                            dias_trabalhados = valores['dias_trabalhados']
-                            self.employee_delete(employees_cpf)
-                            if cargo == 'Gestor':
-                                obj = Gestor(cpf, data_nascimento, email,
-                                             genero, nome, senha, sobrenome,
-                                             cargo, turno, dias_trabalhados)
-                                self.employee_registration(obj)
-                                self.__boundary.show_message(
-                                    'Atualização salva com sucesso!', 'green')
-                                self.__system_controller.menu_controller.open_menu_manager()
-                            else:
-                                obj = Funcionario(cpf, data_nascimento, email,
-                                                  genero, nome, senha,
-                                                  sobrenome, cargo, turno,
-                                                  dias_trabalhados)
-                                self.employee_registration(obj)
-                                self.__boundary.show_message(
-                                    'Atualização salva com sucesso!', 'green')
-                                self.__system_controller.menu_controller.open_menu_employer()
+                        nome = valores['nome']
+                        data_nascimento = dt.strptime(
+                            valores['data_nascimento'], "%d/%m/%Y")
+                        cpf = int(cpf)
+                        genero = valores['genero']
+                        sobrenome = valores['sobrenome']
+                        cargo = valores['cargo']
+                        turno = [valores['primeiro_turno_entrada_hora'],
+                                    valores['primeiro_turno_entrada_minuto'],
+                                    valores['primeiro_turno_saido_hora'],
+                                    valores['primeiro_turno_saido_minuto'],
+                                    valores['segundo_turno_entrada_hora'],
+                                    valores['segundo_turno_entrada_minuto'],
+                                    valores['segundo_turno_saido_hora'],
+                                    valores['segundo_turno_saido_minuto']]
+                        dias_trabalhados = valores['dias_trabalhados']
+                        self.employee_delete(employees_cpf)
+                        if cargo == 'Gestor':
+                            obj = Gestor(cpf, data_nascimento, email,
+                                            genero, nome, senha, sobrenome,
+                                            cargo, turno, dias_trabalhados)
+                            self.employee_registration(obj)
+                            self.__boundary.show_message(
+                                'Atualização salva com sucesso!', 'green')
+                            self.__system_controller.menu_controller.open_menu_manager()
                         else:
-                            raise ValueError
+                            obj = Funcionario(cpf, data_nascimento, email,
+                                                genero, nome, senha,
+                                                sobrenome, cargo, turno,
+                                                dias_trabalhados)
+                            self.employee_registration(obj)
+                            self.__boundary.show_message(
+                                'Atualização salva com sucesso!', 'green')
+                            self.__system_controller.menu_controller.open_menu_employer()
                     elif acao == EmployeesBoundary.CANCEL:
                         if employees_cpf.cargo == 'Gestor':
                             self.__system_controller.menu_controller.open_menu_manager()
@@ -108,6 +106,7 @@ class EmployeesController:
                         self.__system_controller.shutdown()
                     elif acao == EmployeesBoundary.DELETE:
                         self.employee_delete(employees_cpf)
+                        self.__system_controller.set_logged_user(None)
                         self.__boundary.show_message(
                             'Funcionário deletado com sucesso!', 'green')
                         self.__system_controller.open_login_screen()
@@ -231,7 +230,6 @@ class EmployeesController:
         if employee is not None and \
                 employee in self.__employee_dao.get_all():
             self.__employee_dao.remove(employee.cpf)
-            self.__system_controller.set_logged_user(None)
 
     def search_for_employee_by_cpf(self, cpf: str):
         try:
