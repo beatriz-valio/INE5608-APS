@@ -115,3 +115,27 @@ class VehicleTypesBoundary(AbstractBoundary):
             'acao': button,
             'valores': values
         }
+    
+    def update_vehicle_types_screen(self, vehicle_type):
+        layout = [
+            [sg.Text('Nome: * ', size=VehicleTypesBoundary.TEXT_SIZE),
+             sg.In(default_text=vehicle_type.nome, key='nome', size=VehicleTypesBoundary.INPUT_SIZE)],
+            [sg.Text('Preço: * ', size=VehicleTypesBoundary.TEXT_SIZE),
+             sg.In(default_text=vehicle_type.preco, key='preco', size=VehicleTypesBoundary.INPUT_SIZE)],
+            [sg.Text('Duração: * (hh:mm) ', size=VehicleTypesBoundary.TEXT_SIZE),
+             sg.In(default_text=vehicle_type.duracao, key='duracao', size=VehicleTypesBoundary.INPUT_SIZE)],
+            [sg.Cancel('Voltar', key=VehicleTypesBoundary.CANCEL, size=VehicleTypesBoundary.TEXT_SIZE),
+             sg.Submit('Cadastrar', key=VehicleTypesBoundary.SUBMIT, size=VehicleTypesBoundary.TEXT_SIZE)]
+        ]
+        window = sg.Window('Flanelinha Veloz - Cadastro Tipos de Veículo',
+                           size=(900, 550),
+                           element_justification='c',
+                           resizable=True,
+                           margins=(200, 200)) \
+            .Layout(layout)
+        button, values = window.Read()
+        window.close()
+        return {
+            'acao': button,
+            'valores': values
+        }

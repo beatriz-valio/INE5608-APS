@@ -22,7 +22,7 @@ class VehicleTypesController:
                 0: self.return_menu_manager,
                 1: self.open_create_employees_screen,
                 2: self.open_read_employees_screen,
-                3: self.open_update_employees_screen,
+                3: self.open_menu_update_employees_screen,
                 4: self.open_delete_employees_screen
             }
             while True:
@@ -56,7 +56,7 @@ class VehicleTypesController:
             except Exception as e:
                 self.__boundary.show_message(str(e))
 
-    def open_update_employees_screen(self):
+    def open_menu_update_employees_screen(self):
         while True:
             try:
                 all_vehicle_types = self.get_x_in_table('cod_name')
@@ -68,14 +68,50 @@ class VehicleTypesController:
                     values = self.__boundary.menu_update_vehicle_types_screen(all_vehicle_types)
                     acao = values['acao']
                     if acao == VehicleTypesBoundary.UPDATE:
-                        print(values['valores']['codigo'])
+                        codigo_para_atualizacao = int(values['valores']['codigo'])
+                        vehicle_type = self.search_for_vehicle_types_by_codigo(codigo_para_atualizacao)
+                        self.open_update_employees_screen(vehicle_type, codigo_para_atualizacao)
                     elif acao is None:
                         self.__system_controller.shutdown()
                     else:
                         break
+            except Exception as e:
+                self.__boundary.show_message(str(e))
+
+    def open_update_employees_screen(self, vehicle_type, codigo_para_atualizacao):
+        while True:
+            try:
+                values = self.__boundary.update_vehicle_types_screen(vehicle_type)
+                acoes = values['acao']
+                if acoes == VehicleTypesBoundary.SUBMIT:
+                    valor_atualicao = values['valores']
+                    for value in valor_atualicao:
+                        if valor_atualicao[value] is None or valor_atualicao[value] == '':
+                            raise MissingDataException
+                    codigo = codigo_para_atualizacao
+                    preco = valor_atualicao['preco']
+                    duracao = valor_atualicao['duracao']
+                    preco = float(preco)
+                    if not isinstance(preco, float):
+                        raise PriceValueNotValidException
+                    elif len(duracao)>5 or len(duracao)<3 or not self.validate_duration(duracao):
+                        raise DurationValueNotValidException
+                    else:
+                        duracao = datetime.strptime(duracao,"%H:%M")
+                        duracao = timedelta(hours=duracao.hour, minutes=duracao.minute)
+                        nome = valor_atualicao['nome']
+                        obj = Veiculo(codigo, duracao, nome, preco)
+                        self.vehicle_types_registration(obj)
+                        self.__boundary.show_message(
+                            'Cadastramento do tipo de veículo concluído!', 'green')
+                        break
+                elif acoes is None:
+                    self.__system_controller.shutdown()
+                else:
+                    break
             except ValueError:
                 self.__boundary.show_message(
-                    'Existem campos em branco, confira!', 'red')
+                    'Na atualização, existem campos em branco, confira!', 'red')
             except Exception as e:
                 self.__boundary.show_message(str(e))
 
@@ -87,7 +123,6 @@ class VehicleTypesController:
             try:
                 values = self.__boundary.registration_vehicle_types_screen()
                 acao = values['acao']
-                all_value_good = True
                 if acao == VehicleTypesBoundary.SUBMIT:
                     valores = values['valores']
                     for value in valores:
@@ -107,6 +142,7 @@ class VehicleTypesController:
                         codigo = self.update_total_code()
                         obj = Veiculo(codigo, duracao, nome, preco)
                         self.vehicle_types_registration(obj)
+                        self.update_total_code()
                         self.__boundary.show_message(
                             'Cadastramento do tipo de veículo concluído!', 'green')
                         break
@@ -136,7 +172,6 @@ class VehicleTypesController:
         if vehicle_types is not None and \
                 isinstance(vehicle_types, Veiculo) and \
                 vehicle_types not in self.__vehicle_types_dao.get_all():
-            self.update_total_code()
             self.__vehicle_types_dao.add(vehicle_types)
 
     def vehicle_types_delete(self, vehicle_types: Veiculo):
