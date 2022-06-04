@@ -60,7 +60,6 @@ class VehicleTypesBoundary(AbstractBoundary):
         layout = [
             [sg.Table(values=vehicle_type,
                        headings=['Código', 'Nome', 'Preço', 'Duração'],
-                       max_col_width=25,
                        auto_size_columns=True,
                        justification='center',
                        expand_y=True,
@@ -73,6 +72,42 @@ class VehicleTypesBoundary(AbstractBoundary):
                            element_justification='c',
                            resizable=True,
                            margins=(50, 50)) \
+            .Layout(layout)
+        button, values = window.Read()
+        window.close()
+        return {
+            'acao': button,
+            'valores': values
+        }
+
+    def menu_update_vehicle_types_screen(self, vehicle_type):
+        column_left = [
+            [sg.Table(values=vehicle_type,
+                       headings=['Código', 'Nome'],
+                       auto_size_columns=False,
+                       justification='center',
+                       num_rows=10,
+                       vertical_scroll_only=False)]
+        ]
+        
+        column_rigth = [
+            [sg.Text('Qual o código? *')],
+            [sg.In(key='codigo', justification='c', size=VehicleTypesBoundary.TEXT_SIZE)],
+            [sg.Submit('Atualizar', key=VehicleTypesBoundary.UPDATE, size=17)]
+        ]
+
+        layout = [
+            [sg.Text('Qual o tipo de veículo você gostaria de alterar?', font='Arial 16', pad=10)],
+            [sg.Column(column_left, element_justification='c'),
+             sg.Column([[sg.Text('',size=(2,0))]]),
+             sg.Column(column_rigth, element_justification='c', pad=10)],
+            [sg.Cancel('Voltar', key=VehicleTypesBoundary.CANCEL, size=VehicleTypesBoundary.TEXT_SIZE)]
+        ]
+        window = sg.Window('Flanelinha Veloz - Cadastro Tipos de Veículo',
+                           size=(900, 550),
+                           element_justification='c',
+                           resizable=True,
+                           margins=(100, 100)) \
             .Layout(layout)
         button, values = window.Read()
         window.close()

@@ -38,7 +38,7 @@ class VehicleTypesController:
     def open_read_employees_screen(self):
         while True:
             try:
-                all_vehicle_types = self.get_all_in_table()
+                all_vehicle_types = self.get_x_in_table('all')
                 if all_vehicle_types == []:
                     self.__boundary.show_message(
                     'Sem tipo de veículos cadastrados, cadastre algum!')
@@ -56,25 +56,28 @@ class VehicleTypesController:
             except Exception as e:
                 self.__boundary.show_message(str(e))
 
-    def get_all_in_table(self):
-        data = []
-        line_number = 0
-        for vehicle_type in self.__vehicle_types_dao.get_all():
-            data.append([vehicle_type.codigo, vehicle_type.nome, vehicle_type.preco, vehicle_type.duracao])
-        return data
-    
-    def update_total_code(self):
-        return_of_all = self.get_all_in_table()
-        if return_of_all == []:
-            self.__codigo = 0
-        else:
-            last = return_of_all[-1]
-            code = last[0]
-            self.__codigo = code + 1
-        return self.__codigo
-
     def open_update_employees_screen(self):
-        pass
+        while True:
+            try:
+                all_vehicle_types = self.get_x_in_table('cod_name')
+                if all_vehicle_types == []:
+                    self.__boundary.show_message(
+                    'Sem tipo de veículos cadastrados, cadastre algum!')
+                    break
+                else:
+                    values = self.__boundary.menu_update_vehicle_types_screen(all_vehicle_types)
+                    acao = values['acao']
+                    if acao == VehicleTypesBoundary.UPDATE:
+                        print(values['valores']['codigo'])
+                    elif acao is None:
+                        self.__system_controller.shutdown()
+                    else:
+                        break
+            except ValueError:
+                self.__boundary.show_message(
+                    'Existem campos em branco, confira!', 'red')
+            except Exception as e:
+                self.__boundary.show_message(str(e))
 
     def open_delete_employees_screen(self):
         pass
@@ -148,3 +151,26 @@ class VehicleTypesController:
         except KeyError:
             self.__boundary.show_message('Nenhum tipo de veículo encontrado!',
                                          'red')
+
+    def get_x_in_table(self, qtd):
+        data = []
+        if qtd == 'all':
+            for vehicle_type in self.__vehicle_types_dao.get_all():
+                data.append([vehicle_type.codigo, vehicle_type.nome, vehicle_type.preco, vehicle_type.duracao])
+        elif qtd == 'cod_name':
+            for vehicle_type in self.__vehicle_types_dao.get_all():
+                data.append([vehicle_type.codigo, vehicle_type.nome])
+        elif qtd == 'cod':
+            for vehicle_type in self.__vehicle_types_dao.get_all():
+                data.append(vehicle_type.codigo)
+        return data
+    
+    def update_total_code(self):
+        return_of_all = self.get_x_in_table('all')
+        if return_of_all == []:
+            self.__codigo = 0
+        else:
+            last = return_of_all[-1]
+            code = last[0]
+            self.__codigo = code + 1
+        return self.__codigo
