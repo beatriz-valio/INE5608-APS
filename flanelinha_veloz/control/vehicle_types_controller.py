@@ -5,12 +5,12 @@ from flanelinha_veloz.exceptions.durationValueNotValidException import DurationV
 from flanelinha_veloz.exceptions.missingDataException import MissingDataException
 from flanelinha_veloz.exceptions.priceValueNotValidException import PriceValueNotValidException
 from flanelinha_veloz.persistence.vehicleTypesDAO import VehicleTypesDAO
-from flanelinha_veloz.view.vehicle_types_boundary import vehicleTypesBoundary
+from flanelinha_veloz.view.vehicle_types_boundary import VehicleTypesBoundary
 
 
 class VehicleTypesController:
     def __init__(self, system_controller):
-        self.__boundary = vehicleTypesBoundary()
+        self.__boundary = VehicleTypesBoundary()
         self.__vehicle_types_dao = VehicleTypesDAO()
         self.__system_controller = system_controller
         self.__codigo = 0
@@ -85,7 +85,7 @@ class VehicleTypesController:
                 values = self.__boundary.registration_vehicle_types_screen()
                 acao = values['acao']
                 all_value_good = True
-                if acao == vehicleTypesBoundary.SUBMIT:
+                if acao == VehicleTypesBoundary.SUBMIT:
                     valores = values['valores']
                     for value in valores:
                         if valores[value] is None or valores[value] == '':

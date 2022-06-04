@@ -80,8 +80,8 @@ class EmployeesBoundary(AbstractBoundary):
              sg.Listbox(values=EmployeesBoundary.WEEKDAYS_OPTIONS,
                         select_mode='extended', key="dias_trabalhados",
                         size=(68, 7))],
-            [sg.Cancel("Voltar", key=EmployeesBoundary.CANCEL),
-             sg.Submit("Cadastrar", key=EmployeesBoundary.SUBMIT)]
+            [sg.Cancel("Voltar", key=EmployeesBoundary.CANCEL, size=EmployeesBoundary.TEXT_SIZE),
+             sg.Submit("Cadastrar", key=EmployeesBoundary.SUBMIT, size=EmployeesBoundary.TEXT_SIZE)]
         ]
         window = sg.Window("Flanelinha Veloz - Cadastro Usuário Empresa",
                            size=(900, 550),
@@ -177,10 +177,10 @@ class EmployeesBoundary(AbstractBoundary):
                         default_values=employee.dias_trabalhados,
                         key="dias_trabalhados",
                         size=(68, 7))],
-            [sg.Cancel("Voltar", key=EmployeesBoundary.CANCEL),
-             sg.Submit("Salvar Informações", key=EmployeesBoundary.SUBMIT)],
+            [sg.Cancel("Voltar", key=EmployeesBoundary.CANCEL, size=EmployeesBoundary.TEXT_SIZE),
+             sg.Submit("Salvar Informações", key=EmployeesBoundary.SUBMIT, size=EmployeesBoundary.TEXT_SIZE)],
             [sg.Text("Gostaria de excluir seu perfil?"),
-             sg.Button("Excluir perfil", key=EmployeesBoundary.DELETE)]
+             sg.Button("Excluir perfil", key=EmployeesBoundary.DELETE, size=EmployeesBoundary.TEXT_SIZE)]
         ]
         window = sg.Window("Flanelinha Veloz - Cadastro Usuário Empresa",
                            size=(900, 550),
@@ -266,8 +266,8 @@ class EmployeesBoundary(AbstractBoundary):
                         key="dias_trabalhados",
                         disabled=True,
                         size=(68, 7))],
-            [sg.Cancel("Voltar", key=EmployeesBoundary.CANCEL),
-             sg.Submit("Alterar informações", key=EmployeesBoundary.UPDATE)],
+            [sg.Cancel("Voltar", key=EmployeesBoundary.CANCEL, size=EmployeesBoundary.TEXT_SIZE),
+             sg.Submit("Alterar informações", key=EmployeesBoundary.UPDATE, size=EmployeesBoundary.TEXT_SIZE)],
         ]
         window = sg.Window("Flanelinha Veloz - Perfil",
                            size=(900, 550),
