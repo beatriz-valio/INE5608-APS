@@ -39,9 +39,10 @@ class VehicleTypesController:
         while True:
             try:
                 all_vehicle_types = self.get_all_in_table()
-                if all_vehicle_types is None:
+                if all_vehicle_types == []:
                     self.__boundary.show_message(
                     'Sem tipo de veículos cadastrados, cadastre algum!')
+                    break
                 else:
                     values = self.__boundary.read_vehicle_types_screen(all_vehicle_types)
                     acao = values['acao']
