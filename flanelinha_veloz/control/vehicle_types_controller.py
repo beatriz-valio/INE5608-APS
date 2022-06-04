@@ -1,6 +1,5 @@
 from datetime import timedelta, datetime
 
-from sqlalchemy import false
 from flanelinha_veloz.entity.veiculo import Veiculo
 from flanelinha_veloz.exceptions.durationValueNotValidException import DurationValueNotValidException
 from flanelinha_veloz.exceptions.missingDataException import MissingDataException
@@ -17,7 +16,7 @@ class VehicleTypesController:
         self.__codigo = 0
     
     def open_screen(self):
-        try:
+        try:            
             action_options = {
                 None: self.__system_controller.shutdown,
                 0: self.return_menu_manager,
@@ -37,7 +36,37 @@ class VehicleTypesController:
         self.__system_controller.menu_controller.open_menu_manager()
 
     def open_read_employees_screen(self):
-        pass
+        while True:
+            try:
+                all_vehicle_types = self.get_all_in_table()
+                if all_vehicle_types is None:
+                    self.__boundary.show_message(
+                    'Sem tipo de veículos cadastrados, cadastre algum!')
+                else:
+                    values = self.__boundary.read_vehicle_types_screen(all_vehicle_types)
+                    acao = values['acao']
+                    if acao is None:
+                        self.__system_controller.shutdown()
+                    else:
+                        break
+            except ValueError:
+                self.__boundary.show_message(
+                    'Existem campos em branco, confira!', 'red')
+            except Exception as e:
+                self.__boundary.show_message(str(e))
+
+    def get_all_in_table(self):
+        data = []
+        line_number = 0
+        for vehicle_type in self.__vehicle_types_dao.get_all():
+            data.append([vehicle_type.codigo, vehicle_type.nome, vehicle_type.preco, vehicle_type.duracao])
+        return data
+    
+    def update_total_code(self):
+        last = self.get_all_in_table()[-1]
+        code = last[0]
+        self.__codigo = code + 1
+        return self.__codigo
 
     def open_update_employees_screen(self):
         pass
@@ -67,7 +96,7 @@ class VehicleTypesController:
                         duracao = datetime.strptime(duracao,"%H:%M")
                         duracao = timedelta(hours=duracao.hour, minutes=duracao.minute)
                         nome = valores['nome']
-                        codigo = self.__codigo
+                        codigo = self.update_total_code()
                         obj = Veiculo(codigo, duracao, nome, preco)
                         self.vehicle_types_registration(obj)
                         self.__boundary.show_message(
@@ -99,8 +128,8 @@ class VehicleTypesController:
         if vehicle_types is not None and \
                 isinstance(vehicle_types, Veiculo) and \
                 vehicle_types not in self.__vehicle_types_dao.get_all():
+            self.update_total_code()
             self.__vehicle_types_dao.add(vehicle_types)
-            self.__codigo = self.__codigo + 1
 
     def vehicle_types_delete(self, vehicle_types: Veiculo):
         if vehicle_types is not None and \
