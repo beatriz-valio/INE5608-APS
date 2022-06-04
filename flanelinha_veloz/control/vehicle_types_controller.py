@@ -75,6 +75,9 @@ class VehicleTypesController:
                         self.__system_controller.shutdown()
                     else:
                         break
+            except ValueError:
+                self.__boundary.show_message(
+                    'Valores em branco, favor conferir.', 'red')
             except Exception as e:
                 self.__boundary.show_message(str(e))
 
