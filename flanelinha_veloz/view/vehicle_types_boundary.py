@@ -124,6 +124,7 @@ class VehicleTypesBoundary(AbstractBoundary):
              sg.In(default_text=vehicle_type.preco, key='preco', size=VehicleTypesBoundary.INPUT_SIZE)],
             [sg.Text('Duração: * (hh:mm) ', size=VehicleTypesBoundary.TEXT_SIZE),
              sg.In(default_text=vehicle_type.duracao, key='duracao', size=VehicleTypesBoundary.INPUT_SIZE)],
+            # TODO Mudar a formatação da exibição do dado
             [sg.Cancel('Voltar', key=VehicleTypesBoundary.CANCEL, size=VehicleTypesBoundary.TEXT_SIZE),
              sg.Submit('Cadastrar', key=VehicleTypesBoundary.SUBMIT, size=VehicleTypesBoundary.TEXT_SIZE)]
         ]
