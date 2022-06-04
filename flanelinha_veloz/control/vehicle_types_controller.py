@@ -64,9 +64,13 @@ class VehicleTypesController:
         return data
     
     def update_total_code(self):
-        last = self.get_all_in_table()[-1]
-        code = last[0]
-        self.__codigo = code + 1
+        return_of_all = self.get_all_in_table()
+        if return_of_all == []:
+            self.__codigo = 0
+        else:
+            last = return_of_all[-1]
+            code = last[0]
+            self.__codigo = code + 1
         return self.__codigo
 
     def open_update_employees_screen(self):
