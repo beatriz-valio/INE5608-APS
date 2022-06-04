@@ -27,8 +27,10 @@ class LoginBoundary(AbstractBoundary):
         ]
 
         window = sg.Window('Flanelinha Veloz - Realize seu login',
-                           layout=layout, size=(900, 500),
-                           element_justification="c")
+                           layout=layout,
+                           size=(900, 550),
+                           element_justification="c",
+                           margins=(25, 25))
 
         button, values = window.Read()
         window.close()
