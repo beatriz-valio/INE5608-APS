@@ -23,7 +23,7 @@ class VehicleTypesController:
                 1: self.open_create_employees_screen,
                 2: self.open_read_employees_screen,
                 3: self.open_menu_update_employees_screen,
-                4: self.open_delete_employees_screen
+                4: self.open_menu_delete_employees_screen
             }
             while True:
                 option_number = self.__boundary.open_options()
@@ -64,6 +64,7 @@ class VehicleTypesController:
                     self.__boundary.show_message(
                     'Sem tipo de veículos cadastrados, cadastre algum!')
                     break
+                # TODO Verificar se o número existe na base
                 else:
                     values = self.__boundary.menu_update_vehicle_types_screen(all_vehicle_types)
                     acao = values['acao']
@@ -118,8 +119,33 @@ class VehicleTypesController:
             except Exception as e:
                 self.__boundary.show_message(str(e))
 
-    def open_delete_employees_screen(self):
-        pass
+    def open_menu_delete_employees_screen(self):
+        while True:
+            try:
+                all_vehicle_types = self.get_x_in_table('cod_name')
+                if all_vehicle_types == []:
+                    self.__boundary.show_message(
+                    'Sem tipo de veículos cadastrados, cadastre algum!')
+                    break
+                else:
+                    values = self.__boundary.menu_delete_vehicle_types_screen(all_vehicle_types)
+                    acao = values['acao']
+                    if acao == VehicleTypesBoundary.DELETE:
+                        codigo_para_atualizacao = int(values['valores']['codigo'])
+                        vehicle_type = self.search_for_vehicle_types_by_codigo(codigo_para_atualizacao)
+                        self.vehicle_types_delete(vehicle_type)
+                        self.__boundary.show_message(
+                            'Tipo de veículo deletado com sucesso!', 'green')
+                        self.open_screen()
+                    elif acao is None:
+                        self.__system_controller.shutdown()
+                    else:
+                        break
+            except ValueError:
+                self.__boundary.show_message(
+                    'Valores em branco, favor conferir.', 'red')
+            except Exception as e:
+                self.__boundary.show_message(str(e))
 
     def open_create_employees_screen(self):
         while True:

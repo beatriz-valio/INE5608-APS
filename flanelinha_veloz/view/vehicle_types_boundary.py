@@ -67,7 +67,7 @@ class VehicleTypesBoundary(AbstractBoundary):
                        vertical_scroll_only=True)],
             [sg.Cancel('Voltar', key=VehicleTypesBoundary.CANCEL, size=VehicleTypesBoundary.TEXT_SIZE)]
         ]
-        window = sg.Window('Flanelinha Veloz - Cadastro Tipos de Veículo',
+        window = sg.Window('Flanelinha Veloz - Lista dos Tipos de Veículo',
                            size=(900, 550),
                            element_justification='c',
                            resizable=True,
@@ -84,7 +84,8 @@ class VehicleTypesBoundary(AbstractBoundary):
         column_left = [
             [sg.Table(values=vehicle_type,
                        headings=['Código', 'Nome'],
-                       auto_size_columns=False,
+                       auto_size_columns=True,
+                       # TODO Ajustar o tamanho da coluna/tipo de scroll
                        justification='center',
                        num_rows=10,
                        vertical_scroll_only=False)]
@@ -103,7 +104,7 @@ class VehicleTypesBoundary(AbstractBoundary):
              sg.Column(column_rigth, element_justification='c', pad=10)],
             [sg.Cancel('Voltar', key=VehicleTypesBoundary.CANCEL, size=VehicleTypesBoundary.TEXT_SIZE)]
         ]
-        window = sg.Window('Flanelinha Veloz - Cadastro Tipos de Veículo',
+        window = sg.Window('Flanelinha Veloz - Atualização Tipos de Veículo',
                            size=(900, 550),
                            element_justification='c',
                            resizable=True,
@@ -128,11 +129,47 @@ class VehicleTypesBoundary(AbstractBoundary):
             [sg.Cancel('Voltar', key=VehicleTypesBoundary.CANCEL, size=VehicleTypesBoundary.TEXT_SIZE),
              sg.Submit('Cadastrar', key=VehicleTypesBoundary.SUBMIT, size=VehicleTypesBoundary.TEXT_SIZE)]
         ]
-        window = sg.Window('Flanelinha Veloz - Cadastro Tipos de Veículo',
+        window = sg.Window('Flanelinha Veloz - Atualização Tipos de Veículo',
                            size=(900, 550),
                            element_justification='c',
                            resizable=True,
                            margins=(200, 200)) \
+            .Layout(layout)
+        button, values = window.Read()
+        window.close()
+        return {
+            'acao': button,
+            'valores': values
+        }
+    
+    def menu_delete_vehicle_types_screen(self, vehicle_type):
+        column_left = [
+            [sg.Table(values=vehicle_type,
+                       headings=['Código', 'Nome'],
+                       auto_size_columns=True,
+                       justification='center',
+                       num_rows=10,
+                       vertical_scroll_only=False)]
+        ]
+        
+        column_rigth = [
+            [sg.Text('Qual o código? *')],
+            [sg.In(key='codigo', justification='c', size=VehicleTypesBoundary.TEXT_SIZE)],
+            [sg.Submit('Deletar', key=VehicleTypesBoundary.DELETE, size=17)]
+        ]
+
+        layout = [
+            [sg.Text('Qual o tipo de veículo você gostaria de deletar?', font='Arial 16', pad=10)],
+            [sg.Column(column_left, element_justification='c'),
+             sg.Column([[sg.Text('',size=(2,0))]]),
+             sg.Column(column_rigth, element_justification='c', pad=10)],
+            [sg.Cancel('Voltar', key=VehicleTypesBoundary.CANCEL, size=VehicleTypesBoundary.TEXT_SIZE)]
+        ]
+        window = sg.Window('Flanelinha Veloz - Deletar Tipos de Veículo',
+                           size=(900, 550),
+                           element_justification='c',
+                           resizable=True,
+                           margins=(100, 100)) \
             .Layout(layout)
         button, values = window.Read()
         window.close()
