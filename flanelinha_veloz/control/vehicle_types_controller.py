@@ -62,16 +62,23 @@ class VehicleTypesController:
                 all_vehicle_types = self.get_x_in_table('cod_name')
                 if all_vehicle_types == []:
                     self.__boundary.show_message(
-                    'Sem tipo de veículos cadastrados, cadastre algum!')
+                    'Sem tipos de veículos cadastrados, cadastre algum!')
                     break
-                # TODO Verificar se o número existe na base
                 else:
                     values = self.__boundary.menu_update_vehicle_types_screen(all_vehicle_types)
                     acao = values['acao']
                     if acao == VehicleTypesBoundary.UPDATE:
-                        codigo_para_atualizacao = int(values['valores']['codigo'])
-                        vehicle_type = self.search_for_vehicle_types_by_codigo(codigo_para_atualizacao)
-                        self.open_update_employees_screen(vehicle_type, codigo_para_atualizacao)
+                        try:
+                            codigo_para_atualizacao = int(values['valores']['codigo'])
+                            vehicle_type = self.search_for_vehicle_types_by_codigo(codigo_para_atualizacao)
+                            if vehicle_type != None:
+                                self.open_update_employees_screen(vehicle_type, codigo_para_atualizacao)
+                            else:
+                                raise Exception
+                        except Exception:
+                            self.__boundary.show_message(
+                            'Esse código não existe na base!')
+                            self.open_menu_update_employees_screen()
                     elif acao is None:
                         self.__system_controller.shutdown()
                     else:
@@ -95,20 +102,21 @@ class VehicleTypesController:
                     codigo = codigo_para_atualizacao
                     preco = valor_atualicao['preco']
                     duracao = valor_atualicao['duracao']
-                    preco = float(preco)
-                    if not isinstance(preco, float):
+                    try:
+                        preco = float(preco)
+                    except Exception:
                         raise PriceValueNotValidException
-                    elif len(duracao)>5 or len(duracao)<3 or not self.validate_duration(duracao):
+                    try:
+                        duracao = datetime.strptime(duracao,"%H:%M")    
+                    except Exception:
                         raise DurationValueNotValidException
-                    else:
-                        duracao = datetime.strptime(duracao,"%H:%M")
-                        duracao = timedelta(hours=duracao.hour, minutes=duracao.minute)
-                        nome = valor_atualicao['nome']
-                        obj = Veiculo(codigo, duracao, nome, preco)
-                        self.vehicle_types_registration(obj)
-                        self.__boundary.show_message(
-                            'Cadastramento do tipo de veículo concluído!', 'green')
-                        break
+                    duracao = timedelta(hours=duracao.hour, minutes=duracao.minute)
+                    nome = valor_atualicao['nome']
+                    obj = Veiculo(codigo, duracao, nome, preco)
+                    self.vehicle_types_registration(obj)
+                    self.__boundary.show_message(
+                        'Atualização do tipo de veículo concluído!', 'green')
+                    self.open_screen()
                 elif acoes is None:
                     self.__system_controller.shutdown()
                 else:
@@ -131,12 +139,20 @@ class VehicleTypesController:
                     values = self.__boundary.menu_delete_vehicle_types_screen(all_vehicle_types)
                     acao = values['acao']
                     if acao == VehicleTypesBoundary.DELETE:
-                        codigo_para_atualizacao = int(values['valores']['codigo'])
-                        vehicle_type = self.search_for_vehicle_types_by_codigo(codigo_para_atualizacao)
-                        self.vehicle_types_delete(vehicle_type)
-                        self.__boundary.show_message(
-                            'Tipo de veículo deletado com sucesso!', 'green')
-                        self.open_screen()
+                        try:
+                            codigo_para_atualizacao = int(values['valores']['codigo'])
+                            vehicle_type = self.search_for_vehicle_types_by_codigo(codigo_para_atualizacao)
+                            if vehicle_type != None:
+                                self.vehicle_types_delete(vehicle_type)
+                                self.__boundary.show_message(
+                                    'Tipo de veículo deletado com sucesso!', 'green')
+                                self.open_screen()
+                            else:
+                                raise Exception
+                        except Exception:
+                            self.__boundary.show_message(
+                            'Esse código não existe na base!')
+                            self.open_menu_delete_employees_screen()
                     elif acao is None:
                         self.__system_controller.shutdown()
                     else:
@@ -159,22 +175,23 @@ class VehicleTypesController:
                             raise MissingDataException
                     preco = valores['preco']
                     duracao = valores['duracao']
-                    preco = float(preco)
-                    if not isinstance(preco, float):
+                    try:
+                        preco = float(preco)
+                    except Exception:
                         raise PriceValueNotValidException
-                    elif len(duracao)>5 or len(duracao)<3 or not self.validate_duration(duracao):
+                    try:
+                        duracao = datetime.strptime(duracao,"%H:%M")    
+                    except Exception:
                         raise DurationValueNotValidException
-                    else:
-                        duracao = datetime.strptime(duracao,"%H:%M")
-                        duracao = timedelta(hours=duracao.hour, minutes=duracao.minute)
-                        nome = valores['nome']
-                        codigo = self.update_total_code()
-                        obj = Veiculo(codigo, duracao, nome, preco)
-                        self.vehicle_types_registration(obj)
-                        self.update_total_code()
-                        self.__boundary.show_message(
-                            'Cadastramento do tipo de veículo concluído!', 'green')
-                        break
+                    duracao = timedelta(hours=duracao.hour, minutes=duracao.minute)
+                    nome = valores['nome']
+                    codigo = self.update_total_code()
+                    obj = Veiculo(codigo, duracao, nome, preco)
+                    self.vehicle_types_registration(obj)
+                    self.update_total_code()
+                    self.__boundary.show_message(
+                        'Cadastramento do tipo de veículo concluído!', 'green')
+                    break
                 elif acao is None:
                     self.__system_controller.shutdown()
                 else:
@@ -220,7 +237,8 @@ class VehicleTypesController:
         data = []
         if qtd == 'all':
             for vehicle_type in self.__vehicle_types_dao.get_all():
-                data.append([vehicle_type.codigo, vehicle_type.nome, vehicle_type.preco, vehicle_type.duracao])
+                duracao = str(vehicle_type.duracao)[:-3]
+                data.append([vehicle_type.codigo, vehicle_type.nome, vehicle_type.preco, duracao])
         elif qtd == 'cod_name':
             for vehicle_type in self.__vehicle_types_dao.get_all():
                 data.append([vehicle_type.codigo, vehicle_type.nome])

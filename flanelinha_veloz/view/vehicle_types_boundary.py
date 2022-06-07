@@ -85,7 +85,6 @@ class VehicleTypesBoundary(AbstractBoundary):
             [sg.Table(values=vehicle_type,
                        headings=['Código', 'Nome'],
                        auto_size_columns=True,
-                       # TODO Ajustar o tamanho da coluna/tipo de scroll
                        justification='center',
                        num_rows=10,
                        vertical_scroll_only=False)]
@@ -118,14 +117,14 @@ class VehicleTypesBoundary(AbstractBoundary):
         }
     
     def update_vehicle_types_screen(self, vehicle_type):
+        duracao = str(vehicle_type.duracao)[:-3]
         layout = [
             [sg.Text('Nome: * ', size=VehicleTypesBoundary.TEXT_SIZE),
              sg.In(default_text=vehicle_type.nome, key='nome', size=VehicleTypesBoundary.INPUT_SIZE)],
             [sg.Text('Preço: * ', size=VehicleTypesBoundary.TEXT_SIZE),
              sg.In(default_text=vehicle_type.preco, key='preco', size=VehicleTypesBoundary.INPUT_SIZE)],
             [sg.Text('Duração: * (hh:mm) ', size=VehicleTypesBoundary.TEXT_SIZE),
-             sg.In(default_text=vehicle_type.duracao, key='duracao', size=VehicleTypesBoundary.INPUT_SIZE)],
-            # TODO Mudar a formatação da exibição do dado
+             sg.In(default_text=duracao, key='duracao', size=VehicleTypesBoundary.INPUT_SIZE)],
             [sg.Cancel('Voltar', key=VehicleTypesBoundary.CANCEL, size=VehicleTypesBoundary.TEXT_SIZE),
              sg.Submit('Cadastrar', key=VehicleTypesBoundary.SUBMIT, size=VehicleTypesBoundary.TEXT_SIZE)]
         ]
