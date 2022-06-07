@@ -17,7 +17,7 @@ class MenuController:
         self.__system_controller.vehicle_types_controller.open_screen()
 
     def see_types_of_services(self):
-        pass
+        self.__system_controller.types_of_services_controller.open_screen()
 
     def open_menu_client(self):
         try:
