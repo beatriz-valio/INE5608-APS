@@ -1,5 +1,6 @@
 from flanelinha_veloz.control.client_controller import ClientController
 from flanelinha_veloz.control.employees_controller import EmployeesController
+from flanelinha_veloz.control.establishment_operation_controller import EstablishmentOperationController
 from flanelinha_veloz.control.login_controller import LoginController
 from flanelinha_veloz.control.menu_controller import MenuController
 from flanelinha_veloz.control.vehicle_types_controller import VehicleTypesController
@@ -15,6 +16,7 @@ class SystemController:
         self.__employees_controller = EmployeesController(self)
         self.__vehicle_types_controller = VehicleTypesController(self)
         self.__types_of_services_controller = TypesOfServicesController(self)
+        self.__establishment_operation_controller = EstablishmentOperationController(self)
         self.__menu_controller = MenuController(self)
         self.__logged_user: Usuario or None = None
 
@@ -44,6 +46,10 @@ class SystemController:
     @property
     def types_of_services_controller(self):
         return self.__types_of_services_controller
+
+    @property
+    def establishment_operation_controller(self):
+        return self.__establishment_operation_controller
 
     def open_login_screen(self):
         self.__login_controller.open_screen()

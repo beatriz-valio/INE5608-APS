@@ -33,6 +33,7 @@ class MenuBoundary(AbstractBoundary):
             [sg.Button('Ver perfil', key=MenuBoundary.OPEN_PROFILE, size=MenuBoundary.TEXT_SIZE)],
             [sg.Button('Tipos de Veículos', key=2, size=MenuBoundary.TEXT_SIZE)],
             [sg.Button('Tipos de Serviços', key=3, size=MenuBoundary.TEXT_SIZE)],
+            [sg.Button('Estabelecimento', key=4, size=MenuBoundary.TEXT_SIZE)],
             [sg.Cancel('Sair', key=MenuBoundary.SHUTDOWN, size=MenuBoundary.TEXT_SIZE)]
 
         ]
