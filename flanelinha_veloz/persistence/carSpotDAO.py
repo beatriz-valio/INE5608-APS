@@ -1,16 +1,15 @@
 from flanelinha_veloz.persistence.abstractDAO import DAO
-from flanelinha_veloz.entity.vagas import Vagas
+from flanelinha_veloz.entity.vaga import Vaga
 
 
 class CarSpotDAO(DAO):
     def __init__(self):
         super().__init__('/car_spot_list.pkl')
 
-    def add(self, car_spot: Vagas):
-        if isinstance(car_spot.vaga, int) and \
-                (car_spot is not None) and \
-                isinstance(car_spot, Vagas):
-            super().add(car_spot.vaga, car_spot)
+    def add(self, car_spot: Vaga, key: int):
+        if isinstance(key, int) and \
+                isinstance(car_spot, Vaga):
+            super().add(key, car_spot)
 
     def get(self, key: int):
         if isinstance(key, int):

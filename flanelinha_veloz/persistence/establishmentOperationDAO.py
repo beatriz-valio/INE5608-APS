@@ -7,15 +7,13 @@ class EstablishmentOperationDAO(DAO):
         super().__init__('/establishment_operation_list.pkl')
 
     def add(self, establishment_operation: Estabelecimento):
-
-        if isinstance(establishment_operation.total_vagas, int) and \
+        if isinstance(establishment_operation.total_de_vagas, int) and \
                 (establishment_operation is not None) and \
-                isinstance(establishment_operation, Vagas):
-            super().add(establishment_operation.total_vagas, establishment_operation)
+                isinstance(establishment_operation, Estabelecimento):
+            super().add(0, establishment_operation)
 
-    def get(self, key: int):
-        if isinstance(key, int):
-            return super().get(key)
+    def get(self):
+        return super().get(0)
 
     def remove(self, key: int):
         if isinstance(key, int):

@@ -22,6 +22,9 @@ class MenuController:
     def see_establishment_operation(self):
         self.__system_controller.establishment_operation_controller.open_screen()
 
+    def see_car_spot(self):
+        self.__system_controller.car_spot_controller.open_screen()
+
     def open_menu_client(self):
         try:
             action_options = {
@@ -44,7 +47,8 @@ class MenuController:
                 1: self.see_employees_profile,
                 2: self.see_vehicle_types,
                 3: self.see_types_of_services,
-                4: self.see_establishment_operation,
+                4: self.see_car_spot,
+                5: self.see_establishment_operation,
             }
             while True:
                 option_number = self.__menu_screen.open_menu_manager()
