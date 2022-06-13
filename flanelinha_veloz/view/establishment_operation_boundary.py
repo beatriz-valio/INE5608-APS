@@ -10,9 +10,6 @@ class EstablishmentOperationBoundary(AbstractBoundary):
     WEEKDAYS_OPTIONS = ['Domingo', 'Segunda-feira', 'Terça-feira',
                         'Quarta-feira', 'Quinta-feira', 'Sexta-feira',
                         'Sábado']
-    SCHEDULES = ['Domingo', 'Segunda-feira', 'Terça-feira',
-                        'Quarta-feira', 'Quinta-feira', 'Sexta-feira',
-                        'Sábado']
     TEXT_SIZE = 20
     INPUT_SIZE = 70
 

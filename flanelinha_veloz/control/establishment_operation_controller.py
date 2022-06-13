@@ -23,9 +23,9 @@ class EstablishmentOperationController:
                 # 4: self.open_menu_delete_vehicle_type_screen
             }
             while True:
-                dias_funcionando = self.__system_controller.establishment['dias_de_funcionamento']
+                dias_funcionando = self.__system_controller.establishment.dias_de_funcionamento
                 print(dias_funcionando)
-                horarios_funcionando = self.__system_controller.establishment['horarios_de_funcionamento']
+                horarios_funcionando = self.__system_controller.establishment.horarios_de_funcionamento
                 print(horarios_funcionando)
                 option_number = self.__boundary.open_over_view(dias_funcionando, horarios_funcionando)
                 selected_function = action_options[option_number]
