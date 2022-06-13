@@ -32,7 +32,6 @@ class SystemController:
     def establishment(self) -> Estabelecimento:
         return self.__establishment
 
-
     @establishment.setter
     def establishment(self, value: Estabelecimento):
         self.__establishment = value
@@ -42,10 +41,9 @@ class SystemController:
         if daoObject:
             self.establishment = daoObject
         else:
-            # TODO: Colocar o default de horario e dia (comercial) de funcionamento
             # TODO: Pensar em como colocar a lista de horários -> 1 e ultimo valor ou todos
             daoObject = Estabelecimento(0, ['Segunda-feira', 'Terça-feira',
-                        'Quarta-feira', 'Quinta-feira', 'Sexta-feira'], [])
+                        'Quarta-feira', 'Quinta-feira', 'Sexta-feira'], ['09:00', '18:00'])
             self.establishment = daoObject
             self.__establishment_operation_controller.establishment_operation_dao.add(daoObject)
 

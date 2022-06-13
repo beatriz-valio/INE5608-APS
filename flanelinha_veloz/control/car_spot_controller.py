@@ -1,4 +1,3 @@
-from flanelinha_veloz.entity.vaga import Vaga
 from flanelinha_veloz.exceptions.exceededSpotCarValueNotValidException import ExceededSpotCarValueNotValidException
 from flanelinha_veloz.exceptions.missingSpotCarException import MissingSpotCarException
 from flanelinha_veloz.exceptions.spotCarValueNotValidException import SpotCarValueNotValidException
@@ -125,22 +124,3 @@ class CarSpotController:
                     'Existem campos em branco, confira!', 'red')
             except Exception as e:
                 self.__boundary.show_message(str(e))
-
-    # def car_spot_registration(self, car_spot: Vaga):
-    #     if car_spot is not None and \
-    #             isinstance(car_spot, Vaga) and \
-    #             car_spot not in self.__car_spot_dao.get_all():
-    #         self.__car_spot_dao.add(car_spot)
-    #
-    # def car_spot_delete(self, car_spot: Vaga):
-    #     if car_spot is not None and \
-    #             isinstance(car_spot, Vaga) and \
-    #             car_spot in self.__car_spot_dao.get_all():
-    #         self.__car_spot_dao.remove(car_spot.codigo)
-    #
-    # def search_for_car_spot_by_codigo(self, codigo: int):
-    #     try:
-    #         return self.__car_spot_dao.get(codigo)
-    #     except KeyError:
-    #         self.__boundary.show_message('Nenhuma vaga cadastrada!',
-    #                                      'red')
