@@ -14,9 +14,9 @@ class TypesOfServicesController:
         self.__types_of_services_dao = TypesOfServicesDAO()
         self.__system_controller = system_controller
         self.__codigo = 0
-    
+
     def open_screen(self):
-        try:            
+        try:
             action_options = {
                 None: self.__system_controller.shutdown,
                 0: self.return_menu_manager,
@@ -31,7 +31,7 @@ class TypesOfServicesController:
                 selected_function()
         except Exception as e:
             self.__boundary.show_message(str(e))
-    
+
     def return_menu_manager(self):
         self.__system_controller.menu_controller.open_menu_manager()
 
@@ -41,7 +41,7 @@ class TypesOfServicesController:
                 all_types_of_services = self.get_x_in_table('all')
                 if all_types_of_services == []:
                     self.__boundary.show_message(
-                    'Sem tipo de serviço cadastrados, cadastre algum!')
+                        'Sem tipo de serviço cadastrados, cadastre algum!')
                     break
                 else:
                     values = self.__boundary.read_types_of_services_screen(all_types_of_services)
@@ -62,7 +62,7 @@ class TypesOfServicesController:
                 all_types_of_services = self.get_x_in_table('cod_name')
                 if all_types_of_services == []:
                     self.__boundary.show_message(
-                    'Sem tipos de serviço cadastrados, cadastre algum!')
+                        'Sem tipos de serviço cadastrados, cadastre algum!')
                     break
                 else:
                     values = self.__boundary.menu_update_types_of_services_screen(all_types_of_services)
@@ -77,7 +77,7 @@ class TypesOfServicesController:
                                 raise Exception
                         except Exception:
                             self.__boundary.show_message(
-                            'Esse código não existe na base!')
+                                'Esse código não existe na base!')
                             self.open_menu_update_types_of_services_screen()
                     elif acao is None:
                         self.__system_controller.shutdown()
@@ -107,7 +107,7 @@ class TypesOfServicesController:
                     except Exception:
                         raise PriceValueNotValidException
                     try:
-                        duracao = datetime.strptime(duracao,"%H:%M")    
+                        duracao = datetime.strptime(duracao, "%H:%M")
                     except Exception:
                         raise DurationValueNotValidException
                     duracao = timedelta(hours=duracao.hour, minutes=duracao.minute)
@@ -133,7 +133,7 @@ class TypesOfServicesController:
                 all_types_of_services = self.get_x_in_table('cod_name')
                 if all_types_of_services == []:
                     self.__boundary.show_message(
-                    'Sem tipos de serviço cadastrados, cadastre algum!')
+                        'Sem tipos de serviço cadastrados, cadastre algum!')
                     break
                 else:
                     values = self.__boundary.menu_delete_types_of_services_screen(all_types_of_services)
@@ -151,7 +151,7 @@ class TypesOfServicesController:
                                 raise Exception
                         except Exception:
                             self.__boundary.show_message(
-                            'Esse código não existe na base!')
+                                'Esse código não existe na base!')
                             self.open_menu_delete_types_of_services_screen()
                     elif acao is None:
                         self.__system_controller.shutdown()
@@ -180,7 +180,7 @@ class TypesOfServicesController:
                     except Exception:
                         raise PriceValueNotValidException
                     try:
-                        duracao = datetime.strptime(duracao,"%H:%M")    
+                        duracao = datetime.strptime(duracao, "%H:%M")
                     except Exception:
                         raise DurationValueNotValidException
                     duracao = timedelta(hours=duracao.hour, minutes=duracao.minute)
@@ -233,6 +233,17 @@ class TypesOfServicesController:
             self.__boundary.show_message('Nenhum tipo de serviço encontrado!',
                                          'red')
 
+    def search_for_types_of_service_by_name(self, name: str):
+        try:
+            for service_type in self.__types_of_services_dao.get_all():
+                if service_type.nome == name:
+                    return service_type
+                else:
+                    raise Exception
+        except KeyError:
+            self.__boundary.show_message('Nenhum tipo de serviço encontrado!',
+                                         'red')
+
     def get_x_in_table(self, qtd):
         data = []
         if qtd == 'all':
@@ -246,7 +257,7 @@ class TypesOfServicesController:
             for vehicle_type in self.__types_of_services_dao.get_all():
                 data.append(vehicle_type.codigo)
         return data
-    
+
     def update_total_code(self):
         return_of_all = self.get_x_in_table('all')
         if return_of_all == []:

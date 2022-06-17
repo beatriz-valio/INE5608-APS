@@ -2,6 +2,8 @@ import hashlib
 from datetime import datetime as dt
 
 from flanelinha_veloz.entity.cliente import Cliente
+from flanelinha_veloz.entity.servico import Servico
+from flanelinha_veloz.entity.veiculo import Veiculo
 from flanelinha_veloz.exceptions.cpfNotValidException import \
     CPFNotValidException
 from flanelinha_veloz.exceptions.emailDoesntMatchException import \
@@ -14,6 +16,8 @@ from flanelinha_veloz.exceptions.passwordDoesntMatchException import \
 from flanelinha_veloz.exceptions.userAlreadyExistException import \
     UserAlreadyExistException
 from flanelinha_veloz.persistence.clienteDAO import ClienteDAO
+from flanelinha_veloz.persistence.typesOfServicesDAO import TypesOfServicesDAO
+from flanelinha_veloz.persistence.vehicleTypesDAO import VehicleTypesDAO
 from flanelinha_veloz.view.client_boundary import ClientBoundary
 
 
@@ -22,6 +26,8 @@ class ClientController:
         self.__client_screen = ClientBoundary()
         self.__client_dao = ClienteDAO()
         self.__system_controller = system_controller
+        self.__types_of_services_dao = TypesOfServicesDAO()
+        self.__vehicle_types_dao = VehicleTypesDAO()
 
     @property
     def client_dao(self):
@@ -44,6 +50,7 @@ class ClientController:
                     action = client_values['action']
                     if action == ClientBoundary.UPDATE:
                         client_return = client_values['client']
+                        del (client_return['Calendário'])
                         self.check_if_is_complete(client_return)
                         cpf = logged_user.cpf
                         email = client_return['email']
@@ -98,7 +105,6 @@ class ClientController:
         return self.__client_dao.get(cpf)
 
     def check_if_is_complete(self, data):
-        del (data['Calendário'])
         for value in data:
             if data[value] is None or data[value] == '':
                 raise MissingDataException
@@ -110,6 +116,7 @@ class ClientController:
                 action = client_values['action']
                 if action == ClientBoundary.CREATE:
                     client_return = client_values['client']
+                    del (client_return['Calendário'])
                     self.check_if_is_complete(client_return)
                     cpf = int(client_return['cpf'])
                     if self.check_if_already_exist(cpf):
@@ -180,3 +187,63 @@ class ClientController:
                 selected_function()
         except Exception as e:
             self.__client_screen.show_message(str(e))
+
+    def open_schedule_confirmation_screen(self, total_time, total_price):
+        try:
+            confirmation_values = self.__client_screen.open_schedule_confirmation_screen(total_time, total_price)
+            action = confirmation_values['action']
+            if action == ClientBoundary.SCHEDULE:
+
+                print('Aoba, confirmou')
+            elif action is None:
+                self.__system_controller.shutdown()
+        except Exception as e:
+            self.__client_screen.show_message(str(e))
+
+    def open_schedule_service_screen(self):
+        while True:
+            try:
+                # TODO: Esperar a Bea retornar a lista de horários disponíveis
+                time_list = ['8:00', '10:00']
+                vehicle_list = self.mapper_list('vehicle')
+                service_list = self.mapper_list('service')
+                schedule_values = self.__client_screen.open_schedule_screen(vehicle_list, service_list, time_list)
+                action = schedule_values['action']
+                if action == ClientBoundary.SCHEDULE:
+                    values = schedule_values['schedule']
+                    self.check_if_is_complete(values)
+                    selected_vehicle_type = self.__system_controller.vehicle_types_controller \
+                        .search_for_vehicle_types_by_name(values['vehicle_type'])
+                    selected_service_type = self.__system_controller.types_of_services_controller \
+                        .search_for_types_of_service_by_name(values['service_type'])
+                    self.open_schedule_confirmation_screen(
+                        self.return_total_time(selected_vehicle_type, selected_service_type),
+                        self.return_total_price(selected_vehicle_type, selected_service_type)
+                    )
+                #     TODO: FAZER A LÓGICA CASO A PESSOA CONFIRME
+                elif action is None:
+                    self.__system_controller.shutdown()
+                else:
+                    break
+            except ValueError:
+                self.__client_screen.show_message(
+                    'Digite os valores corretos!', 'red')
+            except Exception as e:
+                self.__client_screen.show_message(str(e))
+
+    def return_total_time(self, vehicle_type: Veiculo, service: Servico):
+        return vehicle_type.duracao + service.duracao
+
+    def return_total_price(self, vehicle_type: Veiculo, service: Servico):
+        return vehicle_type.preco + service.preco
+
+    def mapper_list(self, type_item: str):
+        item_list = None
+        if type_item == 'service':
+            item_list = self.__types_of_services_dao.get_all()
+        if type_item == 'vehicle':
+            item_list = self.__vehicle_types_dao.get_all()
+        return list(map(self.__return_item_name, item_list))
+
+    def __return_item_name(self, item: Servico or Veiculo):
+        return item.nome

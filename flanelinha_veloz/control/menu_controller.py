@@ -10,6 +10,9 @@ class MenuController:
     def see_client_profile(self):
         self.__system_controller.client_controller.open_menu_client()
 
+    def see_schedule_service_screen(self):
+        self.__system_controller.client_controller.open_schedule_service_screen()
+
     def see_employees_profile(self):
         self.__system_controller.employees_controller.open_profile_employees_screen()
 
@@ -23,8 +26,9 @@ class MenuController:
         try:
             action_options = {
                 None: self.__system_controller.shutdown,
-                0: self.__system_controller.shutdown,
-                1: self.see_client_profile
+                MenuBoundary.SHUTDOWN: self.__system_controller.shutdown,
+                MenuBoundary.OPEN_PROFILE: self.see_client_profile,
+                MenuBoundary.SCHEDULE_SERVICE: self.see_schedule_service_screen
             }
             while True:
                 option_number = self.__menu_screen.open_menu_client()
