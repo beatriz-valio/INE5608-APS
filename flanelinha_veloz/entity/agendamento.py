@@ -7,7 +7,8 @@ from flanelinha_veloz.entity.veiculo import Veiculo
 
 
 class Agendamento:
-    def __init__(self, cliente: Cliente, duracao: timedelta, funcionario: Funcionario, placa: str, vaga: Vaga,
+    def __init__(self, cliente: Cliente, duracao: timedelta,
+                 funcionario: Funcionario, placa: str, vaga: Vaga,
                  valor: float, veiculo: Veiculo):
         if isinstance(cliente, Cliente):
             self.__cliente = cliente

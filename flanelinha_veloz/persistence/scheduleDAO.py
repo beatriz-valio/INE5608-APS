@@ -10,16 +10,18 @@ class ScheduleDAO(DAO):
     def add(self, schedule: Agendamento):
         if (schedule is not None) and \
                 isinstance(schedule, Agendamento):
-            data = str(schedule.vaga.data.day) + '/' + str(schedule.vaga.data.month) + '/' + str(
+            data = str(schedule.vaga.data.day) + '/' + str(
+                schedule.vaga.data.month) + '/' + str(
                 schedule.vaga.data.year)
-            key = str(schedule.funcionario.cpf) + str(schedule.cliente.cpf) + data
-            super().add(key, schedule)
+            super().add(self.generate_key(schedule.cliente, data), schedule)
 
     def get(self, cliente: Cliente, data: str):
         if isinstance(cliente, Cliente) and isinstance(data, str):
-            key = str(funcionario.cpf) + str(cliente.cpf) + data
-            return super().get(key)
+            return super().get(self.generate_key(cliente, data))
 
     def remove(self, key: int):
         if isinstance(key, int):
             return super().remove(key)
+
+    def generate_key(self, cliente: Cliente, data: str):
+        return str(cliente.cpf) + data
