@@ -41,9 +41,10 @@ class SystemController:
         if daoObject:
             self.establishment = daoObject
         else:
-            # TODO: Confirmar sobre como colocar horários -> 1 e ultimo valor ou todos
             daoObject = Estabelecimento(0, ['Segunda-feira', 'Terça-feira',
-                        'Quarta-feira', 'Quinta-feira', 'Sexta-feira'], ['09','00' , '18','00'])
+                        'Quarta-feira', 'Quinta-feira', 'Sexta-feira'], ['9:00', '9:30','10:00', '10:30','11:00', '11:30',
+                                                                         '12:00', '12:30','13:00', '13:30','14:00', '14:30',
+                                                                         '15:00', '15:30','16:00', '16:30','17:00', '17:30', '18:00'])
             self.establishment = daoObject
             self.__establishment_operation_controller.establishment_operation_dao.add(daoObject)
 
