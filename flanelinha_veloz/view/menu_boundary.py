@@ -35,6 +35,8 @@ class MenuBoundary(AbstractBoundary):
             [sg.Button('Ver perfil', key=MenuBoundary.OPEN_PROFILE, size=MenuBoundary.TEXT_SIZE)],
             [sg.Button('Tipos de Veículos', key=2, size=MenuBoundary.TEXT_SIZE)],
             [sg.Button('Tipos de Serviços', key=3, size=MenuBoundary.TEXT_SIZE)],
+            [sg.Button('Cadastrar Vagas', key=4, size=MenuBoundary.TEXT_SIZE)],
+            [sg.Button('Cadastrar Dias e Horários', key=5, size=MenuBoundary.TEXT_SIZE)],
             [sg.Cancel('Sair', key=MenuBoundary.SHUTDOWN, size=(MenuBoundary.TEXT_SIZE, 1))]
 
         ]
@@ -61,6 +63,7 @@ class MenuBoundary(AbstractBoundary):
                            layout=layout,
                            size=(900, 500),
                            element_justification="c",
+                           resizable=True,
                            margins=(100, 100))
 
         button, values = window.Read()
