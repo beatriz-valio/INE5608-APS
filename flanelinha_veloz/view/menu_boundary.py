@@ -43,7 +43,7 @@ class MenuBoundary(AbstractBoundary):
                            layout=layout,
                            size=(900, 500),
                            element_justification="c",
-                           margins=(100,100))
+                           margins=(40,40))
 
         button, values = window.Read()
         window.close()
