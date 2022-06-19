@@ -41,7 +41,7 @@ class EstablishmentOperationBoundary(AbstractBoundary):
                      key="fechamento_estabelecimento_minuto"),
              sg.Text("min", size=15)],
             [sg.Cancel('Voltar', key=EstablishmentOperationBoundary.CANCEL, size=EstablishmentOperationBoundary.TEXT_SIZE, pad=20),
-             sg.Cancel('Alterar', key=EstablishmentOperationBoundary.UPDATE, size=EstablishmentOperationBoundary.TEXT_SIZE, pad=20)]
+             sg.Cancel('Alterar funcionamento', key=EstablishmentOperationBoundary.UPDATE, size=EstablishmentOperationBoundary.TEXT_SIZE, pad=20)]
         ]
 
         window = sg.Window('Flanelinha Veloz - Funcionamento do Estabelecimento',
@@ -52,7 +52,10 @@ class EstablishmentOperationBoundary(AbstractBoundary):
             .Layout(layout)
         button, values = window.Read()
         window.close()
-        return button
+        return {
+            'acao': button,
+            'valores': values
+        }
 
     def menu_update_establishment_screen(self, dias_de_funcionamento, horarios_de_funcionamento):
         layout = [
@@ -82,11 +85,11 @@ class EstablishmentOperationBoundary(AbstractBoundary):
                      initial_value=horarios_de_funcionamento[3],
                      key="fechamento_estabelecimento_minuto"),
              sg.Text("min", size=15)],
-            [sg.Cancel('Voltar', key=EstablishmentOperationBoundary.CANCEL, size=EstablishmentOperationBoundary.TEXT_SIZE, pad=20),
-             sg.Submit('Confirmar', key=EstablishmentOperationBoundary.SUBMIT, size=EstablishmentOperationBoundary.TEXT_SIZE, pad=20)]
+            [sg.Cancel('Cancelar', key=EstablishmentOperationBoundary.CANCEL, size=EstablishmentOperationBoundary.TEXT_SIZE, pad=20),
+             sg.Submit('Confirmar alterações', key=EstablishmentOperationBoundary.SUBMIT, size=EstablishmentOperationBoundary.TEXT_SIZE, pad=20)]
         ]
 
-        window = sg.Window('Flanelinha Veloz - Funcionamento do Estabelecimento',
+        window = sg.Window('Flanelinha Veloz - Alterando Funcionamento do Estabelecimento',
                            size=(900, 550),
                            element_justification='c',
                            resizable=True,
@@ -94,4 +97,7 @@ class EstablishmentOperationBoundary(AbstractBoundary):
             .Layout(layout)
         button, values = window.Read()
         window.close()
-        return button
+        return {
+            'acao': button,
+            'valores': values
+        }
