@@ -30,6 +30,7 @@ class LoginBoundary(AbstractBoundary):
                            layout=layout,
                            size=(900, 550),
                            element_justification="c",
+                           resizable=True,
                            margins=(25, 25))
 
         button, values = window.Read()
