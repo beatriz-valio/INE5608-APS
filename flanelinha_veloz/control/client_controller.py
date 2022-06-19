@@ -14,6 +14,7 @@ from flanelinha_veloz.exceptions.emailDoesntMatchException import \
     EmailDoesntMatchException
 from flanelinha_veloz.exceptions.emailNotValidException import \
     EmailNotValidException
+from flanelinha_veloz.exceptions.funcionarioNotAvailableException import FuncionarioNotAvailableException
 from flanelinha_veloz.exceptions.missingDataException import \
     MissingDataException
 from flanelinha_veloz.exceptions.passwordDoesntMatchException import \
@@ -21,6 +22,7 @@ from flanelinha_veloz.exceptions.passwordDoesntMatchException import \
 from flanelinha_veloz.exceptions.userAlreadyExistException import \
     UserAlreadyExistException
 from flanelinha_veloz.persistence.clienteDAO import ClienteDAO
+from flanelinha_veloz.persistence.employeesDAO import EmployeesDAO
 from flanelinha_veloz.persistence.scheduleDAO import ScheduleDAO
 from flanelinha_veloz.persistence.typesOfServicesDAO import TypesOfServicesDAO
 from flanelinha_veloz.persistence.vehicleTypesDAO import VehicleTypesDAO
@@ -31,6 +33,7 @@ class ClientController:
     def __init__(self, system_controller):
         self.__client_screen = ClientBoundary()
         self.__client_dao = ClienteDAO()
+        self.__employee_dao = EmployeesDAO()
         self.__system_controller = system_controller
         self.__types_of_services_dao = TypesOfServicesDAO()
         self.__vehicle_types_dao = VehicleTypesDAO()
@@ -216,26 +219,29 @@ class ClientController:
             confirmation_values = self.__client_screen \
                 .open_schedule_confirmation_screen(total_time,
                                                    total_price)
-            t = datetime.datetime.strptime(values['time'], "%H:%M")
+
             action = confirmation_values['action']
             if action == ClientBoundary.SCHEDULE:
-                print('Antes do fncionario')
-                funcionario_mocado = self.__system_controller.employees_controller.next_employee()
-                print(funcionario_mocado)
-                vaga = Vaga(values.day, values.time,
-                            datetime.timedelta(hours=t.hour, minutes=t.minute) + total_time)
-                schedule = Agendamento(
-                    self.__system_controller.logged_user,
-                    total_time,
-                    funcionario_mocado,
-                    values.plate,
-                    selected_service_type,
-                    vaga,
-                    total_price,
-                    values.vehicle_type
-                )
-                print('Opa')
-                self.schedule_registration(schedule)
+                employee = self.__system_controller.employees_controller.next_employee()
+                if employee:
+                    t = datetime.datetime.strptime(values['time'], "%H:%M")
+                    timedelta_escolhido = datetime.timedelta(hours=t.hour, minutes=t.minute)
+                    dia_escolhido = datetime.datetime.strptime(values['day'], '%d/%m/%Y')
+                    vaga = Vaga(dia_escolhido, timedelta_escolhido,
+                                timedelta_escolhido + total_time)
+                    schedule = Agendamento(
+                        self.__system_controller.logged_user,
+                        total_time,
+                        employee,
+                        values['plate'],
+                        selected_service_type,
+                        vaga,
+                        total_price,
+                        values['vehicle_type']
+                    )
+                    self.schedule_registration(schedule)
+                else:
+                    raise FuncionarioNotAvailableException
             elif action is None:
                 self.__system_controller.shutdown()
         except Exception as e:
@@ -245,11 +251,16 @@ class ClientController:
         if isinstance(schedule,
                       Agendamento) and schedule is not None and schedule \
                 not in self.__schedule_dao.get_all():
-            print('agendou')
             self.__schedule_dao.add(schedule)
             client: Cliente = self.__system_controller.logged_user
-            client.incrementar_agendamento(schedule)
-            # TODO: Falta adicionar o agendamento no funcionário
+            employee: Funcionario = self.__system_controller.employees_controller.next_employee()
+
+            client.agendamentos = schedule
+            employee.agendamentos = schedule
+
+            self.__client_dao.add(client)
+            self.__employee_dao.add(employee)
+
             self.__client_screen.show_message('Ação realizada com sucesso!',
                                               'green')
 

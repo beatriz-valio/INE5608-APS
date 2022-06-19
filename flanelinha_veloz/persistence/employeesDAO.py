@@ -22,8 +22,6 @@ class EmployeesDAO(DAO):
     def get_all_funcionarios(self):
         funcionarios_list = []
         for employee in self.get_all():
-            print('Funcionario do get all')
-            print(employee)
             if isinstance(employee, Funcionario):
                 funcionarios_list.append(employee)
         return funcionarios_list
