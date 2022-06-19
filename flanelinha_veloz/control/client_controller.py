@@ -208,30 +208,31 @@ class ClientController:
                 .search_for_types_of_service_by_name(
                 values['service_type'])
 
-            total_time = self.__return_total_time(selected_vehicle_type,
-                                                  selected_service_type)
+            total_time: datetime.timedelta = self.__return_total_time(selected_vehicle_type,
+                                                                      selected_service_type)
             total_price = self.__return_total_price(selected_vehicle_type,
                                                     selected_service_type)
 
             confirmation_values = self.__client_screen \
                 .open_schedule_confirmation_screen(total_time,
                                                    total_price)
+            t = datetime.datetime.strptime(values['time'], "%H:%M")
             action = confirmation_values['action']
-            # TODO: Remover usuário mocado
-            funcionario_mocado = Funcionario(14725836922, dt(2001, 1, 8),
-                                             'b@b.com', 'masculino',
-                                             'Joberson', '123', 'Clebinho',
-                                             'Funcionário', [], [])
-            # TODO: Verificar se o horário fim está funcionando perfeitamente
-            vaga = Vaga(values.day, values.time,
-                        datetime.timedelta(values.time + total_time))
-
             if action == ClientBoundary.SCHEDULE:
+                # TODO: Remover usuário mocado
+                funcionario_mocado = Funcionario(14725836922, dt(2001, 1, 8),
+                                                 'b@b.com', 'masculino',
+                                                 'Joberson', '123', 'Clebinho',
+                                                 'Funcionário', [], [])
+                # TODO: Verificar se o horário fim está funcionando perfeitamente
+                vaga = Vaga(values.day, values.time,
+                            datetime.timedelta(hours=t.hour, minutes=t.minute) + total_time)
                 schedule = Agendamento(
                     self.__system_controller.logged_user,
                     total_time,
                     funcionario_mocado,
                     values.plate,
+                    selected_service_type,
                     vaga,
                     total_price,
                     values.vehicle_type

@@ -1,13 +1,15 @@
 from datetime import datetime as dt
 
 from flanelinha_veloz.entity.abstractUsuario import Usuario
-from flanelinha_veloz.entity.agendamento import Agendamento
+
+
+# from flanelinha_veloz.entity.agendamento import Agendamento
 
 
 class Cliente(Usuario):
     def __init__(self, cpf: int, data_nascimento: dt, email: str, genero: str,
                  nome: str, senha: str, sobrenome: str,
-                 agendamentos: Agendamento = None):
+                 agendamentos=None):
         super().__init__(cpf, data_nascimento, email, genero, nome, senha,
                          sobrenome)
         if agendamentos is not None:
@@ -21,7 +23,7 @@ class Cliente(Usuario):
 
     # TODO: Verificar se a implementação da lista em python está correta.
     @agendamentos.setter
-    def agendamentos(self, agendamentos: Agendamento):
+    def agendamentos(self, agendamentos):
         self.agendamentos.append(agendamentos)
 
     def incrementar_agendamento(self, schedule):

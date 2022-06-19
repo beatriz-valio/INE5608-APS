@@ -22,9 +22,13 @@ class SystemController:
         self.__establishment_operation_controller = EstablishmentOperationController(self)
         self.__menu_controller = MenuController(self)
         self.__logged_user: Usuario or None = None
-        self.__establishment: Estabelecimento
+        self.__establishment: Estabelecimento = Estabelecimento(0, ['Segunda-feira', 'Terça-feira',
+                                                                    'Quarta-feira', 'Quinta-feira', 'Sexta-feira'],
+                                                                ['9:00', '9:30', '10:00', '10:30', '11:00', '11:30',
+                                                                 '12:00', '12:30', '13:00', '13:30', '14:00', '14:30',
+                                                                 '15:00', '15:30', '16:00', '16:30', '17:00', '17:30',
+                                                                 '18:00'])
         self.update_establishment()
-
 
     @property
     def establishment(self) -> Estabelecimento:
@@ -33,35 +37,6 @@ class SystemController:
     @establishment.setter
     def establishment(self, value: Estabelecimento):
         self.__establishment = value
-
-    def update_establishment(self):
-        daoObject = self.__establishment_operation_controller.establishment_operation_dao.get()
-        if daoObject:
-            self.establishment = daoObject
-        else:
-            daoObject = Estabelecimento(0, ['Segunda-feira', 'Terça-feira',
-                        'Quarta-feira', 'Quinta-feira', 'Sexta-feira'], ['9:00', '9:30','10:00', '10:30','11:00', '11:30',
-                                                                         '12:00', '12:30','13:00', '13:30','14:00', '14:30',
-                                                                         '15:00', '15:30','16:00', '16:30','17:00', '17:30', '18:00'])
-            self.establishment = daoObject
-            self.__establishment_operation_controller.establishment_operation_dao.add(daoObject)
-
-    def update_establishment_key(self, key, value):
-        if key == 'total_de_vagas':
-            self.establishment.total_de_vagas = value
-        elif key == 'dias_de_funcionamento':
-            self.establishment.dias_de_funcionamento = value
-        elif key == 'horarios_de_funcionamento':
-            self.establishment.horarios_de_funcionamento = value
-        self.__establishment_operation_controller.establishment_operation_dao.add(self.establishment)
-
-    def see_establishment_key(self, key):
-        if key == 'total_de_vagas':
-            return self.establishment.total_de_vagas
-        elif key == 'dias_de_funcionamento':
-            return self.establishment.dias_de_funcionamento
-        elif key == 'horarios_de_funcionamento':
-            return self.establishment.horarios_de_funcionamento
 
     @property
     def logged_user(self) -> Usuario:
@@ -135,3 +110,24 @@ class SystemController:
 
         return has_char_neededs
 
+    def update_establishment(self):
+        establishment_object = self.__establishment_operation_controller.establishment_operation_dao.get()
+        if establishment_object:
+            self.establishment = establishment_object
+
+    def update_establishment_key(self, key, value):
+        if key == 'total_de_vagas':
+            self.establishment.total_de_vagas = value
+        elif key == 'dias_de_funcionamento':
+            self.establishment.dias_de_funcionamento = value
+        elif key == 'horarios_de_funcionamento':
+            self.establishment.horarios_de_funcionamento = value
+        self.__establishment_operation_controller.establishment_operation_dao.add(self.establishment)
+
+    def see_establishment_key(self, key):
+        if key == 'total_de_vagas':
+            return self.establishment.total_de_vagas
+        elif key == 'dias_de_funcionamento':
+            return self.establishment.dias_de_funcionamento
+        elif key == 'horarios_de_funcionamento':
+            return self.establishment.horarios_de_funcionamento
