@@ -27,7 +27,7 @@ class Cliente(Usuario):
         self.agendamentos.append(agendamentos)
 
     def incrementar_agendamento(self, schedule):
-        self.__agendamentos.append(schedule)
+        self.agendamentos.append(schedule)
 
     def limpar_agendamentos(self):
-        self.__agendamentos = []
+        self.agendamentos = []

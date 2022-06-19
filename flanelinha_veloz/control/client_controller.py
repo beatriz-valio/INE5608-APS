@@ -219,12 +219,9 @@ class ClientController:
             t = datetime.datetime.strptime(values['time'], "%H:%M")
             action = confirmation_values['action']
             if action == ClientBoundary.SCHEDULE:
-                # TODO: Remover usuário mocado
-                funcionario_mocado = Funcionario(14725836922, dt(2001, 1, 8),
-                                                 'b@b.com', 'masculino',
-                                                 'Joberson', '123', 'Clebinho',
-                                                 'Funcionário', [], [])
-                # TODO: Verificar se o horário fim está funcionando perfeitamente
+                print('Antes do fncionario')
+                funcionario_mocado = self.__system_controller.employees_controller.next_employee()
+                print(funcionario_mocado)
                 vaga = Vaga(values.day, values.time,
                             datetime.timedelta(hours=t.hour, minutes=t.minute) + total_time)
                 schedule = Agendamento(
@@ -237,6 +234,7 @@ class ClientController:
                     total_price,
                     values.vehicle_type
                 )
+                print('Opa')
                 self.schedule_registration(schedule)
             elif action is None:
                 self.__system_controller.shutdown()
@@ -247,6 +245,7 @@ class ClientController:
         if isinstance(schedule,
                       Agendamento) and schedule is not None and schedule \
                 not in self.__schedule_dao.get_all():
+            print('agendou')
             self.__schedule_dao.add(schedule)
             client: Cliente = self.__system_controller.logged_user
             client.incrementar_agendamento(schedule)
@@ -260,8 +259,7 @@ class ClientController:
     def open_schedule_service_screen(self):
         while True:
             try:
-                # TODO: Esperar a Bea retornar a lista de horários disponíveis
-                time_list = ['8:00', '10:00']
+                time_list = self.__system_controller.establishment.horarios_de_funcionamento
                 vehicle_list = self.__mapper_list('vehicle')
                 service_list = self.__mapper_list('service')
                 schedule_values = self.__client_screen.open_schedule_screen(
