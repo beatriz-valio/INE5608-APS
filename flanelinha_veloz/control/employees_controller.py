@@ -1,6 +1,7 @@
 import hashlib
 from datetime import datetime as dt, timedelta
 
+from flanelinha_veloz.entity.cliente import Cliente
 from flanelinha_veloz.entity.funcionario import Funcionario
 from flanelinha_veloz.entity.gestor import Gestor
 from flanelinha_veloz.exceptions.cpfNotValidException import \
@@ -31,9 +32,9 @@ class EmployeesController:
         return self.__employee_dao
 
     def next_employee(self):
-        employees = self.__employee_dao.get_all()
+        employees = self.__employee_dao.get_all_funcionarios()
         all_employee = {}
-        for employee in employees:  
+        for employee in employees:
             all_employee['cpf'] = employee.cpf
             all_jobs = employee.agendamentos
             duration = timedelta(hours=0, minutes=0)
@@ -48,8 +49,7 @@ class EmployeesController:
                 if max_time_employee[1] < all_employee[emp]:
                     max_time_employee[0] = emp
                     max_time_employee[1] = all_employee[emp]
-        return self.search_for_employee_by_cpf(str(max_time_employee[0])) 
-        
+        return self.search_for_employee_by_cpf(str(max_time_employee[0]))
 
     def open_edit_employees_screen(self):
         while True:
@@ -92,28 +92,28 @@ class EmployeesController:
                         sobrenome = valores['sobrenome']
                         cargo = valores['cargo']
                         turno = [valores['primeiro_turno_entrada_hora'],
-                                    valores['primeiro_turno_entrada_minuto'],
-                                    valores['primeiro_turno_saido_hora'],
-                                    valores['primeiro_turno_saido_minuto'],
-                                    valores['segundo_turno_entrada_hora'],
-                                    valores['segundo_turno_entrada_minuto'],
-                                    valores['segundo_turno_saido_hora'],
-                                    valores['segundo_turno_saido_minuto']]
+                                 valores['primeiro_turno_entrada_minuto'],
+                                 valores['primeiro_turno_saido_hora'],
+                                 valores['primeiro_turno_saido_minuto'],
+                                 valores['segundo_turno_entrada_hora'],
+                                 valores['segundo_turno_entrada_minuto'],
+                                 valores['segundo_turno_saido_hora'],
+                                 valores['segundo_turno_saido_minuto']]
                         dias_trabalhados = valores['dias_trabalhados']
                         self.employee_delete(employees_cpf)
                         if cargo == 'Gestor':
                             obj = Gestor(cpf, data_nascimento, email,
-                                            genero, nome, senha, sobrenome,
-                                            cargo, turno, dias_trabalhados)
+                                         genero, nome, senha, sobrenome,
+                                         cargo, turno, dias_trabalhados)
                             self.employee_registration(obj)
                             self.__boundary.show_message(
                                 'Atualização salva com sucesso!', 'green')
                             self.__system_controller.menu_controller.open_menu_manager()
                         else:
                             obj = Funcionario(cpf, data_nascimento, email,
-                                                genero, nome, senha,
-                                                sobrenome, cargo, turno,
-                                                dias_trabalhados)
+                                              genero, nome, senha,
+                                              sobrenome, cargo, turno,
+                                              dias_trabalhados)
                             self.employee_registration(obj)
                             self.__boundary.show_message(
                                 'Atualização salva com sucesso!', 'green')
