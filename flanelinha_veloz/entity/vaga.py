@@ -5,9 +5,9 @@ class Vaga:
     def __init__(self, data: datetime, horario_inicio: timedelta, horario_fim: timedelta):
         if isinstance(data, datetime):
             self.__data = data
-        if isinstance(horario_inicio, int):
+        if isinstance(horario_inicio, timedelta):
             self.__horario_inicio = horario_inicio
-        if isinstance(horario_fim, int):
+        if isinstance(horario_fim, timedelta):
             self.__horario_fim = horario_fim
 
     @property
@@ -17,7 +17,7 @@ class Vaga:
     @data.setter
     def data(self, data: datetime):
         if isinstance(data, datetime):
-            self.__livres = data
+            self.__data = data
 
     @property
     def horario_inicio(self) -> timedelta:

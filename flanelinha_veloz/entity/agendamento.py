@@ -2,14 +2,14 @@ from datetime import timedelta
 
 from flanelinha_veloz.entity.cliente import Cliente
 from flanelinha_veloz.entity.funcionario import Funcionario
+from flanelinha_veloz.entity.servico import Servico
 from flanelinha_veloz.entity.vaga import Vaga
 from flanelinha_veloz.entity.veiculo import Veiculo
 
 
 class Agendamento:
-    def __init__(self, cliente: Cliente, duracao: timedelta,
-                 funcionario: Funcionario, placa: str, vaga: Vaga,
-                 valor: float, veiculo: Veiculo):
+    def __init__(self, cliente: Cliente, duracao: timedelta, funcionario: Funcionario, placa: str, servico: Servico,
+                 vaga: Vaga, valor: float, veiculo: Veiculo):
         if isinstance(cliente, Cliente):
             self.__cliente = cliente
         if isinstance(duracao, timedelta):
@@ -18,6 +18,8 @@ class Agendamento:
             self.__funcionario = funcionario
         if isinstance(placa, str):
             self.__placa = placa
+        if isinstance(servico, Servico):
+            self.__servico = servico
         if isinstance(vaga, Vaga):
             self.__vaga = vaga
         if isinstance(valor, float):
@@ -33,6 +35,7 @@ class Agendamento:
     def cliente(self, cliente: Cliente):
         if isinstance(cliente, Cliente):
             self.cliente = cliente
+        self.cliente = cliente
 
     @property
     def duracao(self) -> timedelta:
@@ -42,6 +45,7 @@ class Agendamento:
     def duracao(self, duracao: timedelta):
         if isinstance(duracao, timedelta):
             self.duracao = duracao
+        self.duracao = duracao
 
     @property
     def funcionario(self) -> Funcionario:
@@ -69,6 +73,14 @@ class Agendamento:
     def vaga(self, vaga: Vaga):
         if isinstance(vaga, Vaga):
             self.vaga = vaga
+
+    @property
+    def servico(self) -> Servico:
+        return self.__servico
+
+    @servico.setter
+    def servico(self, servico: Servico):
+        self.servico = servico
 
     @property
     def valor(self) -> float:
