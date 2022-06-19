@@ -1,4 +1,5 @@
 from flanelinha_veloz.exceptions.dayNotValidException import DayNotValidException
+from flanelinha_veloz.exceptions.establishmentOperationNotValidException import EstablishmentOperationNotValidException
 from flanelinha_veloz.exceptions.timeNotValidException import TimeNotValidException
 from flanelinha_veloz.persistence.establishmentOperationDAO import EstablishmentOperationDAO
 from flanelinha_veloz.view.establishment_operation_boundary import EstablishmentOperationBoundary
@@ -14,7 +15,7 @@ class EstablishmentOperationController:
     @property
     def establishment_operation_dao(self) -> EstablishmentOperationDAO:
         return self.__establishment_operation_dao
-
+    
     def return_menu_manager(self):
         self.__system_controller.menu_controller.open_menu_manager()
 
@@ -59,17 +60,24 @@ class EstablishmentOperationController:
 
                     # TODO: Confirmar se pode haver ou não 0 dias de funcionamento
                     # TODO: Agendamento não funcionaria? Daria pra colocar excessão de 'Estabelecimento não funcionando'
-                    if len(novos_dias) > 0:
-                        self.__system_controller.update_establishment_key('dias_de_funcionamento', novos_dias)
-                    else:
-                        raise DayNotValidException
 
-                    if valores['abertura_estabelecimento_hora'] < valores['fechamento_estabelecimento_hora']:
-                        self.__system_controller.update_establishment_key('horarios_de_funcionamento', lista_novos_horarios)
-                    else:
-                        raise TimeNotValidException
+                    dias_anteriores = self.__system_controller.see_establishment_key('dias_de_funcionamento')
+                    horarios_anteriores = self.__system_controller.see_establishment_key('horarios_de_funcionamento')
 
-                    self.__boundary.show_message('Dias e Horários de funcionamento atualizados!', 'green')
+                    if dias_anteriores != novos_dias or horarios_anteriores != lista_novos_horarios:
+                        if len(novos_dias) > 0:
+                            self.__system_controller.update_establishment_key('dias_de_funcionamento', novos_dias)
+                        else:
+                            raise DayNotValidException
+
+                        if valores['abertura_estabelecimento_hora'] < valores['fechamento_estabelecimento_hora']:
+                            self.__system_controller.update_establishment_key('horarios_de_funcionamento', lista_novos_horarios)
+                        else:
+                            raise TimeNotValidException
+                    else:
+                        raise EstablishmentOperationNotValidException
+
+                    self.__boundary.show_message('Funcionamento do estabelecimento atualizado!', 'green')
                     break
 
                 elif acao == EstablishmentOperationBoundary.CANCEL:
@@ -95,11 +103,11 @@ class EstablishmentOperationController:
 
     def return_time_list(self, hora_inicial, minuto_inicial, hora_final, minuto_final):
 
+        # Corrige hora menor que 10
         if hora_inicial < 10:
             horario_abertura = '0' + str(hora_inicial) + ':' + str(minuto_inicial)
         else:
             horario_abertura = str(hora_inicial) + ':' + str(minuto_inicial)
-
         if hora_final < 10:
             horario_fechamento = '0' + str(hora_final) + ':' + str(minuto_final)
         else:
@@ -111,7 +119,8 @@ class EstablishmentOperationController:
         lista_horarios = [time(t,m,0,0).strftime("%H:%M") for t in range(min(work_time_convert).hour, (max(work_time_convert).hour)+1) for m in [0, 30]]
         print(lista_horarios)
 
-        if min(lista_horarios) > horario_abertura:
+        # Corrige valores iniciais e finais da lista de horários
+        if minuto_inicial != 0 and min(lista_horarios) > horario_abertura:
             lista_horarios.append(horario_abertura)
         elif min(lista_horarios) < horario_abertura:
             lista_horarios.remove(min(lista_horarios))
@@ -121,8 +130,5 @@ class EstablishmentOperationController:
         elif max(lista_horarios) < horario_fechamento:
             lista_horarios.append(horario_fechamento)
 
-        print(lista_horarios)
         lista_horarios_estabelecimento = sorted(lista_horarios)
-        print(lista_horarios_estabelecimento)
         return lista_horarios_estabelecimento
-
