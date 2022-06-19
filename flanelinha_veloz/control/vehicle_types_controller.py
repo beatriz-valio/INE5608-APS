@@ -4,6 +4,7 @@ from flanelinha_veloz.entity.veiculo import Veiculo
 from flanelinha_veloz.exceptions.durationValueNotValidException import DurationValueNotValidException
 from flanelinha_veloz.exceptions.missingDataException import MissingDataException
 from flanelinha_veloz.exceptions.priceValueNotValidException import PriceValueNotValidException
+from flanelinha_veloz.exceptions.vehicleTypesAlreadyExistsInTheSystemException import VehicleTypesAlreadyExistsInTheSystemException
 from flanelinha_veloz.persistence.vehicleTypesDAO import VehicleTypesDAO
 from flanelinha_veloz.view.vehicle_types_boundary import VehicleTypesBoundary
 
@@ -185,6 +186,7 @@ class VehicleTypesController:
                         raise DurationValueNotValidException
                     duracao = timedelta(hours=duracao.hour, minutes=duracao.minute)
                     nome = valores['nome']
+                    self.validate_name(nome)
                     codigo = self.update_total_code()
                     obj = Veiculo(codigo, duracao, nome, preco)
                     self.vehicle_types_registration(obj)
@@ -202,17 +204,11 @@ class VehicleTypesController:
             except Exception as e:
                 self.__boundary.show_message(str(e))
 
-    def validate_duration(self, text):
-        try:
-            hour, minute = [int(w) for w in text.split(':')]
-            if hour > 23 or minute > 60:
-                return False
-            elif not isinstance(hour, int) or not isinstance(minute, int):
-                return False
-            else:
-                return True
-        except ValueError:
-            return False
+    def validate_name(self, text):
+        for vehicle_type in self.__vehicle_types_dao.get_all():
+            name = str(vehicle_type.nome)
+            if name == text:
+                raise VehicleTypesAlreadyExistsInTheSystemException
 
     def vehicle_types_registration(self, vehicle_types: Veiculo):
         if vehicle_types is not None and \

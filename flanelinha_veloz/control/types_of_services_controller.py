@@ -4,6 +4,7 @@ from flanelinha_veloz.entity.servico import Servico
 from flanelinha_veloz.exceptions.durationValueNotValidException import DurationValueNotValidException
 from flanelinha_veloz.exceptions.missingDataException import MissingDataException
 from flanelinha_veloz.exceptions.priceValueNotValidException import PriceValueNotValidException
+from flanelinha_veloz.exceptions.typesOfServicesAlreadyExistsInTheSystemException import TypesOfServicesAlreadyExistsInTheSystemException
 from flanelinha_veloz.persistence.typesOfServicesDAO import TypesOfServicesDAO
 from flanelinha_veloz.view.types_of_services_boundary import TypesOfServicesBoundary
 
@@ -185,6 +186,7 @@ class TypesOfServicesController:
                         raise DurationValueNotValidException
                     duracao = timedelta(hours=duracao.hour, minutes=duracao.minute)
                     nome = valores['nome']
+                    self.validate_name(nome)
                     codigo = self.update_total_code()
                     obj = Servico(codigo, duracao, nome, preco)
                     self.types_of_services_registration(obj)
@@ -202,17 +204,11 @@ class TypesOfServicesController:
             except Exception as e:
                 self.__boundary.show_message(str(e))
 
-    def validate_duration(self, text):
-        try:
-            hour, minute = [int(w) for w in text.split(':')]
-            if hour > 23 or minute > 60:
-                return False
-            elif not isinstance(hour, int) or not isinstance(minute, int):
-                return False
-            else:
-                return True
-        except ValueError:
-            return False
+    def validate_name(self, text):
+        for vehicle_type in self.__types_of_services_dao.get_all():
+            name = str(vehicle_type.nome)
+            if name == text:
+                raise TypesOfServicesAlreadyExistsInTheSystemException
 
     def types_of_services_registration(self, types_of_services: Servico):
         if types_of_services is not None and \
