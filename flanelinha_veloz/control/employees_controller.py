@@ -1,5 +1,5 @@
 import hashlib
-from datetime import datetime as dt
+from datetime import datetime as dt, timedelta
 
 from flanelinha_veloz.entity.funcionario import Funcionario
 from flanelinha_veloz.entity.gestor import Gestor
@@ -29,6 +29,27 @@ class EmployeesController:
     @property
     def employee_dao(self):
         return self.__employee_dao
+
+    def next_employee(self):
+        employees = self.__employee_dao.get_all()
+        all_employee = {}
+        for employee in employees:  
+            all_employee['cpf'] = employee.cpf
+            all_jobs = employee.agendamentos
+            duration = timedelta(hours=0, minutes=0)
+            for job in all_jobs:
+                duration = duration + job.duracao
+            all_employee['agendamentos'] = duration
+        max_time_employee = [None, None]
+        for emp in all_employee:
+            if max_time_employee[0] is None:
+                max_time_employee = [emp, all_employee[emp]]
+            else:
+                if max_time_employee[1] < all_employee[emp]:
+                    max_time_employee[0] = emp
+                    max_time_employee[1] = all_employee[emp]
+        return self.search_for_employee_by_cpf(str(max_time_employee[0])) 
+        
 
     def open_edit_employees_screen(self):
         while True:
