@@ -14,8 +14,7 @@ class EstablishmentOperationBoundary(AbstractBoundary):
 
     def list_establishment_screen(self, dias_de_funcionamento, horarios_de_funcionamento):
         layout = [
-            [sg.Text('Estas são as configurações atuais de Funcionamento.', font='Arial 12', pad=5)],
-            [sg.Text('Para editar, altere os valores e confirme as alterações.', font='Arial 14', pad=15)],
+            [sg.Text('No momento, este é o atual Funcionamento do Estabelecimento.', font='Arial 14', pad=25)],
             [sg.Text("Dias de Funcionamento:", font='Arial 11',size=EstablishmentOperationBoundary.TEXT_SIZE),
              sg.Listbox(values=dias_de_funcionamento,
                         select_mode='extended',
@@ -41,7 +40,7 @@ class EstablishmentOperationBoundary(AbstractBoundary):
                      key="fechamento_estabelecimento_minuto"),
              sg.Text("min", size=15)],
             [sg.Cancel('Voltar', key=EstablishmentOperationBoundary.CANCEL, size=EstablishmentOperationBoundary.TEXT_SIZE, pad=20),
-             sg.Cancel('Alterar funcionamento', key=EstablishmentOperationBoundary.UPDATE, size=EstablishmentOperationBoundary.TEXT_SIZE, pad=20)]
+             sg.Cancel('Alterar', key=EstablishmentOperationBoundary.UPDATE, size=EstablishmentOperationBoundary.TEXT_SIZE, pad=20)]
         ]
 
         window = sg.Window('Flanelinha Veloz - Funcionamento do Estabelecimento',
@@ -59,8 +58,7 @@ class EstablishmentOperationBoundary(AbstractBoundary):
 
     def menu_update_establishment_screen(self, dias_de_funcionamento, horarios_de_funcionamento):
         layout = [
-            [sg.Text('Estas são as configurações atuais de Funcionamento.', font='Arial 12', pad=5)],
-            [sg.Text('Para editar, altere os valores e confirme as alterações.', font='Arial 14', pad=15)],
+            [sg.Text('Altere o Funcionamento do Estabelecimento e confirme as alterações.', font='Arial 14', pad=25)],
             [sg.Text("Dias de Funcionamento:", font='Arial 11',size=EstablishmentOperationBoundary.TEXT_SIZE),
              sg.Listbox(values=EstablishmentOperationBoundary.WEEKDAYS_OPTIONS,
                         select_mode='extended',
@@ -86,7 +84,7 @@ class EstablishmentOperationBoundary(AbstractBoundary):
                      key="fechamento_estabelecimento_minuto"),
              sg.Text("min", size=15)],
             [sg.Cancel('Cancelar', key=EstablishmentOperationBoundary.CANCEL, size=EstablishmentOperationBoundary.TEXT_SIZE, pad=20),
-             sg.Submit('Confirmar alterações', key=EstablishmentOperationBoundary.SUBMIT, size=EstablishmentOperationBoundary.TEXT_SIZE, pad=20)]
+             sg.Submit('Confirmar', key=EstablishmentOperationBoundary.SUBMIT, size=EstablishmentOperationBoundary.TEXT_SIZE, pad=20)]
         ]
 
         window = sg.Window('Flanelinha Veloz - Alterando Funcionamento do Estabelecimento',

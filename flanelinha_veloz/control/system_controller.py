@@ -1,5 +1,3 @@
-from pprint import pprint
-
 from flanelinha_veloz.control.car_spot_controller import CarSpotController
 from flanelinha_veloz.control.client_controller import ClientController
 from flanelinha_veloz.control.employees_controller import EmployeesController
@@ -49,7 +47,6 @@ class SystemController:
             self.__establishment_operation_controller.establishment_operation_dao.add(daoObject)
 
     def update_establishment_key(self, key, value):
-        pprint(vars(self.establishment))
         if key == 'total_de_vagas':
             self.establishment.total_de_vagas = value
         elif key == 'dias_de_funcionamento':
@@ -57,7 +54,6 @@ class SystemController:
         elif key == 'horarios_de_funcionamento':
             self.establishment.horarios_de_funcionamento = value
         self.__establishment_operation_controller.establishment_operation_dao.add(self.establishment)
-        pprint(vars(self.establishment))
 
     def see_establishment_key(self, key):
         if key == 'total_de_vagas':
