@@ -33,23 +33,19 @@ class EmployeesController:
 
     def next_employee(self):
         employees = self.__employee_dao.get_all_funcionarios()
-        all_employee = {}
+        all_employee = {'cpf': None, 'agendamentos': timedelta(hours=0, minutes=0)}
         for employee in employees:
-            all_employee['cpf'] = employee.cpf
             all_jobs = employee.agendamentos
             duration = timedelta(hours=0, minutes=0)
             for job in all_jobs:
                 duration = duration + job.duracao
-            all_employee['agendamentos'] = duration
-        max_time_employee = [None, None]
-        for emp in all_employee:
-            if max_time_employee[0] is None:
-                max_time_employee = [emp, all_employee[emp]]
-            else:
-                if max_time_employee[1] < all_employee[emp]:
-                    max_time_employee[0] = emp
-                    max_time_employee[1] = all_employee[emp]
-        return self.search_for_employee_by_cpf(str(max_time_employee[0]))
+            if duration >= all_employee['agendamentos']:
+                all_employee['cpf'] = employee.cpf
+                all_employee['agendamentos'] = duration
+        if all_employee['cpf'] is None:
+            return None
+        else:
+            return self.search_for_employee_by_cpf(str(all_employee['cpf']))
 
     def open_edit_employees_screen(self):
         while True:
