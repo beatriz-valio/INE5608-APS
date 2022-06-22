@@ -33,12 +33,12 @@ class CarSpotController:
     def open_registration_car_spot_screen(self):
         while True:
             try:
-                values = self.__boundary.registration_car_spot_screen()
-                acao = values['acao']
+                retorno = self.__boundary.registration_car_spot_screen()
+                acao = retorno['acao']
                 if acao == CarSpotBoundary.SUBMIT:
-                    valores = values['valores']
-                    for value in valores:
-                        if valores[value] is None or valores[value] == '':
+                    valores = retorno['valores']
+                    for campo in valores:
+                        if valores[campo] is None or valores[campo] == '':
                             raise MissingSpotCarException
 
                     try:
@@ -49,8 +49,8 @@ class CarSpotController:
                     if qtd_vaga <= 0:
                         raise SpotCarValueNotValidException
 
-                    vagas_anteriores = self.__system_controller.see_establishment_key('total_de_vagas')
-                    total_vagas = vagas_anteriores + qtd_vaga
+                    vagas_atuais = self.__system_controller.see_establishment_key('total_de_vagas')
+                    total_vagas = vagas_atuais + qtd_vaga
 
                     self.__system_controller.update_establishment_key('total_de_vagas', total_vagas)
                     self.__boundary.show_message('Quantidade adicionada com sucesso!', 'green')
@@ -59,39 +59,37 @@ class CarSpotController:
                     self.__system_controller.shutdown()
                 else:
                     break
-            except ValueError:
-                self.__boundary.show_message('Existem campos em branco, confira!', 'red')
+
             except Exception as e:
                 self.__boundary.show_message(str(e))
 
     def open_list_car_spot_screen(self):
         while True:
             try:
-                all_car_spot = self.__system_controller.see_establishment_key('total_de_vagas')
-                if all_car_spot >= 0:
-                    values = self.__boundary.list_car_spot_screen(all_car_spot)
-                    acao = values['acao']
-                    if acao is None:
-                        self.__system_controller.shutdown()
-                    else:
-                        break
+                vagas_atuais = self.__system_controller.see_establishment_key('total_de_vagas')
+                retorno = self.__boundary.list_car_spot_screen(vagas_atuais)
+                acao = retorno['acao']
+                if acao is None:
+                    self.__system_controller.shutdown()
+                else:
+                    break
             except Exception as e:
                 self.__boundary.show_message(str(e))
 
     def open_menu_delete_car_spot_screen(self):
         while True:
             try:
-                all_car_spot = self.__system_controller.see_establishment_key('total_de_vagas')
-                if all_car_spot == 0:
+                vagas_atuais = self.__system_controller.see_establishment_key('total_de_vagas')
+                if vagas_atuais <= 0:
                     self.__boundary.show_message('Sem vagas cadastradas! Não há vagas para excluir.')
                     break
                 else:
-                    values = self.__boundary.menu_delete_car_spot_screen(all_car_spot)
-                    acao = values['acao']
+                    retorno = self.__boundary.menu_delete_car_spot_screen(vagas_atuais)
+                    acao = retorno['acao']
                     if acao == CarSpotBoundary.SUBMIT:
-                        valores = values['valores']
-                        for value in valores:
-                            if valores[value] is None or valores[value] == '':
+                        valores = retorno['valores']
+                        for campo in valores:
+                            if valores[campo] is None or valores[campo] == '':
                                 raise MissingSpotCarException
 
                         try:
@@ -99,14 +97,13 @@ class CarSpotController:
                         except Exception:
                             raise SpotCarValueNotValidException
 
-                        if qtd_vaga > all_car_spot:
+                        if qtd_vaga > vagas_atuais:
                             raise ExceededSpotCarValueNotValidException
 
                         if qtd_vaga <= 0:
                             raise SpotCarValueNotValidException
 
-                        vagas_anteriores = self.__system_controller.see_establishment_key('total_de_vagas')
-                        total_vagas = vagas_anteriores - qtd_vaga
+                        total_vagas = vagas_atuais - qtd_vaga
 
                         self.__system_controller.update_establishment_key('total_de_vagas', total_vagas)
                         self.__boundary.show_message('Quantidade removida com sucesso!', 'green')
@@ -115,7 +112,6 @@ class CarSpotController:
                         self.__system_controller.shutdown()
                     else:
                         break
-            except ValueError:
-                self.__boundary.show_message('Existem campos em branco, confira!', 'red')
+
             except Exception as e:
                 self.__boundary.show_message(str(e))
