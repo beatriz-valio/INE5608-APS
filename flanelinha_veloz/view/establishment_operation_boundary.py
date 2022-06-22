@@ -10,7 +10,6 @@ class EstablishmentOperationBoundary(AbstractBoundary):
                         'Quarta-feira', 'Quinta-feira', 'Sexta-feira',
                         'Sábado']
     TEXT_SIZE = 20
-    INPUT_SIZE = 70
 
     def list_establishment_screen(self, dias_de_funcionamento, horarios_de_funcionamento):
         layout = [
