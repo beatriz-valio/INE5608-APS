@@ -53,16 +53,14 @@ class CarSpotController:
                     total_vagas = vagas_anteriores + qtd_vaga
 
                     self.__system_controller.update_establishment_key('total_de_vagas', total_vagas)
-                    self.__boundary.show_message(
-                        'Quantidade adicionada com sucesso!', 'green')
+                    self.__boundary.show_message('Quantidade adicionada com sucesso!', 'green')
                     break
                 elif acao is None:
                     self.__system_controller.shutdown()
                 else:
                     break
             except ValueError:
-                self.__boundary.show_message(
-                    'Existem campos em branco, confira!', 'red')
+                self.__boundary.show_message('Existem campos em branco, confira!', 'red')
             except Exception as e:
                 self.__boundary.show_message(str(e))
 
@@ -85,8 +83,7 @@ class CarSpotController:
             try:
                 all_car_spot = self.__system_controller.see_establishment_key('total_de_vagas')
                 if all_car_spot == 0:
-                    self.__boundary.show_message(
-                    'Sem vagas cadastradas! Não há vagas para excluir.')
+                    self.__boundary.show_message('Sem vagas cadastradas! Não há vagas para excluir.')
                     break
                 else:
                     values = self.__boundary.menu_delete_car_spot_screen(all_car_spot)
@@ -112,15 +109,13 @@ class CarSpotController:
                         total_vagas = vagas_anteriores - qtd_vaga
 
                         self.__system_controller.update_establishment_key('total_de_vagas', total_vagas)
-                        self.__boundary.show_message(
-                            'Quantidade removida com sucesso!', 'green')
+                        self.__boundary.show_message('Quantidade removida com sucesso!', 'green')
                         break
                     elif acao is None:
                         self.__system_controller.shutdown()
                     else:
                         break
             except ValueError:
-                self.__boundary.show_message(
-                    'Existem campos em branco, confira!', 'red')
+                self.__boundary.show_message('Existem campos em branco, confira!', 'red')
             except Exception as e:
                 self.__boundary.show_message(str(e))
