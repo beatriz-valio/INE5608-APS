@@ -19,10 +19,12 @@ from flanelinha_veloz.exceptions.missingDataException import \
     MissingDataException
 from flanelinha_veloz.exceptions.passwordDoesntMatchException import \
     PasswordDoesntMatchException
+from flanelinha_veloz.exceptions.spotCarLimitReachedException import SpotCarLimitReachedException
 from flanelinha_veloz.exceptions.userAlreadyExistException import \
     UserAlreadyExistException
 from flanelinha_veloz.persistence.clienteDAO import ClienteDAO
 from flanelinha_veloz.persistence.employeesDAO import EmployeesDAO
+from flanelinha_veloz.persistence.establishmentOperationDAO import EstablishmentOperationDAO
 from flanelinha_veloz.persistence.scheduleDAO import ScheduleDAO
 from flanelinha_veloz.persistence.typesOfServicesDAO import TypesOfServicesDAO
 from flanelinha_veloz.persistence.vehicleTypesDAO import VehicleTypesDAO
@@ -38,6 +40,7 @@ class ClientController:
         self.__types_of_services_dao = TypesOfServicesDAO()
         self.__vehicle_types_dao = VehicleTypesDAO()
         self.__schedule_dao = ScheduleDAO()
+        self.__establishment = EstablishmentOperationDAO().get()
 
     @property
     def client_dao(self):
@@ -225,10 +228,11 @@ class ClientController:
                 employee = self.__system_controller.employees_controller.next_employee()
                 if employee:
                     t = datetime.datetime.strptime(values['time'], "%H:%M")
-                    timedelta_escolhido = datetime.timedelta(hours=t.hour, minutes=t.minute)
+                    hora_escolhida = datetime.timedelta(hours=t.hour, minutes=t.minute)
+                    hora_fim = hora_escolhida + total_time
                     dia_escolhido = datetime.datetime.strptime(values['day'], '%d/%m/%Y')
-                    vaga = Vaga(dia_escolhido, timedelta_escolhido,
-                                timedelta_escolhido + total_time)
+                    vaga = Vaga(dia_escolhido, hora_escolhida,
+                                hora_fim)
                     schedule = Agendamento(
                         self.__system_controller.logged_user,
                         total_time,
@@ -239,7 +243,10 @@ class ClientController:
                         total_price,
                         values['vehicle_type']
                     )
-                    self.schedule_registration(schedule)
+                    if self.vaga_is_available(hora_escolhida, hora_fim, dia_escolhido):
+                        self.schedule_registration(schedule)
+                    else:
+                        raise SpotCarLimitReachedException
                 else:
                     raise FuncionarioNotAvailableException
             elif action is None:
@@ -266,6 +273,29 @@ class ClientController:
 
         else:
             self.__client_screen.show_message('Dados incorretos!', 'red')
+
+    def vaga_is_available(self, horario_escolhido, horario_fim_escolhido, data_escolhida):
+        lista_de_agendamentos = self.__schedule_dao.get_all()
+        total_vagas_estabelecimento = self.__establishment.total_de_vagas
+        vagas_ocupadas = 0
+        if lista_de_agendamentos is None or len(lista_de_agendamentos) == 0:
+            return True
+        else:
+            for agendamento in lista_de_agendamentos:
+                if data_escolhida == agendamento.vaga.data:
+                    if horario_escolhido < agendamento.vaga.horario_inicio:
+                        if agendamento.vaga.horario_inicio < horario_fim_escolhido < agendamento.vaga.horario_fim:
+                            vagas_ocupadas += 1
+                    elif horario_escolhido == agendamento.vaga.horario_inicio:
+                        vagas_ocupadas += 1
+                    elif horario_escolhido > agendamento.vaga.horario_inicio:
+                        if horario_fim_escolhido < agendamento.vaga.horario_fim or horario_escolhido < agendamento.vaga.horario_fim:
+                            vagas_ocupadas += 1
+
+            if vagas_ocupadas < total_vagas_estabelecimento:
+                return True
+            else:
+                return False
 
     def open_schedule_service_screen(self):
         while True:

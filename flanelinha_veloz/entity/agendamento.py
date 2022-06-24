@@ -35,7 +35,6 @@ class Agendamento:
     def cliente(self, cliente: Cliente):
         if isinstance(cliente, Cliente):
             self.cliente = cliente
-        self.cliente = cliente
 
     @property
     def duracao(self) -> timedelta:
@@ -45,7 +44,6 @@ class Agendamento:
     def duracao(self, duracao: timedelta):
         if isinstance(duracao, timedelta):
             self.duracao = duracao
-        self.duracao = duracao
 
     @property
     def funcionario(self) -> Funcionario:

@@ -231,11 +231,15 @@ class TypesOfServicesController:
 
     def search_for_types_of_service_by_name(self, name: str):
         try:
-            for service_type in self.__types_of_services_dao.get_all():
-                if service_type.nome == name:
-                    return service_type
-                else:
-                    raise Exception
+            vehicle_type = None
+            for service_types in self.__types_of_services_dao.get_all():
+                if service_types.nome == name:
+                    return service_types
+
+            if vehicle_type is None:
+                raise Exception
+            else:
+                return vehicle_type
         except KeyError:
             self.__boundary.show_message('Nenhum tipo de serviço encontrado!',
                                          'red')

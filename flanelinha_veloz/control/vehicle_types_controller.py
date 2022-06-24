@@ -231,11 +231,14 @@ class VehicleTypesController:
 
     def search_for_vehicle_types_by_name(self, name: str):
         try:
+            vehicle_type = None
             for vehicle_types in self.__vehicle_types_dao.get_all():
                 if vehicle_types.nome == name:
-                    return vehicle_types
-                else:
-                    raise Exception
+                    vehicle_type = vehicle_types
+            if vehicle_type is None:
+                raise Exception
+            else:
+                return vehicle_type
         except KeyError:
             self.__boundary.show_message('Nenhum tipo de veículo encontrado!',
                                          'red')
