@@ -1,3 +1,4 @@
+from flanelinha_veloz.entity.funcionario import Funcionario
 from flanelinha_veloz.persistence.abstractDAO import DAO
 
 
@@ -17,3 +18,10 @@ class EmployeesDAO(DAO):
     def remove(self, key: int):
         if isinstance(key, int):
             return super().remove(key)
+
+    def get_all_funcionarios(self):
+        funcionarios_list = []
+        for employee in self.get_all():
+            if isinstance(employee, Funcionario):
+                funcionarios_list.append(employee)
+        return funcionarios_list
