@@ -14,17 +14,20 @@ from flanelinha_veloz.exceptions.emailDoesntMatchException import \
     EmailDoesntMatchException
 from flanelinha_veloz.exceptions.emailNotValidException import \
     EmailNotValidException
-from flanelinha_veloz.exceptions.funcionarioNotAvailableException import FuncionarioNotAvailableException
+from flanelinha_veloz.exceptions.funcionarioNotAvailableException import \
+    FuncionarioNotAvailableException
 from flanelinha_veloz.exceptions.missingDataException import \
     MissingDataException
 from flanelinha_veloz.exceptions.passwordDoesntMatchException import \
     PasswordDoesntMatchException
-from flanelinha_veloz.exceptions.spotCarLimitReachedException import SpotCarLimitReachedException
+from flanelinha_veloz.exceptions.spotCarLimitReachedException import \
+    SpotCarLimitReachedException
 from flanelinha_veloz.exceptions.userAlreadyExistException import \
     UserAlreadyExistException
 from flanelinha_veloz.persistence.clienteDAO import ClienteDAO
 from flanelinha_veloz.persistence.employeesDAO import EmployeesDAO
-from flanelinha_veloz.persistence.establishmentOperationDAO import EstablishmentOperationDAO
+from flanelinha_veloz.persistence.establishmentOperationDAO import \
+    EstablishmentOperationDAO
 from flanelinha_veloz.persistence.scheduleDAO import ScheduleDAO
 from flanelinha_veloz.persistence.typesOfServicesDAO import TypesOfServicesDAO
 from flanelinha_veloz.persistence.vehicleTypesDAO import VehicleTypesDAO
@@ -214,8 +217,9 @@ class ClientController:
                 .search_for_types_of_service_by_name(
                 values['service_type'])
 
-            total_time: datetime.timedelta = self.__return_total_time(selected_vehicle_type,
-                                                                      selected_service_type)
+            total_time: datetime.timedelta = self.__return_total_time(
+                selected_vehicle_type,
+                selected_service_type)
             total_price = self.__return_total_price(selected_vehicle_type,
                                                     selected_service_type)
 
@@ -228,9 +232,11 @@ class ClientController:
                 employee = self.__system_controller.employees_controller.next_employee()
                 if employee:
                     t = datetime.datetime.strptime(values['time'], "%H:%M")
-                    hora_escolhida = datetime.timedelta(hours=t.hour, minutes=t.minute)
+                    hora_escolhida = datetime.timedelta(hours=t.hour,
+                                                        minutes=t.minute)
                     hora_fim = hora_escolhida + total_time
-                    dia_escolhido = datetime.datetime.strptime(values['day'], '%d/%m/%Y')
+                    dia_escolhido = datetime.datetime.strptime(values['day'],
+                                                               '%d/%m/%Y')
                     vaga = Vaga(dia_escolhido, hora_escolhida,
                                 hora_fim)
                     schedule = Agendamento(
@@ -243,7 +249,8 @@ class ClientController:
                         total_price,
                         values['vehicle_type']
                     )
-                    if self.vaga_is_available(hora_escolhida, hora_fim, dia_escolhido):
+                    if self.vaga_is_available(hora_escolhida, hora_fim,
+                                              dia_escolhido):
                         self.schedule_registration(schedule)
                     else:
                         raise SpotCarLimitReachedException
@@ -274,7 +281,8 @@ class ClientController:
         else:
             self.__client_screen.show_message('Dados incorretos!', 'red')
 
-    def vaga_is_available(self, horario_escolhido, horario_fim_escolhido, data_escolhida):
+    def vaga_is_available(self, horario_escolhido, horario_fim_escolhido,
+                          data_escolhida):
         lista_de_agendamentos = self.__schedule_dao.get_all()
         total_vagas_estabelecimento = self.__establishment.total_de_vagas
         vagas_ocupadas = 0

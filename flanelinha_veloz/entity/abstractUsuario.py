@@ -5,8 +5,7 @@ from datetime import datetime as dt
 class Usuario(ABC):
     @abstractmethod
     def __init__(self, cpf: int, data_nascimento: dt, email: str, genero: str,
-                 nome: str, senha: str,
-                 sobrenome: str):
+                 nome: str, senha: str, sobrenome: str):
         if isinstance(cpf, int):
             self.__cpf = cpf
         if isinstance(data_nascimento, dt):

@@ -1,19 +1,24 @@
 from datetime import timedelta, datetime
 
 from flanelinha_veloz.entity.servico import Servico
-from flanelinha_veloz.exceptions.durationValueNotValidException import DurationValueNotValidException
-from flanelinha_veloz.exceptions.missingDataException import MissingDataException
-from flanelinha_veloz.exceptions.priceValueNotValidException import PriceValueNotValidException
-from flanelinha_veloz.exceptions.typesOfServicesAlreadyExistsInTheSystemException import TypesOfServicesAlreadyExistsInTheSystemException
+from flanelinha_veloz.exceptions.durationValueNotValidException import \
+    DurationValueNotValidException
+from flanelinha_veloz.exceptions.missingDataException import \
+    MissingDataException
+from flanelinha_veloz.exceptions.priceValueNotValidException import \
+    PriceValueNotValidException
+from flanelinha_veloz.exceptions.typesOfServicesAlreadyExistsInTheSystemException import \
+    TypesOfServicesAlreadyExistsInTheSystemException
 from flanelinha_veloz.persistence.typesOfServicesDAO import TypesOfServicesDAO
-from flanelinha_veloz.view.types_of_services_boundary import TypesOfServicesBoundary
+from flanelinha_veloz.view.types_of_services_boundary import \
+    TypesOfServicesBoundary
 
 
 class TypesOfServicesController:
     def __init__(self, system_controller):
+        self.__system_controller = system_controller
         self.__boundary = TypesOfServicesBoundary()
         self.__types_of_services_dao = TypesOfServicesDAO()
-        self.__system_controller = system_controller
         self.__codigo = 0
 
     def open_screen(self):
@@ -45,7 +50,8 @@ class TypesOfServicesController:
                         'Sem tipo de serviço cadastrados, cadastre algum!')
                     break
                 else:
-                    values = self.__boundary.read_types_of_services_screen(all_types_of_services)
+                    values = self.__boundary.read_types_of_services_screen(
+                        all_types_of_services)
                     acao = values['acao']
                     if acao is None:
                         self.__system_controller.shutdown()
@@ -66,14 +72,18 @@ class TypesOfServicesController:
                         'Sem tipos de serviço cadastrados, cadastre algum!')
                     break
                 else:
-                    values = self.__boundary.menu_update_types_of_services_screen(all_types_of_services)
+                    values = self.__boundary.menu_update_types_of_services_screen(
+                        all_types_of_services)
                     acao = values['acao']
                     if acao == TypesOfServicesBoundary.UPDATE:
                         try:
-                            codigo_para_atualizacao = int(values['valores']['codigo'])
-                            vehicle_type = self.search_for_types_of_services_by_codigo(codigo_para_atualizacao)
+                            codigo_para_atualizacao = int(
+                                values['valores']['codigo'])
+                            vehicle_type = self.search_for_types_of_services_by_codigo(
+                                codigo_para_atualizacao)
                             if vehicle_type != None:
-                                self.open_update_types_of_services_screen(vehicle_type, codigo_para_atualizacao)
+                                self.open_update_types_of_services_screen(
+                                    vehicle_type, codigo_para_atualizacao)
                             else:
                                 raise Exception
                         except Exception:
@@ -90,15 +100,18 @@ class TypesOfServicesController:
             except Exception as e:
                 self.__boundary.show_message(str(e))
 
-    def open_update_types_of_services_screen(self, vehicle_type, codigo_para_atualizacao):
+    def open_update_types_of_services_screen(self, vehicle_type,
+                                             codigo_para_atualizacao):
         while True:
             try:
-                values = self.__boundary.update_types_of_services_screen(vehicle_type)
+                values = self.__boundary.update_types_of_services_screen(
+                    vehicle_type)
                 acoes = values['acao']
                 if acoes == TypesOfServicesBoundary.SUBMIT:
                     valor_atualicao = values['valores']
                     for value in valor_atualicao:
-                        if valor_atualicao[value] is None or valor_atualicao[value] == '':
+                        if valor_atualicao[value] is None or valor_atualicao[
+                            value] == '':
                             raise MissingDataException
                     codigo = codigo_para_atualizacao
                     preco = valor_atualicao['preco']
@@ -111,7 +124,8 @@ class TypesOfServicesController:
                         duracao = datetime.strptime(duracao, "%H:%M")
                     except Exception:
                         raise DurationValueNotValidException
-                    duracao = timedelta(hours=duracao.hour, minutes=duracao.minute)
+                    duracao = timedelta(hours=duracao.hour,
+                                        minutes=duracao.minute)
                     nome = valor_atualicao['nome']
                     obj = Servico(codigo, duracao, nome, preco)
                     self.types_of_services_registration(obj)
@@ -124,7 +138,8 @@ class TypesOfServicesController:
                     break
             except ValueError:
                 self.__boundary.show_message(
-                    'Na atualização, existem campos em branco, confira!', 'red')
+                    'Na atualização, existem campos em branco, confira!',
+                    'red')
             except Exception as e:
                 self.__boundary.show_message(str(e))
 
@@ -137,16 +152,20 @@ class TypesOfServicesController:
                         'Sem tipos de serviço cadastrados, cadastre algum!')
                     break
                 else:
-                    values = self.__boundary.menu_delete_types_of_services_screen(all_types_of_services)
+                    values = self.__boundary.menu_delete_types_of_services_screen(
+                        all_types_of_services)
                     acao = values['acao']
                     if acao == TypesOfServicesBoundary.DELETE:
                         try:
-                            codigo_para_atualizacao = int(values['valores']['codigo'])
-                            vehicle_type = self.search_for_types_of_services_by_codigo(codigo_para_atualizacao)
+                            codigo_para_atualizacao = int(
+                                values['valores']['codigo'])
+                            vehicle_type = self.search_for_types_of_services_by_codigo(
+                                codigo_para_atualizacao)
                             if vehicle_type != None:
                                 self.types_of_services_delete(vehicle_type)
                                 self.__boundary.show_message(
-                                    'Tipo de serviço deletado com sucesso!', 'green')
+                                    'Tipo de serviço deletado com sucesso!',
+                                    'green')
                                 self.open_screen()
                             else:
                                 raise Exception
@@ -184,7 +203,8 @@ class TypesOfServicesController:
                         duracao = datetime.strptime(duracao, "%H:%M")
                     except Exception:
                         raise DurationValueNotValidException
-                    duracao = timedelta(hours=duracao.hour, minutes=duracao.minute)
+                    duracao = timedelta(hours=duracao.hour,
+                                        minutes=duracao.minute)
                     nome = valores['nome']
                     self.validate_name(nome)
                     codigo = self.update_total_code()
@@ -249,7 +269,8 @@ class TypesOfServicesController:
         if qtd == 'all':
             for vehicle_type in self.__types_of_services_dao.get_all():
                 duracao = str(vehicle_type.duracao)[:-3]
-                data.append([vehicle_type.codigo, vehicle_type.nome, vehicle_type.preco, duracao])
+                data.append([vehicle_type.codigo, vehicle_type.nome,
+                             vehicle_type.preco, duracao])
         elif qtd == 'cod_name':
             for vehicle_type in self.__types_of_services_dao.get_all():
                 data.append([vehicle_type.codigo, vehicle_type.nome])

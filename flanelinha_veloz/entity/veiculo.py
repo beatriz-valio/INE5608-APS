@@ -2,7 +2,8 @@ from datetime import timedelta
 
 
 class Veiculo:
-    def __init__(self, codigo: int, duracao: timedelta, nome: str, preco: float):
+    def __init__(self, codigo: int, duracao: timedelta, nome: str,
+                 preco: float):
         if isinstance(codigo, int):
             self.__codigo = codigo
         if isinstance(duracao, timedelta):

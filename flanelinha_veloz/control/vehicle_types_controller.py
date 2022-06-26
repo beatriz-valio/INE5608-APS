@@ -1,19 +1,23 @@
 from datetime import timedelta, datetime
 
 from flanelinha_veloz.entity.veiculo import Veiculo
-from flanelinha_veloz.exceptions.durationValueNotValidException import DurationValueNotValidException
-from flanelinha_veloz.exceptions.missingDataException import MissingDataException
-from flanelinha_veloz.exceptions.priceValueNotValidException import PriceValueNotValidException
-from flanelinha_veloz.exceptions.vehicleTypesAlreadyExistsInTheSystemException import VehicleTypesAlreadyExistsInTheSystemException
+from flanelinha_veloz.exceptions.durationValueNotValidException import \
+    DurationValueNotValidException
+from flanelinha_veloz.exceptions.missingDataException import \
+    MissingDataException
+from flanelinha_veloz.exceptions.priceValueNotValidException import \
+    PriceValueNotValidException
+from flanelinha_veloz.exceptions.vehicleTypesAlreadyExistsInTheSystemException import \
+    VehicleTypesAlreadyExistsInTheSystemException
 from flanelinha_veloz.persistence.vehicleTypesDAO import VehicleTypesDAO
 from flanelinha_veloz.view.vehicle_types_boundary import VehicleTypesBoundary
 
 
 class VehicleTypesController:
     def __init__(self, system_controller):
+        self.__system_controller = system_controller
         self.__boundary = VehicleTypesBoundary()
         self.__vehicle_types_dao = VehicleTypesDAO()
-        self.__system_controller = system_controller
         self.__codigo = 0
 
     def open_screen(self):
@@ -45,7 +49,8 @@ class VehicleTypesController:
                         'Sem tipo de veículos cadastrados, cadastre algum!')
                     break
                 else:
-                    values = self.__boundary.read_vehicle_types_screen(all_vehicle_types)
+                    values = self.__boundary.read_vehicle_types_screen(
+                        all_vehicle_types)
                     acao = values['acao']
                     if acao is None:
                         self.__system_controller.shutdown()
@@ -66,14 +71,18 @@ class VehicleTypesController:
                         'Sem tipos de veículos cadastrados, cadastre algum!')
                     break
                 else:
-                    values = self.__boundary.menu_update_vehicle_types_screen(all_vehicle_types)
+                    values = self.__boundary.menu_update_vehicle_types_screen(
+                        all_vehicle_types)
                     acao = values['acao']
                     if acao == VehicleTypesBoundary.UPDATE:
                         try:
-                            codigo_para_atualizacao = int(values['valores']['codigo'])
-                            vehicle_type = self.search_for_vehicle_types_by_codigo(codigo_para_atualizacao)
+                            codigo_para_atualizacao = int(
+                                values['valores']['codigo'])
+                            vehicle_type = self.search_for_vehicle_types_by_codigo(
+                                codigo_para_atualizacao)
                             if vehicle_type != None:
-                                self.open_update_vehicle_type_screen(vehicle_type, codigo_para_atualizacao)
+                                self.open_update_vehicle_type_screen(
+                                    vehicle_type, codigo_para_atualizacao)
                             else:
                                 raise Exception
                         except Exception:
@@ -90,15 +99,18 @@ class VehicleTypesController:
             except Exception as e:
                 self.__boundary.show_message(str(e))
 
-    def open_update_vehicle_type_screen(self, vehicle_type, codigo_para_atualizacao):
+    def open_update_vehicle_type_screen(self, vehicle_type,
+                                        codigo_para_atualizacao):
         while True:
             try:
-                values = self.__boundary.update_vehicle_types_screen(vehicle_type)
+                values = self.__boundary.update_vehicle_types_screen(
+                    vehicle_type)
                 acoes = values['acao']
                 if acoes == VehicleTypesBoundary.SUBMIT:
                     valor_atualicao = values['valores']
                     for value in valor_atualicao:
-                        if valor_atualicao[value] is None or valor_atualicao[value] == '':
+                        if valor_atualicao[value] is None or valor_atualicao[
+                            value] == '':
                             raise MissingDataException
                     codigo = codigo_para_atualizacao
                     preco = valor_atualicao['preco']
@@ -111,7 +123,8 @@ class VehicleTypesController:
                         duracao = datetime.strptime(duracao, "%H:%M")
                     except Exception:
                         raise DurationValueNotValidException
-                    duracao = timedelta(hours=duracao.hour, minutes=duracao.minute)
+                    duracao = timedelta(hours=duracao.hour,
+                                        minutes=duracao.minute)
                     nome = valor_atualicao['nome']
                     obj = Veiculo(codigo, duracao, nome, preco)
                     self.vehicle_types_registration(obj)
@@ -124,7 +137,8 @@ class VehicleTypesController:
                     break
             except ValueError:
                 self.__boundary.show_message(
-                    'Na atualização, existem campos em branco, confira!', 'red')
+                    'Na atualização, existem campos em branco, confira!',
+                    'red')
             except Exception as e:
                 self.__boundary.show_message(str(e))
 
@@ -137,16 +151,20 @@ class VehicleTypesController:
                         'Sem tipo de veículos cadastrados, cadastre algum!')
                     break
                 else:
-                    values = self.__boundary.menu_delete_vehicle_types_screen(all_vehicle_types)
+                    values = self.__boundary.menu_delete_vehicle_types_screen(
+                        all_vehicle_types)
                     acao = values['acao']
                     if acao == VehicleTypesBoundary.DELETE:
                         try:
-                            codigo_para_atualizacao = int(values['valores']['codigo'])
-                            vehicle_type = self.search_for_vehicle_types_by_codigo(codigo_para_atualizacao)
+                            codigo_para_atualizacao = int(
+                                values['valores']['codigo'])
+                            vehicle_type = self.search_for_vehicle_types_by_codigo(
+                                codigo_para_atualizacao)
                             if vehicle_type != None:
                                 self.vehicle_types_delete(vehicle_type)
                                 self.__boundary.show_message(
-                                    'Tipo de veículo deletado com sucesso!', 'green')
+                                    'Tipo de veículo deletado com sucesso!',
+                                    'green')
                                 self.open_screen()
                             else:
                                 raise Exception
@@ -184,7 +202,8 @@ class VehicleTypesController:
                         duracao = datetime.strptime(duracao, "%H:%M")
                     except Exception:
                         raise DurationValueNotValidException
-                    duracao = timedelta(hours=duracao.hour, minutes=duracao.minute)
+                    duracao = timedelta(hours=duracao.hour,
+                                        minutes=duracao.minute)
                     nome = valores['nome']
                     self.validate_name(nome)
                     codigo = self.update_total_code()
@@ -248,7 +267,8 @@ class VehicleTypesController:
         if qtd == 'all':
             for vehicle_type in self.__vehicle_types_dao.get_all():
                 duracao = str(vehicle_type.duracao)[:-3]
-                data.append([vehicle_type.codigo, vehicle_type.nome, vehicle_type.preco, duracao])
+                data.append([vehicle_type.codigo, vehicle_type.nome,
+                             vehicle_type.preco, duracao])
         elif qtd == 'cod_name':
             for vehicle_type in self.__vehicle_types_dao.get_all():
                 data.append([vehicle_type.codigo, vehicle_type.nome])

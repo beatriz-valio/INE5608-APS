@@ -1,11 +1,14 @@
 from flanelinha_veloz.control.car_spot_controller import CarSpotController
 from flanelinha_veloz.control.client_controller import ClientController
 from flanelinha_veloz.control.employees_controller import EmployeesController
-from flanelinha_veloz.control.establishment_operation_controller import EstablishmentOperationController
+from flanelinha_veloz.control.establishment_operation_controller import \
+    EstablishmentOperationController
 from flanelinha_veloz.control.login_controller import LoginController
 from flanelinha_veloz.control.menu_controller import MenuController
-from flanelinha_veloz.control.vehicle_types_controller import VehicleTypesController
-from flanelinha_veloz.control.types_of_services_controller import TypesOfServicesController
+from flanelinha_veloz.control.types_of_services_controller import \
+    TypesOfServicesController
+from flanelinha_veloz.control.vehicle_types_controller import \
+    VehicleTypesController
 from flanelinha_veloz.entity.abstractUsuario import Usuario
 from flanelinha_veloz.entity.estabelecimento import Estabelecimento
 
@@ -22,11 +25,27 @@ class SystemController:
         self.__establishment_operation_controller = EstablishmentOperationController(self)
         self.__menu_controller = MenuController(self)
         self.__logged_user: Usuario or None = None
-        self.__establishment: Estabelecimento = Estabelecimento(0, ['Segunda-feira', 'Terça-feira',
-                                                                    'Quarta-feira', 'Quinta-feira', 'Sexta-feira'],
-                                                                ['9:00', '9:30', '10:00', '10:30', '11:00', '11:30',
-                                                                 '12:00', '12:30', '13:00', '13:30', '14:00', '14:30',
-                                                                 '15:00', '15:30', '16:00', '16:30', '17:00', '17:30',
+        self.__establishment: Estabelecimento = Estabelecimento(0,
+            ['Segunda-feira', 'Terça-feira',
+            'Quarta-feira', 'Quinta-feira', 'Sexta-feira'],
+            ['9:00',
+                                                                 '9:30',
+                                                                 '10:00',
+                                                                 '10:30',
+                                                                 '11:00',
+                                                                 '11:30',
+                                                                 '12:00',
+                                                                 '12:30',
+                                                                 '13:00',
+                                                                 '13:30',
+                                                                 '14:00',
+                                                                 '14:30',
+                                                                 '15:00',
+                                                                 '15:30',
+                                                                 '16:00',
+                                                                 '16:30',
+                                                                 '17:00',
+                                                                 '17:30',
                                                                  '18:00'])
         self.update_establishment()
 

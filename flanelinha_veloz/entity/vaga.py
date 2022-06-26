@@ -2,7 +2,8 @@ from datetime import datetime, timedelta
 
 
 class Vaga:
-    def __init__(self, data: datetime, horario_inicio: timedelta, horario_fim: timedelta):
+    def __init__(self, data: datetime, horario_inicio: timedelta,
+                 horario_fim: timedelta):
         if isinstance(data, datetime):
             self.__data = data
         if isinstance(horario_inicio, timedelta):

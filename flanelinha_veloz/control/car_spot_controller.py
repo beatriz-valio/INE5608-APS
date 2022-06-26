@@ -1,6 +1,9 @@
-from flanelinha_veloz.exceptions.exceededSpotCarValueNotValidException import ExceededSpotCarValueNotValidException
-from flanelinha_veloz.exceptions.missingSpotCarException import MissingSpotCarException
-from flanelinha_veloz.exceptions.spotCarValueNotValidException import SpotCarValueNotValidException
+from flanelinha_veloz.exceptions.exceededSpotCarValueNotValidException import \
+    ExceededSpotCarValueNotValidException
+from flanelinha_veloz.exceptions.missingSpotCarException import \
+    MissingSpotCarException
+from flanelinha_veloz.exceptions.spotCarValueNotValidException import \
+    SpotCarValueNotValidException
 from flanelinha_veloz.view.car_spot_boundary import CarSpotBoundary
 
 
@@ -8,9 +11,9 @@ class CarSpotController:
     def __init__(self, system_controller):
         self.__boundary = CarSpotBoundary()
         self.__system_controller = system_controller
-    
+
     def open_screen(self):
-        try:            
+        try:
             action_options = {
                 None: self.__system_controller.shutdown,
                 0: self.return_menu_manager,
@@ -24,7 +27,7 @@ class CarSpotController:
                 selected_function()
         except Exception as e:
             self.__boundary.show_message(str(e))
-    
+
     def return_menu_manager(self):
         self.__system_controller.menu_controller.open_menu_manager()
 
@@ -47,11 +50,14 @@ class CarSpotController:
                     if qtd_vaga <= 0:
                         raise SpotCarValueNotValidException
 
-                    vagas_atuais = self.__system_controller.see_establishment_key('total_de_vagas')
+                    vagas_atuais = self.__system_controller.see_establishment_key(
+                        'total_de_vagas')
                     novo_total_vagas = vagas_atuais + qtd_vaga
 
-                    self.__system_controller.update_establishment_key('total_de_vagas', novo_total_vagas)
-                    self.__boundary.show_message('Quantidade adicionada com sucesso!', 'green')
+                    self.__system_controller.update_establishment_key(
+                        'total_de_vagas', novo_total_vagas)
+                    self.__boundary.show_message(
+                        'Quantidade adicionada com sucesso!', 'green')
                     break
                 elif acao is None:
                     self.__system_controller.shutdown()
@@ -64,7 +70,8 @@ class CarSpotController:
     def open_list_car_spot_screen(self):
         while True:
             try:
-                vagas_atuais = self.__system_controller.see_establishment_key('total_de_vagas')
+                vagas_atuais = self.__system_controller.see_establishment_key(
+                    'total_de_vagas')
                 retorno = self.__boundary.list_car_spot_screen(vagas_atuais)
                 acao = retorno['acao']
                 if acao is None:
@@ -77,12 +84,15 @@ class CarSpotController:
     def open_menu_delete_car_spot_screen(self):
         while True:
             try:
-                vagas_atuais = self.__system_controller.see_establishment_key('total_de_vagas')
+                vagas_atuais = self.__system_controller.see_establishment_key(
+                    'total_de_vagas')
                 if vagas_atuais <= 0:
-                    self.__boundary.show_message('Sem vagas cadastradas! Não há vagas para excluir.')
+                    self.__boundary.show_message(
+                        'Sem vagas cadastradas! Não há vagas para excluir.')
                     break
                 else:
-                    retorno = self.__boundary.menu_delete_car_spot_screen(vagas_atuais)
+                    retorno = self.__boundary.menu_delete_car_spot_screen(
+                        vagas_atuais)
                     acao = retorno['acao']
                     if acao == CarSpotBoundary.SUBMIT:
                         valores = retorno['valores']
@@ -103,8 +113,10 @@ class CarSpotController:
 
                         novo_total_vagas = vagas_atuais - qtd_vaga
 
-                        self.__system_controller.update_establishment_key('total_de_vagas', novo_total_vagas)
-                        self.__boundary.show_message('Quantidade removida com sucesso!', 'green')
+                        self.__system_controller.update_establishment_key(
+                            'total_de_vagas', novo_total_vagas)
+                        self.__boundary.show_message(
+                            'Quantidade removida com sucesso!', 'green')
                         break
                     elif acao is None:
                         self.__system_controller.shutdown()

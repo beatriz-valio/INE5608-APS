@@ -8,7 +8,8 @@ from flanelinha_veloz.entity.veiculo import Veiculo
 
 
 class Agendamento:
-    def __init__(self, cliente: Cliente, duracao: timedelta, funcionario: Funcionario, placa: str, servico: Servico,
+    def __init__(self, cliente: Cliente, duracao: timedelta,
+                 funcionario: Funcionario, placa: str, servico: Servico,
                  vaga: Vaga, valor: float, veiculo: Veiculo):
         if isinstance(cliente, Cliente):
             self.__cliente = cliente
@@ -64,15 +65,6 @@ class Agendamento:
             self.placa = placa
 
     @property
-    def vaga(self) -> Vaga:
-        return self.__vaga
-
-    @vaga.setter
-    def vaga(self, vaga: Vaga):
-        if isinstance(vaga, Vaga):
-            self.vaga = vaga
-
-    @property
     def servico(self) -> Servico:
         return self.__servico
 
@@ -88,6 +80,15 @@ class Agendamento:
     def valor(self, valor: float):
         if isinstance(valor, float):
             self.valor = valor
+
+    @property
+    def vaga(self) -> Vaga:
+        return self.__vaga
+
+    @vaga.setter
+    def vaga(self, vaga: Vaga):
+        if isinstance(vaga, Vaga):
+            self.vaga = vaga
 
     @property
     def veiculo(self) -> Veiculo:

@@ -1,7 +1,6 @@
 import hashlib
 from datetime import datetime as dt, timedelta
 
-from flanelinha_veloz.entity.cliente import Cliente
 from flanelinha_veloz.entity.funcionario import Funcionario
 from flanelinha_veloz.entity.gestor import Gestor
 from flanelinha_veloz.exceptions.cpfNotValidException import \
@@ -14,7 +13,8 @@ from flanelinha_veloz.exceptions.employeesAlreadyExistsInTheSystemException impo
     EmployeesAlreadyExistsInTheSystemException
 from flanelinha_veloz.exceptions.employeesNotWritedException import \
     EmployeesNotWritedException
-from flanelinha_veloz.exceptions.missingDataException import MissingDataException
+from flanelinha_veloz.exceptions.missingDataException import \
+    MissingDataException
 from flanelinha_veloz.exceptions.passwordDoesntMatchException import \
     PasswordDoesntMatchException
 from flanelinha_veloz.persistence.employeesDAO import EmployeesDAO
@@ -33,7 +33,8 @@ class EmployeesController:
 
     def next_employee(self):
         employees = self.__employee_dao.get_all_funcionarios()
-        all_employee = {'cpf': None, 'agendamentos': timedelta(hours=0, minutes=0)}
+        all_employee = {'cpf': None,
+                        'agendamentos': timedelta(hours=0, minutes=0)}
         for employee in employees:
             all_jobs = employee.agendamentos
             duration = timedelta(hours=0, minutes=0)
@@ -57,7 +58,6 @@ class EmployeesController:
                         employees_cpf)
                     senha_antiga = employees_cpf.senha
                     acao = values['acao']
-                    all_value_good = True
                     if acao == EmployeesBoundary.SUBMIT:
                         valores = values['valores']
                         del (valores['Calendário'])

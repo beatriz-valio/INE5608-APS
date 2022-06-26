@@ -1,8 +1,6 @@
-# establishment_operation_controller
-
-
 class Estabelecimento:
-    def __init__(self, total_de_vagas:int, dias_de_funcionamento: list, horarios_de_funcionamento: list):
+    def __init__(self, total_de_vagas: int, dias_de_funcionamento: list,
+                 horarios_de_funcionamento: list):
         if isinstance(total_de_vagas, int):
             self.__total_de_vagas = total_de_vagas
         if isinstance(dias_de_funcionamento, list):

@@ -7,8 +7,8 @@ from flanelinha_veloz.view.login_boundary import LoginBoundary
 class LoginController:
 
     def __init__(self, system_controller):
-        self.__login_screen = LoginBoundary()
         self.__system_controller = system_controller
+        self.__login_screen = LoginBoundary()
 
     def save_user(self, client: Usuario):
         self.__system_controller.set_logged_user(client)

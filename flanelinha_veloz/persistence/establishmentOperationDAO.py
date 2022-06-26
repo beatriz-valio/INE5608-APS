@@ -1,5 +1,5 @@
-from flanelinha_veloz.persistence.abstractDAO import DAO
 from flanelinha_veloz.entity.estabelecimento import Estabelecimento
+from flanelinha_veloz.persistence.abstractDAO import DAO
 
 
 class EstablishmentOperationDAO(DAO):
@@ -14,7 +14,3 @@ class EstablishmentOperationDAO(DAO):
 
     def get(self):
         return super().get(0)
-
-    def remove(self, key: int):
-        if isinstance(key, int):
-            return super().remove(key)

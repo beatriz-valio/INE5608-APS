@@ -4,8 +4,8 @@ from flanelinha_veloz.view.menu_boundary import MenuBoundary
 class MenuController:
 
     def __init__(self, system_controller):
-        self.__menu_screen = MenuBoundary()
         self.__system_controller = system_controller
+        self.__menu_screen = MenuBoundary()
 
     def see_client_profile(self):
         self.__system_controller.client_controller.open_menu_client()
