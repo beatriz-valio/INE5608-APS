@@ -1,14 +1,12 @@
 from flanelinha_veloz.exceptions.exceededSpotCarValueNotValidException import ExceededSpotCarValueNotValidException
 from flanelinha_veloz.exceptions.missingSpotCarException import MissingSpotCarException
 from flanelinha_veloz.exceptions.spotCarValueNotValidException import SpotCarValueNotValidException
-from flanelinha_veloz.persistence.carSpotDAO import CarSpotDAO
 from flanelinha_veloz.view.car_spot_boundary import CarSpotBoundary
 
 
 class CarSpotController:
     def __init__(self, system_controller):
         self.__boundary = CarSpotBoundary()
-        self.__car_spot_dao = CarSpotDAO()
         self.__system_controller = system_controller
     
     def open_screen(self):
@@ -50,9 +48,9 @@ class CarSpotController:
                         raise SpotCarValueNotValidException
 
                     vagas_atuais = self.__system_controller.see_establishment_key('total_de_vagas')
-                    total_vagas = vagas_atuais + qtd_vaga
+                    novo_total_vagas = vagas_atuais + qtd_vaga
 
-                    self.__system_controller.update_establishment_key('total_de_vagas', total_vagas)
+                    self.__system_controller.update_establishment_key('total_de_vagas', novo_total_vagas)
                     self.__boundary.show_message('Quantidade adicionada com sucesso!', 'green')
                     break
                 elif acao is None:
@@ -103,9 +101,9 @@ class CarSpotController:
                         if qtd_vaga <= 0:
                             raise SpotCarValueNotValidException
 
-                        total_vagas = vagas_atuais - qtd_vaga
+                        novo_total_vagas = vagas_atuais - qtd_vaga
 
-                        self.__system_controller.update_establishment_key('total_de_vagas', total_vagas)
+                        self.__system_controller.update_establishment_key('total_de_vagas', novo_total_vagas)
                         self.__boundary.show_message('Quantidade removida com sucesso!', 'green')
                         break
                     elif acao is None:
