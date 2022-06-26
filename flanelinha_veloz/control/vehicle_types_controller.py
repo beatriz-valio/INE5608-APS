@@ -15,9 +15,9 @@ class VehicleTypesController:
         self.__vehicle_types_dao = VehicleTypesDAO()
         self.__system_controller = system_controller
         self.__codigo = 0
-    
+
     def open_screen(self):
-        try:            
+        try:
             action_options = {
                 None: self.__system_controller.shutdown,
                 0: self.return_menu_manager,
@@ -32,7 +32,7 @@ class VehicleTypesController:
                 selected_function()
         except Exception as e:
             self.__boundary.show_message(str(e))
-    
+
     def return_menu_manager(self):
         self.__system_controller.menu_controller.open_menu_manager()
 
@@ -42,7 +42,7 @@ class VehicleTypesController:
                 all_vehicle_types = self.get_x_in_table('all')
                 if all_vehicle_types == []:
                     self.__boundary.show_message(
-                    'Sem tipo de veículos cadastrados, cadastre algum!')
+                        'Sem tipo de veículos cadastrados, cadastre algum!')
                     break
                 else:
                     values = self.__boundary.read_vehicle_types_screen(all_vehicle_types)
@@ -63,7 +63,7 @@ class VehicleTypesController:
                 all_vehicle_types = self.get_x_in_table('cod_name')
                 if all_vehicle_types == []:
                     self.__boundary.show_message(
-                    'Sem tipos de veículos cadastrados, cadastre algum!')
+                        'Sem tipos de veículos cadastrados, cadastre algum!')
                     break
                 else:
                     values = self.__boundary.menu_update_vehicle_types_screen(all_vehicle_types)
@@ -78,7 +78,7 @@ class VehicleTypesController:
                                 raise Exception
                         except Exception:
                             self.__boundary.show_message(
-                            'Esse código não existe na base!')
+                                'Esse código não existe na base!')
                             self.open_menu_update_vehicle_type_screen()
                     elif acao is None:
                         self.__system_controller.shutdown()
@@ -108,7 +108,7 @@ class VehicleTypesController:
                     except Exception:
                         raise PriceValueNotValidException
                     try:
-                        duracao = datetime.strptime(duracao,"%H:%M")    
+                        duracao = datetime.strptime(duracao, "%H:%M")
                     except Exception:
                         raise DurationValueNotValidException
                     duracao = timedelta(hours=duracao.hour, minutes=duracao.minute)
@@ -134,7 +134,7 @@ class VehicleTypesController:
                 all_vehicle_types = self.get_x_in_table('cod_name')
                 if all_vehicle_types == []:
                     self.__boundary.show_message(
-                    'Sem tipo de veículos cadastrados, cadastre algum!')
+                        'Sem tipo de veículos cadastrados, cadastre algum!')
                     break
                 else:
                     values = self.__boundary.menu_delete_vehicle_types_screen(all_vehicle_types)
@@ -152,7 +152,7 @@ class VehicleTypesController:
                                 raise Exception
                         except Exception:
                             self.__boundary.show_message(
-                            'Esse código não existe na base!')
+                                'Esse código não existe na base!')
                             self.open_menu_delete_vehicle_type_screen()
                     elif acao is None:
                         self.__system_controller.shutdown()
@@ -181,7 +181,7 @@ class VehicleTypesController:
                     except Exception:
                         raise PriceValueNotValidException
                     try:
-                        duracao = datetime.strptime(duracao,"%H:%M")    
+                        duracao = datetime.strptime(duracao, "%H:%M")
                     except Exception:
                         raise DurationValueNotValidException
                     duracao = timedelta(hours=duracao.hour, minutes=duracao.minute)
@@ -229,6 +229,20 @@ class VehicleTypesController:
             self.__boundary.show_message('Nenhum tipo de veículo encontrado!',
                                          'red')
 
+    def search_for_vehicle_types_by_name(self, name: str):
+        try:
+            vehicle_type = None
+            for vehicle_types in self.__vehicle_types_dao.get_all():
+                if vehicle_types.nome == name:
+                    vehicle_type = vehicle_types
+            if vehicle_type is None:
+                raise Exception
+            else:
+                return vehicle_type
+        except KeyError:
+            self.__boundary.show_message('Nenhum tipo de veículo encontrado!',
+                                         'red')
+
     def get_x_in_table(self, qtd):
         data = []
         if qtd == 'all':
@@ -242,7 +256,7 @@ class VehicleTypesController:
             for vehicle_type in self.__vehicle_types_dao.get_all():
                 data.append(vehicle_type.codigo)
         return data
-    
+
     def update_total_code(self):
         return_of_all = self.get_x_in_table('all')
         if return_of_all == []:

@@ -11,6 +11,7 @@ class ClientBoundary(AbstractBoundary):
     CREATE = 1
     UPDATE = 2
     DELETE = 3
+    SCHEDULE = 4
     GENDER_OPTIONS = ['Masculino', 'Feminino', 'Outro']
 
     def open_screen(self):
@@ -105,3 +106,42 @@ class ClientBoundary(AbstractBoundary):
         button, values = window.Read()
         window.close()
         return button
+
+    def open_schedule_confirmation_screen(self, total_time, total_price):
+        layout = [
+            [sg.Text('Deseja confirmar seu agendamento?', font='Arial 16', pad=10)],
+            [sg.Text('Valor total: *'), sg.Text(total_price)],
+            [sg.Text('Tempo total: *'), sg.Text(total_time)],
+            [sg.Cancel('Voltar', key=ClientBoundary.CANCEL),
+             sg.Submit('Confirmar', key=ClientBoundary.SCHEDULE)]
+        ]
+        window = sg.Window('Flanelinha Veloz - Confirmar agendamento', size=(420, 420)) \
+            .Layout(layout)
+        button, values = window.Read()
+        window.close()
+        return {
+            'action': button,
+        }
+
+    def open_schedule_screen(self, vehicle_list, service_list, time_list):
+        layout = [
+            [sg.Text('Dia: *'),
+             sg.CalendarButton(target='day', button_text="Calendário", format="%d/%m/%Y")],
+            [sg.In(key='day', readonly=True)],
+            [sg.Text('Horário: *'), sg.Combo(time_list, default_value=time_list[0], key='time')],
+            [sg.Text('Placa: *'), sg.In(key='plate')],
+            [sg.Text('Tipo de veículo: *'),
+             sg.Combo(vehicle_list, default_value=vehicle_list[0], key='vehicle_type')],
+            [sg.Text('Tipo de serviço: *'), sg.Combo(service_list, default_value=service_list[0], key='service_type')],
+            [sg.Cancel('Voltar', key=ClientBoundary.CANCEL),
+             sg.Submit('Agendar', key=ClientBoundary.SCHEDULE)]
+        ]
+        window = sg.Window('Flanelinha Veloz - Agendamento', size=(320, 320)) \
+            .Layout(layout)
+        button, values = window.Read()
+        window.close()
+        del (values['Calendário'])
+        return {
+            'action': button,
+            'schedule': values
+        }
