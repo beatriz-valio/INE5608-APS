@@ -14,6 +14,7 @@ from flanelinha_veloz.exceptions.emailDoesntMatchException import \
     EmailDoesntMatchException
 from flanelinha_veloz.exceptions.emailNotValidException import \
     EmailNotValidException
+from flanelinha_veloz.exceptions.establishmentUnavailableTimeSchedule import EstablishmentUnavailableTimeSchedule
 from flanelinha_veloz.exceptions.funcionarioNotAvailableException import \
     FuncionarioNotAvailableException
 from flanelinha_veloz.exceptions.missingDataException import \
@@ -237,23 +238,26 @@ class ClientController:
                     hora_fim = hora_escolhida + total_time
                     dia_escolhido = datetime.datetime.strptime(values['day'],
                                                                '%d/%m/%Y')
-                    vaga = Vaga(dia_escolhido, hora_escolhida,
-                                hora_fim)
-                    schedule = Agendamento(
-                        self.__system_controller.logged_user,
-                        total_time,
-                        employee,
-                        values['plate'],
-                        selected_service_type,
-                        vaga,
-                        total_price,
-                        values['vehicle_type']
-                    )
-                    if self.vaga_is_available(hora_escolhida, hora_fim,
-                                              dia_escolhido):
-                        self.schedule_registration(schedule)
+                    if hora_fim > self.__establishment.horarios_de_funcionamento[-1]:
+                        raise EstablishmentUnavailableTimeSchedule
                     else:
-                        raise SpotCarLimitReachedException
+                        vaga = Vaga(dia_escolhido, hora_escolhida,
+                                    hora_fim)
+                        schedule = Agendamento(
+                            self.__system_controller.logged_user,
+                            total_time,
+                            employee,
+                            values['plate'],
+                            selected_service_type,
+                            vaga,
+                            total_price,
+                            values['vehicle_type']
+                        )
+                        if self.vaga_is_available(hora_escolhida, hora_fim,
+                                              dia_escolhido):
+                            self.schedule_registration(schedule)
+                        else:
+                            raise SpotCarLimitReachedException
                 else:
                     raise FuncionarioNotAvailableException
             elif action is None:
