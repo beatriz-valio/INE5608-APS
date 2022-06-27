@@ -9,8 +9,8 @@ from flanelinha_veloz.view.car_spot_boundary import CarSpotBoundary
 
 class CarSpotController:
     def __init__(self, system_controller):
-        self.__boundary = CarSpotBoundary()
         self.__system_controller = system_controller
+        self.__boundary = CarSpotBoundary()
 
     def open_screen(self):
         try:

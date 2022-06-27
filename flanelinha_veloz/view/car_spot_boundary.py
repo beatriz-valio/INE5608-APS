@@ -6,7 +6,6 @@ from flanelinha_veloz.view.abstract_boundary import AbstractBoundary
 class CarSpotBoundary(AbstractBoundary):
     CANCEL = 0
     SUBMIT = 1
-    DELETE = 2
     TEXT_SIZE = 20
 
     def open_options(self):
