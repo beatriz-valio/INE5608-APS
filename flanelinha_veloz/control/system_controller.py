@@ -5,6 +5,8 @@ from flanelinha_veloz.control.establishment_operation_controller import \
     EstablishmentOperationController
 from flanelinha_veloz.control.login_controller import LoginController
 from flanelinha_veloz.control.menu_controller import MenuController
+from flanelinha_veloz.control.next_day_report_controller import \
+    NextDayReportController
 from flanelinha_veloz.control.types_of_services_controller import \
     TypesOfServicesController
 from flanelinha_veloz.control.vehicle_types_controller import \
@@ -25,6 +27,7 @@ class SystemController:
         self.__establishment_operation_controller = EstablishmentOperationController(self)
         self.__menu_controller = MenuController(self)
         self.__logged_user: Usuario or None = None
+        self.__next_day_report_controller = NextDayReportController(self)
         self.__establishment: Estabelecimento = Estabelecimento(0,
             ['Segunda-feira', 'Terça-feira',
             'Quarta-feira', 'Quinta-feira', 'Sexta-feira'],
@@ -91,6 +94,10 @@ class SystemController:
     @property
     def establishment_operation_controller(self):
         return self.__establishment_operation_controller
+
+    @property
+    def next_day_report_controller(self):
+        return self.__next_day_report_controller
 
     def open_login_screen(self):
         self.__login_controller.open_screen()

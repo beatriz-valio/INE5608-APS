@@ -46,6 +46,8 @@ class MenuBoundary(AbstractBoundary):
             [sg.Button('Cadastrar Vagas', key=4, size=MenuBoundary.TEXT_SIZE)],
             [sg.Button('Cadastrar Dias e Horários', key=5,
                        size=MenuBoundary.TEXT_SIZE)],
+            [sg.Button('Relatório do Dia Seguinte', key=6,
+                       size=MenuBoundary.TEXT_SIZE)],
             [sg.Cancel('Sair', key=MenuBoundary.SHUTDOWN,
                        size=(MenuBoundary.TEXT_SIZE, 1))]
 
@@ -55,7 +57,7 @@ class MenuBoundary(AbstractBoundary):
                            layout=layout,
                            size=(900, 500),
                            element_justification="c",
-                           margins=(100, 100))
+                           margins=(80, 80))
 
         button, values = window.Read()
         window.close()
