@@ -9,8 +9,9 @@ class NextDayReportBoundary(AbstractBoundary):
 
     def list_report_screen(self, agendamentos):
         layout = [
-            [sg.Text('Relatório de agendamentos do próximo dia: ', font='Arial 14')],
-            [sg.Listbox(values=agendamentos,
+            [sg.Text('Relatório de agendamentos Dia Seguinte: ', font='Arial 14')],
+            [[sg.Text('Data,   Horário Início,   Horário Fim,   : ', font='Arial 14')],
+             sg.Listbox(values=agendamentos,
                         select_mode='extended',
                         key="dias_de_funcionamento",
                         disabled=True,
@@ -22,7 +23,7 @@ class NextDayReportBoundary(AbstractBoundary):
                            size=(900, 550),
                            element_justification='c',
                            resizable=True,
-                           margins=(100, 100)) \
+                           margins=(20, 20)) \
             .Layout(layout)
         button, values = window.Read()
         window.close()

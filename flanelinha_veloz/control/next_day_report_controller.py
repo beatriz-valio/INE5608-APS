@@ -32,23 +32,36 @@ class NextDayReportController:
 
                 # Tratamento variavel dia seguinte
                 data_hoje = datetime.now()
-                data_string = data_hoje.strftime("%d/%m/%Y, %H:%M:%S")
+                data_string = data_hoje.strftime("%Y/%m/%d, %H:%M:%S")
                 hoje_string = data_string.split(",")[0]
-                dia = hoje_string.split("/")[0]
+                dia = hoje_string.split("/")[2]
                 dia_int = int(dia)
                 amanha = dia_int + 1
 
-                amanha_data = str(amanha) + "/" + hoje_string.split("/")[
-                    1] + "/" + hoje_string.split("/")[2]
+                amanha_data =  hoje_string.split("/")[0] + "/" + hoje_string.split("/")[
+                    1] + "/" + str(amanha)
                 amanha_convertido = datetime.strptime(amanha_data,
-                                                      '%d/%m/%Y').date()
+                                                      '%Y/%m/%d').date()
 
                 # Seleção de agendamentos dia seguinte
                 for agendamento in self.__schedule_dao.get_all():
                     agendamento_string = ''
 
-                    if agendamento.vaga.data == amanha_convertido:
-                        agendamento_string += agendamento.vaga
+                    data_vaga = agendamento.vaga.data
+                    data_vaga_string = data_vaga.strftime("%Y/%m/%d, %H:%M:%S")
+                    data_padrao = data_vaga_string.split(",")[0]
+                    data_convertido = datetime.strptime(data_padrao,
+                                                          '%Y/%m/%d').date()
+
+                    if data_convertido == amanha_convertido:
+                        agendamento_string += str(agendamento.vaga.horario_inicio) + '  '
+                        agendamento_string += str(agendamento.vaga.horario_fim) + '  '
+                        agendamento_string += str(agendamento.servico.nome) + ' '
+                        agendamento_string += str(agendamento.valor) + ' '
+                        agendamento_string += str(agendamento.funcionario.nome) + ' '
+                        agendamento_string += str(agendamento.placa) + ' '
+                        agendamento_string += str(agendamento.cliente.nome)
+
                         lista_agendamentos.append(agendamento_string)
 
                 if lista_agendamentos == []:
