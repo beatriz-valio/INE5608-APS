@@ -1,6 +1,7 @@
 import hashlib
 
 from flanelinha_veloz.entity.abstractUsuario import Usuario
+from flanelinha_veloz.entity.gestor import Gestor
 from flanelinha_veloz.view.login_boundary import LoginBoundary
 
 
@@ -31,9 +32,9 @@ class LoginController:
             password_md5 = password_md5.hexdigest()
             if employee.email == email and employee.senha == password_md5:
                 self.save_user(employee)
-                if employee.cargo == 'Gestor':
+                if isinstance(employee, Gestor) == True:
                     self.__system_controller.menu_controller.open_menu_manager()
-                elif employee.cargo == 'Funcionário':
+                else:
                     self.__system_controller.menu_controller.open_menu_employer()
 
     def login(self, client):
