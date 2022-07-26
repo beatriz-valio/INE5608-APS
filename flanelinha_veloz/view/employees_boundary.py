@@ -98,7 +98,7 @@ class EmployeesBoundary(AbstractBoundary):
             "valores": values
         }
 
-    def update_employees_screen(self, employee: Funcionario or Gestor):
+    def update_employees_screen(self, employee: Funcionario or Gestor, cargo: int):
         layout = [
             [sg.Text("Nome: * ", size=EmployeesBoundary.TEXT_SIZE),
              sg.In(default_text=employee.nome, key="nome",
@@ -136,7 +136,7 @@ class EmployeesBoundary(AbstractBoundary):
                                size=(54))],
             [sg.Text("Cargo: * ", size=EmployeesBoundary.TEXT_SIZE),
              sg.Combo(values=EmployeesBoundary.FUNCTION_OPTIONS,
-                      default_value=employee.cargo,
+                      default_value=EmployeesBoundary.FUNCTION_OPTIONS[cargo],
                       key="cargo",
                       size=68)],
             [sg.Text("Primeiro Turno: * ", size=32),
@@ -200,7 +200,7 @@ class EmployeesBoundary(AbstractBoundary):
             "valores": values
         }
 
-    def profile_employees_screen(self, employee: Funcionario or Gestor):
+    def profile_employees_screen(self, employee: Funcionario or Gestor, cargo: int):
         layout = [
             [sg.Text("Nome:", size=EmployeesBoundary.TEXT_SIZE),
              sg.Text(employee.nome, key="nome",
@@ -227,7 +227,7 @@ class EmployeesBoundary(AbstractBoundary):
                      size=EmployeesBoundary.INPUT_SIZE)],
             [sg.Text("Cargo:", size=EmployeesBoundary.TEXT_SIZE),
              sg.Combo(EmployeesBoundary.FUNCTION_OPTIONS,
-                      default_value=employee.cargo,
+                      default_value=EmployeesBoundary.FUNCTION_OPTIONS[cargo],
                       key="cargo",
                       disabled=True,
                       size=68)],
