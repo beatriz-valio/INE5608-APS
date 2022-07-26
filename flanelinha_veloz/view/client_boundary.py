@@ -7,6 +7,7 @@ from flanelinha_veloz.view.abstract_boundary import AbstractBoundary
 
 
 class ClientBoundary(AbstractBoundary):
+    SAIR = 9
     CANCEL = 0
     CREATE = 1
     UPDATE = 2
@@ -99,7 +100,7 @@ class ClientBoundary(AbstractBoundary):
                       disabled=True)],
             [sg.Text('Data de nascimento: *')],
             [sg.Text(dt.strftime(client.data_nascimento, "%d/%m/%Y"))],
-            [sg.Cancel('Sair', key=ClientBoundary.CANCEL),
+            [sg.Cancel('Voltar', key=ClientBoundary.CANCEL),
              sg.Submit('Alterar informação', key=ClientBoundary.UPDATE)],
         ]
         window = sg.Window('Flanelinha Veloz - Perfil',
