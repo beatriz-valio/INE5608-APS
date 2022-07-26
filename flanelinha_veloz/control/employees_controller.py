@@ -17,6 +17,7 @@ from flanelinha_veloz.exceptions.missingDataException import \
     MissingDataException
 from flanelinha_veloz.exceptions.passwordDoesntMatchException import \
     PasswordDoesntMatchException
+from flanelinha_veloz.exceptions.shiftMatchException import ShiftMatchException
 from flanelinha_veloz.persistence.employeesDAO import EmployeesDAO
 from flanelinha_veloz.view.employees_boundary import EmployeesBoundary
 
@@ -54,8 +55,9 @@ class EmployeesController:
                 cpf = self.__system_controller.logged_user.cpf
                 employees_cpf = self.search_for_employee_by_cpf(cpf)
                 if employees_cpf:
+                    cargo = 1 if isinstance(self.search_for_employee_by_cpf(cpf), Gestor) == True else 0
                     values = self.__boundary.update_employees_screen(
-                        employees_cpf)
+                        employees_cpf, cargo)
                     senha_antiga = employees_cpf.senha
                     acao = values['acao']
                     if acao == EmployeesBoundary.SUBMIT:
@@ -74,12 +76,22 @@ class EmployeesController:
                         else:
                             senha = valores['senha']
                             confirmar_senha = valores['confirmar_senha']
+                            turno = [valores['primeiro_turno_entrada_hora'],
+                                    valores['primeiro_turno_entrada_minuto'],
+                                    valores['primeiro_turno_saido_hora'],
+                                    valores['primeiro_turno_saido_minuto'],
+                                    valores['segundo_turno_entrada_hora'],
+                                    valores['segundo_turno_entrada_minuto'],
+                                    valores['segundo_turno_saido_hora'],
+                                    valores['segundo_turno_saido_minuto']]
                             if senha != confirmar_senha:
                                 raise PasswordDoesntMatchException
                             if senha != senha_antiga:
                                 senha = senha.encode('utf-8', 'ignore')
                                 senha = hashlib.md5(senha)
                                 senha = senha.hexdigest()
+                            elif not self.checking_different_shifts(turno):
+                                raise ShiftMatchException
                         nome = valores['nome']
                         data_nascimento = dt.strptime(
                             valores['data_nascimento'], "%d/%m/%Y")
@@ -87,20 +99,12 @@ class EmployeesController:
                         genero = valores['genero']
                         sobrenome = valores['sobrenome']
                         cargo = valores['cargo']
-                        turno = [valores['primeiro_turno_entrada_hora'],
-                                 valores['primeiro_turno_entrada_minuto'],
-                                 valores['primeiro_turno_saido_hora'],
-                                 valores['primeiro_turno_saido_minuto'],
-                                 valores['segundo_turno_entrada_hora'],
-                                 valores['segundo_turno_entrada_minuto'],
-                                 valores['segundo_turno_saido_hora'],
-                                 valores['segundo_turno_saido_minuto']]
                         dias_trabalhados = valores['dias_trabalhados']
                         self.employee_delete(employees_cpf)
                         if cargo == 'Gestor':
                             obj = Gestor(cpf, data_nascimento, email,
                                          genero, nome, senha, sobrenome,
-                                         cargo, turno, dias_trabalhados)
+                                         turno, dias_trabalhados)
                             self.employee_registration(obj)
                             self.__boundary.show_message(
                                 'Atualização salva com sucesso!', 'green')
@@ -108,7 +112,7 @@ class EmployeesController:
                         else:
                             obj = Funcionario(cpf, data_nascimento, email,
                                               genero, nome, senha,
-                                              sobrenome, cargo, turno,
+                                              sobrenome, turno,
                                               dias_trabalhados)
                             self.employee_registration(obj)
                             self.__boundary.show_message(
@@ -143,8 +147,9 @@ class EmployeesController:
                 cpf = self.__system_controller.logged_user.cpf
                 employees_cpf = self.search_for_employee_by_cpf(cpf)
                 if employees_cpf:
+                    cargo = 1 if isinstance(self.search_for_employee_by_cpf(cpf), Gestor) == True else 0
                     values = self.__boundary.profile_employees_screen(
-                        employees_cpf)
+                        employees_cpf, cargo)
                     acao = values['acao']
                     if acao == EmployeesBoundary.UPDATE:
                         self.open_edit_employees_screen()
@@ -192,8 +197,18 @@ class EmployeesController:
                         else:
                             senha = valores['senha']
                             confirmar_senha = valores['confirmar_senha']
+                            turno = [valores['primeiro_turno_entrada_hora'],
+                                    valores['primeiro_turno_entrada_minuto'],
+                                    valores['primeiro_turno_saido_hora'],
+                                    valores['primeiro_turno_saido_minuto'],
+                                    valores['segundo_turno_entrada_hora'],
+                                    valores['segundo_turno_entrada_minuto'],
+                                    valores['segundo_turno_saido_hora'],
+                                    valores['segundo_turno_saido_minuto']]
                             if senha != confirmar_senha:
                                 raise PasswordDoesntMatchException
+                            elif not self.checking_different_shifts(turno):
+                                raise ShiftMatchException
                     if all_value_good:
                         nome = valores['nome']
                         data_nascimento = dt.strptime(
@@ -202,26 +217,18 @@ class EmployeesController:
                         genero = valores['genero']
                         sobrenome = valores['sobrenome']
                         cargo = valores['cargo']
-                        turno = [valores['primeiro_turno_entrada_hora'],
-                                 valores['primeiro_turno_entrada_minuto'],
-                                 valores['primeiro_turno_saido_hora'],
-                                 valores['primeiro_turno_saido_minuto'],
-                                 valores['segundo_turno_entrada_hora'],
-                                 valores['segundo_turno_entrada_minuto'],
-                                 valores['segundo_turno_saido_hora'],
-                                 valores['segundo_turno_saido_minuto']]
                         dias_trabalhados = valores['dias_trabalhados']
                         senha = senha.encode('utf-8', 'ignore')
                         senha = hashlib.md5(senha)
                         senha = senha.hexdigest()
                         if cargo == 'Gestor':
                             obj = Gestor(cpf, data_nascimento, email, genero,
-                                         nome, senha, sobrenome, cargo, turno,
+                                         nome, senha, sobrenome, turno,
                                          dias_trabalhados)
                         else:
                             obj = Funcionario(cpf, data_nascimento, email,
                                               genero, nome, senha, sobrenome,
-                                              cargo, turno, dias_trabalhados)
+                                              turno, dias_trabalhados)
                         self.employee_registration(obj)
                         self.__boundary.show_message(
                             'Cadastramento concluído!', 'green')
@@ -255,3 +262,17 @@ class EmployeesController:
         except KeyError:
             self.__boundary.show_message('Nenhum funcionário encontrado!',
                                          'red')
+
+    def checking_different_shifts(self, shifts: list):
+        final_return = True
+        if (shifts[0] == shifts[2] and shifts[1] == shifts[3]) \
+             or (shifts[0] == shifts[4] and shifts[1] == shifts[5]) \
+             or (shifts[0] == shifts[6]  and shifts[1] == shifts[7]):
+            final_return = False
+        elif shifts[6] < shifts[4] or shifts[6] < shifts[2] or shifts[6] < shifts[0]:
+            final_return = False
+        elif shifts[4] < shifts[2] or shifts[6] < shifts[0]:
+            final_return = False
+        elif shifts[2] < shifts[0]:
+            final_return = False
+        return final_return
