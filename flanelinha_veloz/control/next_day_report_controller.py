@@ -54,13 +54,15 @@ class NextDayReportController:
                                                           '%Y/%m/%d').date()
 
                     if data_convertido == amanha_convertido:
-                        agendamento_string += str(agendamento.vaga.horario_inicio) + '  '
-                        agendamento_string += str(agendamento.vaga.horario_fim) + '  '
-                        agendamento_string += str(agendamento.servico.nome) + ' '
-                        agendamento_string += str(agendamento.valor) + ' '
-                        agendamento_string += str(agendamento.funcionario.nome) + ' '
-                        agendamento_string += str(agendamento.placa) + ' '
-                        agendamento_string += str(agendamento.cliente.nome)
+                        data_relatorio = amanha_convertido.strftime("%d/%m/%Y")
+                        agendamento_string += '{:^16}'.format(str(data_relatorio))
+                        agendamento_string += '{:14}'.format(str(agendamento.vaga.horario_inicio))
+                        agendamento_string += '{:14}'.format(str(agendamento.vaga.horario_fim))
+                        agendamento_string += '{:^11}'.format(str(agendamento.placa))
+                        agendamento_string += '{:^20}'.format(str(agendamento.cliente.nome))
+                        agendamento_string += '{:^22}'.format(str(agendamento.funcionario.nome))
+                        agendamento_string += '{:^34}'.format(str(agendamento.servico.nome))
+                        agendamento_string += '{:^12}'.format(str(agendamento.valor))
 
                         lista_agendamentos.append(agendamento_string)
 
@@ -71,6 +73,8 @@ class NextDayReportController:
                 acao = retorno['acao']
                 if acao is None:
                     self.__system_controller.shutdown()
+                elif acao == NextDayReportBoundary.CANCEL:
+                    self.return_menu_manager()
                 else:
                     break
             except Exception as e:
