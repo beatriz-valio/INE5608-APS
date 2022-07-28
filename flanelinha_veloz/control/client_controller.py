@@ -2,6 +2,7 @@ import datetime
 import hashlib
 from datetime import datetime as dt
 
+from flanelinha_veloz.control.menu_controller import MenuController
 from flanelinha_veloz.entity.agendamento import Agendamento
 from flanelinha_veloz.entity.cliente import Cliente
 from flanelinha_veloz.entity.funcionario import Funcionario
@@ -45,6 +46,7 @@ class ClientController:
         self.__vehicle_types_dao = VehicleTypesDAO()
         self.__schedule_dao = ScheduleDAO()
         self.__establishment = EstablishmentOperationDAO().get()
+        self.__menu = MenuController(system_controller)
 
     @property
     def client_dao(self):
@@ -194,16 +196,16 @@ class ClientController:
 
     def open_menu_client(self):
         try:
-            action_options = {
-                None: self.__system_controller.shutdown,
-                0: self.__system_controller.shutdown,
-                2: self.open_update_screen
-            }
             while True:
-                option_number = self.__client_screen.profile_screen(
+                option = self.__client_screen.profile_screen(
                     self.__system_controller.logged_user)
-                selected_function = action_options[option_number]
-                selected_function()
+                if option == ClientBoundary.UPDATE:
+                    self.__client_screen.open_update_screen(self.__system_controller.logged_user)
+                elif option is None:
+                    self.__system_controller.shutdown()
+                else:
+                    break
+
         except Exception as e:
             self.__client_screen.show_message(str(e))
 
@@ -238,7 +240,12 @@ class ClientController:
                     hora_fim = hora_escolhida + total_time
                     dia_escolhido = datetime.datetime.strptime(values['day'],
                                                                '%d/%m/%Y')
-                    if hora_fim > self.__establishment.horarios_de_funcionamento[-1]:
+
+                    horario_funcionario = datetime.datetime.strptime(self.__establishment.horarios_de_funcionamento[-1], "%H:%M")
+                    horario_funcionario_convertido = datetime.timedelta(hours=horario_funcionario.hour,
+                                                        minutes=horario_funcionario.minute)
+
+                    if hora_fim > horario_funcionario_convertido:
                         raise EstablishmentUnavailableTimeSchedule
                     else:
                         vaga = Vaga(dia_escolhido, hora_escolhida,
@@ -260,8 +267,14 @@ class ClientController:
                             raise SpotCarLimitReachedException
                 else:
                     raise FuncionarioNotAvailableException
+
             elif action is None:
                 self.__system_controller.shutdown()
+            elif action == ClientBoundary.CANCEL:
+                self.open_schedule_service_screen()
+            else:
+                self.__menu.open_menu_client()
+
         except Exception as e:
             self.__client_screen.show_message(str(e))
 
