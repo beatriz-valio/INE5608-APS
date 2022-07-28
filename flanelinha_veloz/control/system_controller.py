@@ -5,6 +5,7 @@ from flanelinha_veloz.control.establishment_operation_controller import \
     EstablishmentOperationController
 from flanelinha_veloz.control.login_controller import LoginController
 from flanelinha_veloz.control.menu_controller import MenuController
+from flanelinha_veloz.control.send_report_controller import SendReportController
 from flanelinha_veloz.control.next_day_report_controller import \
     NextDayReportController
 from flanelinha_veloz.control.types_of_services_controller import \
@@ -26,6 +27,7 @@ class SystemController:
         self.__car_spot_controller = CarSpotController(self)
         self.__establishment_operation_controller = EstablishmentOperationController(self)
         self.__menu_controller = MenuController(self)
+        self.__send_report_controller = SendReportController(self)
         self.__logged_user: Usuario or None = None
         self.__next_day_report_controller = NextDayReportController(self)
         self.__establishment: Estabelecimento = Estabelecimento(0,
@@ -100,6 +102,7 @@ class SystemController:
         return self.__next_day_report_controller
 
     def open_login_screen(self):
+        self.__send_report_controller.verify_date()
         self.__login_controller.open_screen()
 
     def shutdown(self):
